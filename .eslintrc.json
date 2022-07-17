@@ -1,3 +1,70 @@
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+      "browser": true,
+      "es2021": true
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "airbnb",
+      "plugin:prettier/recommended"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "ecmaFeatures": {
+          "jsx": true
+      },
+      "ecmaVersion": 12,
+      "sourceType": "module"
+  },
+  "plugins": [
+    "react-hooks",
+      "react",
+      "@typescript-eslint",
+      "prettier"
+  ],
+  "rules": {
+    "react/jsx-no-bind": "off",
+    "dot-notation": "off",
+    "consistent-return": "off",
+    "react/function-component-definition": "off",
+    "react/require-default-props": "off",
+    "no-unused-vars": "off",
+    "react/jsx-no-constructed-context-values": "off",
+    "no-nested-ternary": "off",
+    "no-shadow": "off",
+    "import/no-extraneous-dependencies": "off",
+    "prettier/prettier": "error",
+    "import/prefer-default-export": "off",
+    "react/jsx-props-no-spreading": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/jsx-filename-extension": [
+      1,
+      {
+      "extensions": [
+        ".tsx"
+      ]
+      }
+    ],
+    "no-use-before-define": "off",
+    "react/no-children-prop": "off",
+    "@typescript-eslint/no-use-before-define": [
+      "error"
+    ],
+    "react/react-in-jsx-scope": "off",
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "ts": "never",
+        "tsx": "never"
+      }
+   ]
+  },
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  }
 }
