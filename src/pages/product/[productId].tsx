@@ -36,8 +36,9 @@ export default function Product({ product }: ProductProps) {
   return (
     <Box>
       <Header />
-      <Link href="/">
-        <Flex w="80vw" justify="end">
+
+      <Flex w="80vw" justify="end">
+        <Link href="/">
           <Image
             ml="1rem"
             cursor="pointer"
@@ -45,8 +46,9 @@ export default function Product({ product }: ProductProps) {
             w={['4rem', '4rem', '5rem']}
             src="../flexaSair.svg"
           />
-        </Flex>
-      </Link>
+        </Link>
+      </Flex>
+
       <Flex minH="100vh" flexDir="column" justify="center" align="center">
         {(!isLoading && isFetching) || isLoading ? (
           <Spinner color="orange" />

@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Input } from '../../components/Form/Input';
 import { useAuth } from '../../services/hooks/useAuth';
 import { withSSRGuest } from '../../utils/WithSSRGuest';
+import { ForgotPasswordModal } from '../../components/Modais/ForgotPasswordModal';
 
 type SignInFormData = {
   username: string;
@@ -68,6 +69,8 @@ function Admin() {
         >
           Entrar
         </Button>
+
+        <ForgotPasswordModal />
       </Flex>
     </Flex>
   );

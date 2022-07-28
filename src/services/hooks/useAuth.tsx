@@ -10,6 +10,7 @@ type SignInCredentials = {
 
 type AuthContextData = {
   signIn(credentials: SignInCredentials): Promise<void>;
+  signOut(): void;
 };
 
 type AuthProviderProps = {
@@ -35,7 +36,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     authChannel.onmessage = message => {
       switch (message.data) {
         case 'signOut':
-          signOut();
+          Router.push('/admin');
           break;
         default:
           break;
@@ -71,7 +72,9 @@ function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ signIn }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ signIn, signOut }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
 

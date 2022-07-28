@@ -1,14 +1,12 @@
+/* eslint-disable no-else-return */
+/* eslint-disable no-lonely-if */
 import axios, { AxiosError } from 'axios';
 import { parseCookies, setCookie } from 'nookies';
 import { AuthTokenError } from '../errors/AuthTokenError';
 import { signOut } from './hooks/useAuth';
 
-interface AxiosErrorResponse {
-  message?: string;
-}
-
-let isRefreshing = false;
 let failedRequestsQueue = [];
+let isRefreshing = false;
 
 export function setupAPIClient(ctx = undefined) {
   let cookies = parseCookies(ctx);
@@ -20,14 +18,10 @@ export function setupAPIClient(ctx = undefined) {
   });
 
   api.interceptors.response.use(
-    response => {
-      return response;
-    },
-    (error: AxiosError<AxiosErrorResponse>) => {
-      console.log(error.response.status);
-
-      if (error.response.status === 401) {
-        if (error.response.data.message === 'Invalid JWT token') {
+    response => response,
+    (error: AxiosError) => {
+      if (error.response?.status === 401) {
+        if (error.response.data?.message === 'Invalid JWT token') {
           cookies = parseCookies(ctx);
 
           const { 'snap.refreshToken': refreshToken } = cookies;
@@ -47,7 +41,7 @@ export function setupAPIClient(ctx = undefined) {
 
                 setCookie(
                   ctx,
-                  'zaytech.refreshToken',
+                  'snap.refreshToken',
                   response.data.refreshToken,
                   {
                     maxAge: 60 * 60 * 24 * 30,
@@ -66,7 +60,7 @@ export function setupAPIClient(ctx = undefined) {
                 failedRequestsQueue.forEach(request => request.onFailure(err));
                 failedRequestsQueue = [];
 
-                if (process.browser) {
+                if (typeof window !== 'undefined') {
                   signOut();
                 }
               })
@@ -86,13 +80,14 @@ export function setupAPIClient(ctx = undefined) {
               },
             });
           });
+        } else {
+          if (process.browser) {
+            signOut();
+          } else {
+            return Promise.reject(new AuthTokenError());
+          }
         }
-      } else if (process.browser) {
-        signOut();
-      } else {
-        return Promise.reject(new AuthTokenError());
       }
-
       return Promise.reject(error);
     },
   );
