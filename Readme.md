@@ -1,3 +1,5 @@
+[ ] ABRIR MODAL DE DETALHES DE CLIENTES
+
 [ x ] Adicionar array de imagens
 [  ] Adicionar Categorias.
 [  ] Ser possível pesquisar por produtos

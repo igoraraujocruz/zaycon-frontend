@@ -12,33 +12,13 @@ import {
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import { useState } from 'react';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
 import { DeleteModal } from '../../../components/Modais/DeleteModal';
 import { ImagesModal } from '../../../components/Modais/ImagesModal';
 import { useProducts } from '../../../services/hooks/useProducts';
 
-interface ProductProps {
-  product: {
-    id: string;
-    name: string;
-    description: string;
-    slug: string;
-    price: number;
-    creditPoints: number;
-    debitPoints: number;
-    photos: [
-      {
-        id: string;
-        name: string;
-        url: string;
-      },
-    ];
-  };
-}
-
-export default function Get() {
+export function GetProducts() {
   const { data, isLoading, error, isFetching } = useProducts();
 
   return (

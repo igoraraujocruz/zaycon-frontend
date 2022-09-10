@@ -24,8 +24,6 @@ export function setupAPIClient(ctx = undefined) {
       return response;
     },
     (error: AxiosError<AxiosErrorResponse>) => {
-      console.log(error.response.status);
-
       if (error.response.status === 401) {
         if (error.response.data.message === 'Invalid JWT token') {
           cookies = parseCookies(ctx);
@@ -66,7 +64,7 @@ export function setupAPIClient(ctx = undefined) {
                 failedRequestsQueue.forEach(request => request.onFailure(err));
                 failedRequestsQueue = [];
 
-                if (process.browser) {
+                if (typeof window) {
                   signOut();
                 }
               })
@@ -87,7 +85,11 @@ export function setupAPIClient(ctx = undefined) {
             });
           });
         }
-      } else if (process.browser) {
+      }
+      if (error.response.status === 400) {
+        return Promise.reject(error);
+      }
+      if (typeof window) {
         signOut();
       } else {
         return Promise.reject(new AuthTokenError());

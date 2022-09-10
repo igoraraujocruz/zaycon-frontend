@@ -1,12 +1,11 @@
-import { Box, Button, Flex, Stack, useToast } from '@chakra-ui/react';
+import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { createProduct } from '../../../services/hooks/useProducts';
 import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
-import { FileUpload } from '../../../components/Form/FileUpload';
 
 type CreateFormData = {
   name: string;
@@ -19,13 +18,24 @@ type CreateFormData = {
 
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome do produto é obrigatório'),
-  points: yup.number().required('Pontos são obrigatórios'),
+  description: yup.string().required('Descrição do produto é obrigatória'),
+  price: yup.number().required('Preço do produto é obrigatório'),
+  debitPoints: yup
+    .number()
+    .required(
+      'Informar quantos pontos são necessários para adquirir o produto',
+    ),
+  creditPoints: yup
+    .number()
+    .required(
+      'Informar quantidade de pontos que se ganha ao comprar este produto',
+    ),
 });
 
-export default function Create() {
+export function CreateProducts() {
   const [images, setImages] = useState([]);
   const { register, handleSubmit, reset } = useForm({
-    // resolver: yupResolver(createFormSchema),
+    resolver: yupResolver(createFormSchema),
   });
 
   const toast = useToast();
@@ -53,7 +63,7 @@ export default function Create() {
     } catch (error) {
       toast({
         title: 'Não foi possível cadastrar o produto',
-        description: error.message,
+        description: error.response.data.message,
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -71,6 +81,7 @@ export default function Create() {
       borderRadius={8}
       flexDir="column"
     >
+      <Text fontSize="3xl">Novo Produto</Text>
       <Stack spacing="0.5">
         <Input name="name" label="Nome" {...register('name')} />
         <Input name="price" label="Preço" {...register('price')} />
@@ -91,7 +102,7 @@ export default function Create() {
         />
         <input type="file" multiple onChange={onFileChange} />
       </Stack>
-      <Button type="submit" mt="6" colorScheme="pink" size="lg">
+      <Button type="submit" mt="6" colorScheme="orange" size="lg">
         Cadastrar
       </Button>
     </Flex>

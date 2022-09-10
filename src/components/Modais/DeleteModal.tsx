@@ -9,6 +9,7 @@ import {
   ModalOverlay,
   useDisclosure,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { BsTrashFill } from 'react-icons/bs';
 import { deleteProducts } from '../../services/hooks/useProducts';
@@ -20,8 +21,20 @@ interface ImageModalProps {
 export function DeleteModal({ productId }: ImageModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  function deleteProduct() {
-    deleteProducts(productId);
+  const toast = useToast();
+
+  async function deleteProduct() {
+    try {
+      await deleteProducts(productId);
+    } catch (error) {
+      toast({
+        title: 'Não foi deletar o produto',
+        description: error.message,
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
   }
 
   return (
