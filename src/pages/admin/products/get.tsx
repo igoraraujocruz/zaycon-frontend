@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Flex,
   Heading,
   Image,
@@ -14,21 +15,33 @@ import {
 } from '@chakra-ui/react';
 import Zoom from 'react-medium-image-zoom';
 import 'react-medium-image-zoom/dist/styles.css';
-import { DeleteModal } from '../../../components/Modais/DeleteModal';
+import { BsTrashFill } from 'react-icons/bs';
 import { ImagesModal } from '../../../components/Modais/ImagesModal';
 import { useProducts } from '../../../services/hooks/useProducts';
+import { useCallback, useRef, useState } from 'react';
+import DeleteModal, { ModalDeleteHandle } from '../../../components/Modais/DeleteModal';
 
 export function GetProducts() {
   const { data, isLoading, error, isFetching } = useProducts();
+  const modalDelete = useRef<ModalDeleteHandle>(null);
+  const [productId, setProductId] = useState('')
+
+  const openDeleteModal = useCallback((productId: string) => {
+    setProductId(productId)
+    modalDelete.current.onOpen()
+  }, [])
 
   return (
     <Flex w="70vw" flexDir="column">
+      <DeleteModal productId={productId} ref={modalDelete} />
       <Heading alignSelf="center" size="lg" fontWeight="normal">
         Produtos Cadastrados
-        {!isLoading && isFetching && (
-          <Spinner size="sm" color="gray.500" ml="4" />
-        )}
       </Heading>
+      <Flex h={'2rem'}>  
+      {!isLoading && isFetching && (
+          <Spinner size="sm" color="gray.500" ml="4" />
+      )}
+      </Flex>
 
       {isLoading ? (
         <Flex justify="center">
@@ -84,9 +97,8 @@ export function GetProducts() {
                     <ImagesModal product={product} />
                   </Flex>
                 </Td>
-
                 <Td>
-                  <DeleteModal productId={product.id} />
+                  <BsTrashFill color="orange" size={25} onClick={() => openDeleteModal(product.id)} cursor="pointer" />
                 </Td>
               </Tr>
             ))}

@@ -1,11 +1,12 @@
-import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react';
+import { Button, Flex, Stack, Text, useToast, VStack } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCallback, useState } from 'react';
+import { useRef } from 'react';
 import { createProduct } from '../../../services/hooks/useProducts';
 import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
+import { InputFile, ModalDetalhesHandle } from '../../../components/Form/InputFile'
 
 type CreateFormData = {
   name: string;
@@ -33,20 +34,12 @@ const createFormSchema = yup.object().shape({
 });
 
 export function CreateProducts() {
-  const [images, setImages] = useState([]);
+  const inputFileRef = useRef<ModalDetalhesHandle>(null)
   const { register, handleSubmit, reset } = useForm({
     resolver: yupResolver(createFormSchema),
   });
 
   const toast = useToast();
-
-  const onFileChange = useCallback(e => {
-    const uploadImages = [];
-    for (let i = 0; i < e.target.files.length; i += 1) {
-      uploadImages.push(e.target.files[i]);
-      setImages(uploadImages);
-    }
-  }, []);
 
   const onSubmit: SubmitHandler<CreateFormData> = async values => {
     try {
@@ -56,14 +49,15 @@ export function CreateProducts() {
         price: values.price,
         debitPoints: values.debitPoints,
         creditPoints: values.creditPoints,
-        photos: images,
+        photos: inputFileRef.current.images,
       });
-
+      
+      inputFileRef.current?.setImages({})
       reset();
     } catch (error) {
       toast({
         title: 'Não foi possível cadastrar o produto',
-        description: error.response.data.message,
+        description: error.response?.data.message,
         status: 'error',
         duration: 9000,
         isClosable: true,
@@ -75,7 +69,7 @@ export function CreateProducts() {
     <Flex
       onSubmit={handleSubmit(onSubmit)}
       as="form"
-      maxWidth={360}
+      w={400}
       bg="gray.800"
       p="8"
       borderRadius={8}
@@ -100,9 +94,11 @@ export function CreateProducts() {
           label="Crédito de Pontos"
           {...register('creditPoints')}
         />
-        <input type="file" multiple onChange={onFileChange} />
-      </Stack>
-      <Button type="submit" mt="6" colorScheme="orange" size="lg">
+        </Stack>
+        <Flex justify={'center'}>
+          <InputFile mt={'1rem'} ref={inputFileRef} />
+        </Flex>     
+      <Button bg={'#FF6B00'} type="submit" mt="6" colorScheme="orange" size="lg">
         Cadastrar
       </Button>
     </Flex>

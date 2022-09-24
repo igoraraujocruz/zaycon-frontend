@@ -1,9 +1,6 @@
 import {
   Button,
   Flex,
-  FormControl,
-  FormHelperText,
-  FormLabel,
   Stack,
   Text,
   useToast,
@@ -14,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { createClients } from '../../../services/hooks/useClients';
 import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
+import { css } from '@emotion/react';
 
 type CreateFormData = {
   name: string;
@@ -85,6 +83,12 @@ export function CreateClients() {
           type="date"
           name="birthday"
           label="Data da Nascimento"
+          css={css`
+                        ::-webkit-calendar-picker-indicator {
+                            background: url(https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/calendar-16.png) center/80% no-repeat;
+                            color: black;
+                        }
+                    `}
           {...register('birthday')}
         />
         <Input

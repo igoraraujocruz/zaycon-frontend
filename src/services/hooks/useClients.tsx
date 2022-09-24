@@ -1,14 +1,33 @@
-import { useMutation, useQuery } from 'react-query';
+import { useQuery } from 'react-query';
 import { api } from '../apiClient';
 import { queryClient } from '../queryClient';
 
-interface Client {
+export interface Client {
   id: string;
   name: string;
   email: string;
   mobilePhone: string;
   birthday: string;
   createdAt: string;
+  shop: [{
+    id: string;
+    quantity: number;
+    typeOfPayment: string;
+    product: {
+      id: string;
+      name: string;
+      price: number;
+      creditPoints: number;
+      debitPoints: number;
+      description: string;
+      createdAt: string;
+      photos: [{
+        id: string;
+        url: string;
+      }]
+    }
+    createdAt: string;
+  }]
 }
 
 interface CreateClientProps {
@@ -22,7 +41,7 @@ interface CreateClientProps {
 export const getClients = async (): Promise<Client[]> => {
   const { data } = await api.get('/clients');
 
-  const clients = data.map(client => {
+  const clients = data.map((client: Client) => {
     return {
       id: client.id,
       name: client.name,
@@ -30,9 +49,10 @@ export const getClients = async (): Promise<Client[]> => {
       mobilePhone: client.mobilePhone,
       birthday: new Date(client.birthday).toLocaleDateString('pt-BR', {
         day: '2-digit',
-        month: 'long',
+        month: '2-digit',
         year: 'numeric',
       }),
+      shop: client.shop,
       createdAt: new Date(client.createdAt).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: 'long',
@@ -54,7 +74,7 @@ export async function createClients(client: CreateClientProps) {
   queryClient.invalidateQueries('clients');
 }
 
-export async function deleteProducts(clientId: string) {
+export async function deleteClient(clientId: string) {
   await api.delete(`/clients/${clientId}`);
 
   queryClient.invalidateQueries('clients');

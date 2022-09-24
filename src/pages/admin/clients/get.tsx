@@ -1,8 +1,6 @@
 import {
-  Box,
   Flex,
   Heading,
-  Image,
   Spinner,
   Table,
   Tbody,
@@ -11,24 +9,43 @@ import {
   Th,
   Thead,
   Tr,
-  useDisclosure,
 } from '@chakra-ui/react';
-import { DeleteModal } from '../../../components/Modais/DeleteModal';
-import { DetailsClientModal } from '../../../components/Modais/DetailsClientModal';
-import { useClients } from '../../../services/hooks/useClients';
+import { useCallback, useRef, useState } from 'react';
+import DeleteModal, { ModalDeleteHandle } from '../../../components/Modais/DeleteModal';
+import { Client, useClients } from '../../../services/hooks/useClients';
+import { BsTrashFill } from 'react-icons/bs';
+import DetailsClientModal, { ModalDetailsClient } from '../../../components/Modais/DetailsClientModal';
 
 export function GetClients() {
   const { data, isLoading, error, isFetching } = useClients();
-  const { onOpen } = useDisclosure();
+  const [clientId, setClientId] = useState('')
+  const [client, setClient] = useState({} as Client)
+
+  const modalDelete = useRef<ModalDeleteHandle>(null);
+  const modalDetailsClientModal = useRef<ModalDetailsClient>(null);
+
+  const openDeleteModal = useCallback((clientId: string) => {
+    setClientId(clientId)
+    modalDelete.current.onOpen()
+  }, [])
+
+  const openDetailsClientModal = useCallback((client: Client) => {
+    setClient(client)
+    modalDetailsClientModal.current.onOpen()
+  }, [])
 
   return (
     <Flex w="70vw" flexDir="column">
+      <DeleteModal clientId={clientId} ref={modalDelete} />
+      <DetailsClientModal client={client} ref={modalDetailsClientModal} />
       <Heading alignSelf="center" size="lg" fontWeight="normal">
         Clientes Cadastrados
-        {!isLoading && isFetching && (
-          <Spinner size="sm" color="gray.500" ml="4" />
-        )}
       </Heading>
+      <Flex h={'2rem'}>  
+      {!isLoading && isFetching && (
+          <Spinner size="sm" color="gray.500" ml="4" />
+      )}
+      </Flex>
 
       {isLoading ? (
         <Flex justify="center">
@@ -51,16 +68,15 @@ export function GetClients() {
           </Thead>
           <Tbody>
             {data.map(client => (
-              <Tr key={client.id}>
-                <button type="button" onClick={onOpen}>
-                  Tste
-                </button>
-                <Td>{client.name}</Td>
-                <Td>{client.email}</Td>
-                <Td>{client.mobilePhone}</Td>
-                <Td>{client.birthday}</Td>
-                <Td>{client.createdAt}</Td>
-                <DetailsClientModal client={client} />
+              <Tr key={client.id} cursor={'pointer'}>
+                <Td  onClick={() => openDetailsClientModal(client)}>{client.name}</Td>
+                <Td  onClick={() => openDetailsClientModal(client)}>{client.email}</Td>
+                <Td  onClick={() => openDetailsClientModal(client)}>{client.mobilePhone}</Td>
+                <Td  onClick={() => openDetailsClientModal(client)}>{client.birthday}</Td>
+                <Td  onClick={() => openDetailsClientModal(client)}>{client.createdAt}</Td>
+                <Td>
+                  <BsTrashFill color="orange" size={25} onClick={() => openDeleteModal(client.id)} cursor="pointer" />
+                </Td>
               </Tr>
             ))}
           </Tbody>

@@ -11,35 +11,63 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { BsTrashFill } from 'react-icons/bs';
+import { forwardRef, ForwardRefRenderFunction, useCallback, useImperativeHandle } from 'react';
+import { deleteClient } from '../../services/hooks/useClients';
 import { deleteProducts } from '../../services/hooks/useProducts';
 
 interface ImageModalProps {
-  productId: string;
+  productId?: string;
+  clientId?: string;
 }
 
-export function DeleteModal({ productId }: ImageModalProps) {
+export interface ModalDeleteHandle {
+  onOpen: () => void;
+  onClose: () => void;
+}
+
+const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> = ({ productId, clientId }: ImageModalProps, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useImperativeHandle(ref, () => ({
+    onOpen,
+    onClose,
+  }));
 
   const toast = useToast();
 
-  async function deleteProduct() {
-    try {
-      await deleteProducts(productId);
-    } catch (error) {
-      toast({
-        title: 'Não foi deletar o produto',
-        description: error.message,
-        status: 'error',
-        duration: 9000,
-        isClosable: true,
-      });
+  function deleteObject() {
+    if(productId) {
+      try {
+        deleteProducts(productId);
+        onClose()
+      } catch (error) {
+        toast({
+          title: 'Não foi deletar o produto',
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
+      }
+    }
+  
+    if(clientId) {
+      try {
+        deleteClient(clientId);
+        onClose()
+      } catch (error) {
+        toast({
+          title: 'Não foi deletar o cliente',
+          description: error.message,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
+      }
     }
   }
 
   return (
-    <>
-      <BsTrashFill color="orange" size={25} onClick={onOpen} cursor="pointer" />
       <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -57,7 +85,7 @@ export function DeleteModal({ productId }: ImageModalProps) {
               bg=""
               _hover={{ bg: '#ff0118' }}
               mr={3}
-              onClick={deleteProduct}
+              onClick={deleteObject}
             >
               Deletar
             </Button>
@@ -73,6 +101,7 @@ export function DeleteModal({ productId }: ImageModalProps) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
   );
 }
+
+export default forwardRef(DeleteModal)
