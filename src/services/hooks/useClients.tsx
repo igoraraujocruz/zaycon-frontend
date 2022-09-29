@@ -9,6 +9,7 @@ export interface Client {
   mobilePhone: string;
   birthday: string;
   createdAt: string;
+  points: number;
   shop: [{
     id: string;
     quantity: number;
@@ -52,6 +53,7 @@ export const getClients = async (): Promise<Client[]> => {
         month: '2-digit',
         year: 'numeric',
       }),
+      points: client.points,
       shop: client.shop,
       createdAt: new Date(client.createdAt).toLocaleDateString('pt-BR', {
         day: '2-digit',
@@ -66,6 +68,18 @@ export const getClients = async (): Promise<Client[]> => {
 
 export function useClients() {
   return useQuery(['clients'], () => getClients());
+}
+
+const getClientById = async (clientId: string): Promise<Client> => {
+  if(clientId) {
+    const { data } = await api.get(`/clients/${clientId}`);
+
+    return data;
+  }
+};
+
+export function useClient(clientId: string) {
+  return useQuery(['client', clientId], () => getClientById(clientId));
 }
 
 export async function createClients(client: CreateClientProps) {

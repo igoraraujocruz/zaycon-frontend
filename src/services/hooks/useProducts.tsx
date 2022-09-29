@@ -2,7 +2,7 @@ import { useQuery } from 'react-query';
 import { api } from '../apiClient';
 import { queryClient } from '../queryClient';
 
-interface Product {
+export interface Product {
   id: string;
   name: string;
   description: string;
@@ -53,7 +53,7 @@ export const getProducts = async (): Promise<Product[]> => {
       photos: product.photos,
       createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
         day: '2-digit',
-        month: 'long',
+        month: '2-digit',
         year: 'numeric',
       }),
       user: product.user,
@@ -75,6 +75,18 @@ export const getProduct = async (productSlug: string): Promise<Product> => {
 
 export function useProduct(productSlug: string) {
   return useQuery(['product'], () => getProduct(productSlug));
+}
+
+export const getProductById = async (productId: string): Promise<Product> => {
+  if (productId) {
+    const { data } = await api.get(`/products/?productId=${productId}`);
+
+    return data;
+  }
+};
+
+export function useProductById(productId: string) {
+  return useQuery(['productById', productId], () => getProductById(productId));
 }
 
 export async function createProduct(product: CreateProductProps) {
@@ -118,5 +130,5 @@ export async function createPhotos({ productId, photos }: PhotosProps) {
 
   await api.post(`/photos/${productId}`, formData, config);
 
-  queryClient.invalidateQueries('products');
+  queryClient.invalidateQueries('productById');
 }

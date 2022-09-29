@@ -15,7 +15,7 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>) {
     if (!cookies['snap.token']) {
       return {
         redirect: {
-          destination: '/login',
+          destination: '/admin',
           permanent: false,
         },
       };
@@ -30,7 +30,7 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>) {
 
         return {
           redirect: {
-            destination: '/login',
+            destination: '/admin',
             permanent: false,
           },
         };

@@ -45,7 +45,7 @@ export function setupAPIClient(ctx = undefined) {
 
                 setCookie(
                   ctx,
-                  'zaytech.refreshToken',
+                  'snap.refreshToken',
                   response.data.refreshToken,
                   {
                     maxAge: 60 * 60 * 24 * 30,

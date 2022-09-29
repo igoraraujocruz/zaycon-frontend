@@ -1,4 +1,4 @@
-import { Button, Flex, Stack, Text, useToast, VStack } from '@chakra-ui/react';
+import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,7 +6,8 @@ import { useRef } from 'react';
 import { createProduct } from '../../../services/hooks/useProducts';
 import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
-import { InputFile, ModalDetalhesHandle } from '../../../components/Form/InputFile'
+import { InputFile, InputFileHandle } from '../../../components/Form/InputFile'
+import { Textarea } from '../../../components/Form/TextArea';
 
 type CreateFormData = {
   name: string;
@@ -34,7 +35,7 @@ const createFormSchema = yup.object().shape({
 });
 
 export function CreateProducts() {
-  const inputFileRef = useRef<ModalDetalhesHandle>(null)
+  const inputFileRef = useRef<InputFileHandle>(null)
   const { register, handleSubmit, reset } = useForm({
     resolver: yupResolver(createFormSchema),
   });
@@ -78,12 +79,8 @@ export function CreateProducts() {
       <Text fontSize="3xl">Novo Produto</Text>
       <Stack spacing="0.5">
         <Input name="name" label="Nome" {...register('name')} />
-        <Input name="price" label="Preço" {...register('price')} />
-        <Input
-          name="description"
-          label="Descrição"
-          {...register('description')}
-        />
+        <Input name="price" labelInside='R$' label="Preço" {...register('price')} />
+        <Textarea name="description" label="Descrição" {...register('description')} />
         <Input
           name="debitPoints"
           label="Débito de Pontos"
@@ -98,7 +95,7 @@ export function CreateProducts() {
         <Flex justify={'center'}>
           <InputFile mt={'1rem'} ref={inputFileRef} />
         </Flex>     
-      <Button bg={'#FF6B00'} type="submit" mt="6" colorScheme="orange" size="lg">
+      <Button bg={'#FF6B00'}  _hover={{bg: 'orangeHover'}} type="submit" mt="6" colorScheme="orange" size="lg">
         Cadastrar
       </Button>
     </Flex>

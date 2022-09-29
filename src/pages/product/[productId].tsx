@@ -64,7 +64,7 @@ export default function Product({ product }: ProductProps) {
             <Flex flexDir={['column', 'column', 'row']}>
               {!data.photos[0] ? (
                 <Box maxW={['350px', '350px', '650px']}>
-                  <Image src="../imageNotFound.svg" />
+                  <Image w={'50rem'} src="../imageNotFound2.svg" />
                 </Box>
               ) : (
                 <Zoom overlayBgColorEnd="gray.900">

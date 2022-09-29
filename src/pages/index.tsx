@@ -6,21 +6,47 @@ import {
   Heading,
   Image,
   Text,
+  HStack,
+  Button,
 } from '@chakra-ui/react';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Footer } from '../components/Footer';
+import { SearchInput } from '../components/Form/SearchInput';
 import { Header } from '../components/Header';
-import { Search } from '../components/Search';
-import { useProducts } from '../services/hooks/useProducts';
-import { useSearchProduct } from '../services/hooks/useSeachProducts';
+import { api } from '../services/apiClient';
+import { Product, useProducts } from '../services/hooks/useProducts';
+
+interface SearchProps {
+  search: string;
+}
 
 export default function Home() {
   const { data, isLoading, error, isFetching } = useProducts();
-  const { searchProduct } = useSearchProduct();
+  const { register, handleSubmit } = useForm()
+  const [itemFilters, setItemFilters] = useState<Product[]>([])
+
+  const onSubmit = async ({search}: SearchProps) => {
+    try {
+      await api.get(`/products/search/${search}`)
+      .then(response => setItemFilters(response.data))
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return (
-    <Box>
+    <Flex flexDir={'column'}>
       <Header />
-      <Search />
+      <HStack as="form" onSubmit={handleSubmit(onSubmit)} justify={'center'} align={'center'}>
+        <SearchInput w={'18rem'} borderColor='gray.600' name='search' {...register('search', {
+          onChange() {
+            setItemFilters([])
+          },
+        })} />
+        <Button bg={'orange'} _hover={{ bg: 'orangeHover' }} type={'submit'}>Procurar</Button>
+      </HStack>
       <Flex justify="center" minH="70vh">
         <Grid
           templateColumns={[
@@ -41,64 +67,9 @@ export default function Home() {
             <Flex justify="center">
               <Text>Falha ao obter dados</Text>
             </Flex>
-          ) : searchProduct.length ? (
-            searchProduct.map(productFound => (
-              <Link
-                key={productFound.slug}
-                href={`/product/${productFound.slug}`}
-              >
-                <Flex
-                  key={productFound.id}
-                  p="2rem"
-                  flexDir="column"
-                  alignItems="center"
-                >
-                  <Heading cursor="pointer">{productFound.name}</Heading>
-
-                  <Image
-                    cursor="pointer"
-                    w="300px"
-                    zIndex={1}
-                    h="324.29px"
-                    src={
-                      !productFound.photos[0]
-                        ? 'imageNotFound.svg'
-                        : productFound.photos[0].url
-                    }
-                  />
-                  <Box
-                    cursor="pointer"
-                    mt="-1rem"
-                    zIndex={0}
-                    bg="black"
-                    p="1rem"
-                    w="22rem"
-                  >
-                    <Text ml="2rem" align="center" fontSize="1.5rem">
-                      R${productFound.price} ou {productFound.debitPoints}{' '}
-                      pontos
-                    </Text>
-                    <Image
-                      mt="-1.2rem"
-                      ml="0.15rem"
-                      w="3.5rem"
-                      src="flexa.svg"
-                    />
-                    <Text
-                      align="center"
-                      ml="3rem"
-                      mt="-2.2rem"
-                      fontSize="1.5rem"
-                    >
-                      Recebe {productFound.creditPoints} pontos
-                    </Text>
-                  </Box>
-                </Flex>
-              </Link>
-            ))
           ) : (
-            data.map(product => (
-              <Link key={product.slug} href={`/product/${product.slug}`}>
+            itemFilters.length ? itemFilters.map(product => (
+              <Link key={product.id} href={`/product/${product.slug}`}>
                 <Flex
                   key={product.id}
                   p="2rem"
@@ -114,7 +85,7 @@ export default function Home() {
                     h="324.29px"
                     src={
                       !product.photos[0]
-                        ? 'imageNotFound.svg'
+                        ? 'imageNotFound2.svg'
                         : product.photos[0].url
                     }
                   />
@@ -126,23 +97,79 @@ export default function Home() {
                     p="1rem"
                     w="22rem"
                   >
-                    <Text ml="2rem" align="center" fontSize="1.5rem">
+                    <Text align="center" fontSize="1.5rem">
                       R${product.price} ou {product.debitPoints} pontos
                     </Text>
-                    <Image
-                      mt="-1.2rem"
-                      ml="0.15rem"
-                      w="3.5rem"
-                      src="flexa.svg"
-                    />
+                    <HStack justify={'center'}>
                     <Text
+                      color={'orange'}
                       align="center"
-                      ml="3rem"
-                      mt="-2.2rem"
                       fontSize="1.5rem"
                     >
-                      Recebe {product.creditPoints} pontos
+                      Recebe
                     </Text>
+                    <Text
+                      align="center"
+                      fontSize="1.5rem"
+                      borderBottom={'0.1rem solid #FF6B00'}
+                    >
+                      {product.creditPoints} pontos
+                    </Text>
+
+                    </HStack>
+                  </Box>
+                </Flex>
+              </Link>
+            )) :
+            data.map(product => (
+              <Link key={product.id} href={`/product/${product.slug}`}>
+                <Flex
+                  key={product.id}
+                  p="2rem"
+                  flexDir="column"
+                  alignItems="center"
+                >
+                  <Heading cursor="pointer">{product.name}</Heading>
+
+                  <Image
+                    cursor="pointer"
+                    w="300px"
+                    zIndex={1}
+                    h="324.29px"
+                    src={
+                      !product.photos[0]
+                        ? 'imageNotFound2.svg'
+                        : product.photos[0].url
+                    }
+                  />
+                  <Box
+                    cursor="pointer"
+                    mt="-1rem"
+                    zIndex={0}
+                    bg="black"
+                    p="1rem"
+                    w="22rem"
+                  >
+                    <Text align="center" fontSize="1.5rem">
+                      R${product.price} ou {product.debitPoints} pontos
+                    </Text>
+                    <HStack justify={'center'}>
+                    <Text
+                      color={'orange'}
+                      align="center"
+                      fontSize="1.5rem"
+                    >
+                      Recebe
+                    </Text>
+                    <Text
+                      align="center"
+                      fontSize="1.5rem"
+                      borderBottom={'0.1rem solid #FF6B00'}
+                    >
+                      {product.creditPoints} pontos
+                    </Text>
+
+                    </HStack>
                   </Box>
                 </Flex>
               </Link>
@@ -151,6 +178,6 @@ export default function Home() {
         </Grid>
       </Flex>
       <Footer />
-    </Box>
+    </Flex>
   );
 }

@@ -4,7 +4,6 @@ import { QueryClientProvider } from 'react-query';
 import { theme } from '../styles/theme';
 import { queryClient } from '../services/queryClient';
 import { AuthProvider } from '../services/hooks/useAuth';
-import { ProductsProvider } from '../services/hooks/useSeachProducts';
 
 // import { makeServer } from '../services/mirage';
 
@@ -17,9 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <AuthProvider>
       <QueryClientProvider client={queryClient}>
         <ChakraProvider theme={theme}>
-          <ProductsProvider>
-            <Component {...pageProps} />
-          </ProductsProvider>
+          <Component {...pageProps} />
         </ChakraProvider>
       </QueryClientProvider>
     </AuthProvider>

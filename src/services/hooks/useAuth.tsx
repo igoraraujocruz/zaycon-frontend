@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useEffect } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import Router from 'next/router';
 import { setCookie, destroyCookie } from 'nookies';
 import { api } from '../apiClient';
@@ -22,8 +22,8 @@ export const AuthContext = createContext({} as AuthContextData);
 let authChannel: BroadcastChannel;
 
 export function signOut() {
-  destroyCookie(undefined, 'snap.token');
-  destroyCookie(undefined, 'snap.refreshToken');
+  destroyCookie(undefined, 'snap.token', { path: '/' });
+  destroyCookie(undefined, 'snap.refreshToken', { path: '/' });
 
   authChannel.postMessage('signOut');
 
@@ -51,7 +51,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         password,
       });
 
-      const { token, refreshToken } = response.data;
+      const { token, refreshToken, user } = response.data;
 
       setCookie(undefined, 'snap.token', token, {
         maxAge: 60 * 60 * 24 * 30,
@@ -65,7 +65,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
-      Router.push('/admin');
+      Router.push('/admin/products');
     } catch (err) {
       console.log(err);
     }

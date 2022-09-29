@@ -3,7 +3,7 @@ import {
   Flex,
   Stack,
   Text,
-  useToast,
+  useToast
 } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -23,10 +23,10 @@ type CreateFormData = {
 
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome é obrigatório'),
-  cpf: yup.string().required('Cpf é obrigatório'),
+  cpf: yup.string().required('Cpf é obrigatório').min(11).max(11),
   birthday: yup.string().required('Data de Nascimento é obrigatório'),
-  mobilePhone: yup.string().required('Nº de Celular é obrigatório'),
-  email: yup.string().required('Email é obrigatório'),
+  mobilePhone: yup.string().required('Nº de Celular é obrigatório').min(11).max(11),
+  email: yup.string().required('Email é obrigatório').email(),
 });
 
 export function CreateClients() {
@@ -68,7 +68,8 @@ export function CreateClients() {
     <Flex
       onSubmit={handleSubmit(onSubmit)}
       as="form"
-      maxWidth={360}
+      w={400}
+      maxWidth={500}
       bg="gray.800"
       p="8"
       borderRadius={8}
@@ -98,7 +99,7 @@ export function CreateClients() {
         />
         <Input name="email" label="Email" {...register('email')} />
       </Stack>
-      <Button type="submit" mt="6" colorScheme="orange" size="lg">
+      <Button bg={'#FF6B00'} _hover={{bg: 'orangeHover'}} type="submit" mt="6" size="lg">
         Cadastrar
       </Button>
     </Flex>

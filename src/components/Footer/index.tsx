@@ -2,6 +2,7 @@ import { Box, Flex, HStack, Text } from '@chakra-ui/react';
 import { RiMapPin2Fill } from 'react-icons/ri';
 import { GrInstagram } from 'react-icons/gr';
 import { BsWhatsapp } from 'react-icons/bs';
+import Link from 'next/link';
 
 export function Footer() {
   return (
@@ -13,8 +14,16 @@ export function Footer() {
         </Text>
         <HStack ml={10} spacing={5}>
           <Text color="#fff">Shopping Mestre Álvaro - 2º piso</Text>
-          <GrInstagram color="white" size={43} />
-          <BsWhatsapp color="white" size={43} />
+          <Link href='#'>
+            <Flex cursor={'pointer'}>
+              <GrInstagram color="white" size={43} />
+            </Flex>
+          </Link>
+          <Link href='#'>
+            <Flex cursor={'pointer'}>
+              <BsWhatsapp color="white" size={43} />
+            </Flex>
+          </Link>
         </HStack>
         <Flex align="center">
           <RiMapPin2Fill color="#fff" size={35} />

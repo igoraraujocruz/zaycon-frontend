@@ -10,8 +10,6 @@ import {
   ModalHeader,
   Text,
   Heading,
-  ListItem,
-  UnorderedList,
   Table,
   Thead,
   Tr,
@@ -20,14 +18,16 @@ import {
   Td,
   Tfoot,
 } from '@chakra-ui/react';
-import { forwardRef, ForwardRefRenderFunction, useImperativeHandle } from 'react';
+import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useRef } from 'react';
+import { useClient } from '../../services/hooks/useClients';
+import ModalNewBuy, { ModalNewBuyHandle } from './NewBuy'
 
 export interface ModalDetailsClient {
   onOpen: () =>  void;
   onClose: () => void;
 }
 
-interface ClientProps {
+interface Client {
   client: {
     id: string;
     name: string;
@@ -35,6 +35,7 @@ interface ClientProps {
     mobilePhone: string;
     birthday: string;
     createdAt: string;
+    points: number;
     shop: [{
       id: string;
       quantity: number;
@@ -57,8 +58,12 @@ interface ClientProps {
   }
 }
 
-const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, ClientProps> = ({client}: ClientProps, ref) => {
+
+const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, Client> = ({ client }: Client, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const newBuyModalRef = useRef<ModalNewBuyHandle>(null)
+  const { data: clientData } = useClient(client.id)
+
 
   useImperativeHandle(ref, () => ({
     onOpen,
@@ -67,18 +72,20 @@ const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, ClientPro
 
   return (
       <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+        <ModalNewBuy ref={newBuyModalRef} client={client} />
         <ModalOverlay />
         <ModalContent bg="gray.900">
           <ModalCloseButton
-            bg="#ff6a0099"
+            bg="orange"
             _hover={{ bg: 'orange' }}
-            color="black"
+            color="#fff"
           />
           <ModalHeader>
             <Heading>{client.name}</Heading>
             <Text>{client.mobilePhone}</Text>
             <Text>{client.birthday}</Text>
             <Text>{client.email}</Text>
+            <Button bg={'orange'} _hover={{ bg: 'gray.900'}} onClick={() => newBuyModalRef.current.onOpen()}>Nova Compra</Button>
           </ModalHeader>
           <ModalBody>
             <Table>
@@ -100,13 +107,13 @@ const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, ClientPro
                     Data da Compra
                   </Th>
                   <Th>
-                    Pontos por compra
+                    Total de pontos ganhos ou retirados
                   </Th>
                 </Tr>
               </Thead>
               <Tbody>
-                {client.shop?.map(purchase => 
-                  <Tr>
+                {clientData?.shop.map(purchase => 
+                  <Tr key={purchase.id} color={purchase.typeOfPayment == 'creditPoints' && 'orange'}>
                     <Td>
                       {purchase.quantity}
                     </Td>
@@ -117,7 +124,8 @@ const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, ClientPro
                       R${purchase.product.price}
                     </Td>
                     <Td>
-                      {purchase.product.creditPoints}
+                    {purchase.typeOfPayment == 'creditPoints' ? purchase.product.debitPoints : 
+                      purchase.product.creditPoints}
                     </Td>
                     <Td>
                       {
@@ -129,7 +137,8 @@ const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, ClientPro
                       }
                     </Td>
                     <Td>
-                      {purchase.quantity * purchase.product.creditPoints}
+                      {purchase.typeOfPayment == 'creditPoints' ? `- ${purchase.quantity * purchase.product.debitPoints}`
+                       : `+ ${purchase.quantity * purchase.product.creditPoints}`}
                     </Td>
                   </Tr>
                 )}
@@ -137,35 +146,12 @@ const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, ClientPro
               <Tfoot>
                 <Tr>
                   <Th>Total de Pontos</Th>
-                  <Td border={'0'}>{client.shop?.map(purchase => purchase.quantity * purchase.product.creditPoints).reduce((prev, curr) => prev + curr, 0)}</Td>
+                  <Td border={'0'}>{clientData?.points}</Td>
                 </Tr>
               </Tfoot>
             </Table>
-            {/* <Heading size={'md'}>Pontuação Total</Heading>
-            <Text>{client.shop?.map(purchase => purchase.quantity * purchase.product.creditPoints).reduce((prev, curr) => prev + curr, 0)}</Text>
-            <Text>Produtos Comprados</Text>
-            <UnorderedList>
-              {client.shop?.map(purchase => <ListItem>
-                {purchase.quantity} x {purchase.product.name} {purchase.product.creditPoints} - {
-                  new Date(purchase.createdAt).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric',
-                  })
-                }
-            </ListItem>)}
-            </UnorderedList> */}
           </ModalBody>
           <ModalFooter>
-            <Button
-              color="white"
-              bg="#ff6a0099"
-              _hover={{ bg: 'orange' }}
-              mr={3}
-              onClick={onClose}
-            >
-              Close
-            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

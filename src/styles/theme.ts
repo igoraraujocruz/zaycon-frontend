@@ -7,6 +7,7 @@ export const theme = extendTheme({
       '50': '#EEEEF2',
     },
     orange: '#FF6B00',
+    orangeHover: '#FF4500',
   },
   fonts: {
     heading: 'Righteous',

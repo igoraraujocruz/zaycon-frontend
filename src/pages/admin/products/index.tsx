@@ -1,22 +1,27 @@
-import { Flex } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
+import { AdminHeader } from '../../../components/AdminHeader';
 
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
 import { CreateProducts } from './create';
 import { GetProducts } from './get';
 
 const Products = () => (
-  <Flex
-    justify="center"
-    mt="5rem"
-    flexDir={['column', 'column', 'row']}
-  >
-    <Flex position={['initial', 'initial', 'fixed']} justify={['center']} left={'5rem'}>
-      <CreateProducts />
+  <Box>
+    <AdminHeader />
+    <Flex
+      w={'100%'}
+      justify="center"
+      mt="5rem"
+      flexDir={['column', 'column', 'row']}
+    >
+      <Flex justify={['center']}>
+        <CreateProducts />
+      </Flex>
+      <Flex justify={'center'} pl='2rem'>
+        <GetProducts />
+      </Flex>
     </Flex>
-    <Flex ml={'-10rem'} w={'100vw'} justify={'flex-end'}>
-      <GetProducts />
-    </Flex>
-  </Flex>
+  </Box>
 );
 
 export default Products;

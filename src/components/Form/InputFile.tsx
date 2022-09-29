@@ -6,23 +6,19 @@ interface InputFileProps extends ChakraFileInputProps {
     children?: ReactNode;
 }
 
-export interface ModalDetalhesHandle {
+export interface InputFileHandle {
     images: File[];
     setImages: (value) => void;
 }
 
 
-const InputFileBase: ForwardRefRenderFunction<ModalDetalhesHandle, InputFileProps>  = ({children, ...rest}: InputFileProps, ref) => {
+const InputFileBase: ForwardRefRenderFunction<InputFileHandle, InputFileProps>  = ({children, ...rest}: InputFileProps, ref) => {
     const [images, setImages] = useState([]);
 
     useImperativeHandle(ref, () => ({
         images,
         setImages,
       }));
-
-
-      console.log(images)
-
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -38,7 +34,7 @@ const InputFileBase: ForwardRefRenderFunction<ModalDetalhesHandle, InputFileProp
     
     return (
         <Flex flexDir={'column'} justify={'center'} align={'center'} w={'10rem'} h={'6rem'} cursor={'pointer'} onClick={handleClick} onChange={onFileChange} {...rest} bg={'#181B23'} borderRadius={'2rem'} border={`0.2rem solid ${images.length > 0 ? '#FF6B00' : '#181B23'}`}>
-            <ChakraFileInput type={'file'} hidden ref={(e) => {
+            <ChakraFileInput accept="image/png, image/jpeg, image/jpg" multiple type={'file'} hidden ref={(e) => {
             (e)
             inputRef.current = e
           }} />

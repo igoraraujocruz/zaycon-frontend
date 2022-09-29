@@ -11,20 +11,24 @@ import {
   useToast,
   Flex,
   ModalHeader,
+  Spinner,
+  Text,
 } from '@chakra-ui/react';
-import { useCallback, useState } from 'react';
+import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useRef } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { createPhotos } from '../../services/hooks/useProducts';
+import { createPhotos, Product, useProductById } from '../../services/hooks/useProducts';
+import { InputFile, InputFileHandle } from '../Form/InputFile';
 
-interface ImagesModalProps {
+interface ProductProps {
   product: {
     id: string;
     name: string;
     description: string;
-    slug: string;
     price: number;
+    slug: string;
     creditPoints: number;
     debitPoints: number;
+    createdAt: string;
     photos: [
       {
         id: string;
@@ -32,35 +36,42 @@ interface ImagesModalProps {
         url: string;
       },
     ];
-  };
+    user: {
+      id: string;
+      name: string;
+    };
+  }
 }
+
 
 type CreateFormData = {
   photos: File[];
 };
 
-export function ImagesModal({ product }: ImagesModalProps) {
-  const [images, setImages] = useState([]);
-  const { handleSubmit, reset } = useForm({
-    // resolver: yupResolver(createFormSchema),
-  });
+export interface UploadImageModalHandle {
+  onOpen: () => void;
+  onClose: () => void;
+}
+
+const UploadImageModal: ForwardRefRenderFunction<UploadImageModalHandle, ProductProps> = ({ product }: ProductProps, ref) => {
+  const inputFileRef = useRef<InputFileHandle>(null)
+  const { data: newProduct,  isLoading, error, isFetching } = useProductById(product.id)
+  const { handleSubmit } = useForm();
+
+  useImperativeHandle(ref, () => ({
+    onOpen,
+    onClose,
+  }));
 
   const toast = useToast();
-
-  const onFileChange = useCallback(e => {
-    const uploadImages = [];
-    for (let i = 0; i < e.target.files.length; i += 1) {
-      uploadImages.push(e.target.files[i]);
-      setImages(uploadImages);
-    }
-  }, []);
 
   const onSubmit: SubmitHandler<CreateFormData> = async () => {
     try {
       await createPhotos({
         productId: product.id,
-        photos: images,
+        photos: inputFileRef.current.images,
       });
+      inputFileRef.current.setImages({})
     } catch (error) {
       toast({
         title: 'Não foi possível cadastrar o produto',
@@ -75,10 +86,6 @@ export function ImagesModal({ product }: ImagesModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <Flex>
-      <Button bg="" _hover={{ bg: 'orange' }} onClick={onOpen}>
-        + Fotos
-      </Button>
-
       <Modal size="2xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg="gray.900">
@@ -89,24 +96,38 @@ export function ImagesModal({ product }: ImagesModalProps) {
           />
           <ModalHeader>
             <Flex
+              align={'center'}
+              justify={'space-evenly'}
               onSubmit={handleSubmit(onSubmit)}
               as="form"
-              maxWidth={360}
               bg="gray.800"
-              p="8"
+              p="2"
               borderRadius={8}
-              flexDir="column"
             >
-              <input type="file" multiple onChange={onFileChange} />
-              <Button type="submit" mt="6" colorScheme="pink" size="lg">
+              <InputFile mt={'1rem'} ref={inputFileRef} />
+              <Button type="submit" mt="6" bg={'orange'} _hover={{ bg: 'orangeHover'}} size="lg">
                 Upload
               </Button>
             </Flex>
           </ModalHeader>
           <ModalBody>
-            {product.photos.map(photo => (
+          <Flex h={'2rem'}>  
+            {!isLoading && isFetching && (
+                <Spinner size="sm" color="gray.500" ml="4" />
+            )}
+          </Flex>
+          {isLoading ? (
+          <Flex justify="center">
+            <Spinner />
+          </Flex>
+          ) : error ? (
+          <Flex justify="center">
+            <Text>Falha ao obter dados dos produtos.</Text>
+          </Flex>
+          ) : (
+            newProduct?.photos.map(photo => (
               <Image p="0.7rem" key={photo.id} src={photo.url} />
-            ))}
+            )))}
           </ModalBody>
 
           <ModalFooter>
@@ -125,3 +146,5 @@ export function ImagesModal({ product }: ImagesModalProps) {
     </Flex>
   );
 }
+
+export default forwardRef(UploadImageModal)

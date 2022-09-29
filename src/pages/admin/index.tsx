@@ -57,7 +57,7 @@ function Login() {
       >
         <Stack spacing="4">
           <Input name="username" label="Username" {...register('username')} />
-          <Input name="password" label="Senha" {...register('password')} />
+          <Input name="password" type={'password'} label="Senha" {...register('password')} />
         </Stack>
         <Button
           type="submit"
