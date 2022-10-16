@@ -21,14 +21,16 @@ type CreateFormData = {
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome do produto é obrigatório'),
   description: yup.string().required('Descrição do produto é obrigatória'),
-  price: yup.number().required('Preço do produto é obrigatório'),
+  price: yup.number().typeError('Insira um valor').required('Preço do produto é obrigatório'),
   debitPoints: yup
     .number()
+    .typeError('Insira um valor')
     .required(
       'Informar quantos pontos são necessários para adquirir o produto',
     ),
   creditPoints: yup
     .number()
+    .typeError('Insira um valor')
     .required(
       'Informar quantidade de pontos que se ganha ao comprar este produto',
     ),
@@ -36,13 +38,13 @@ const createFormSchema = yup.object().shape({
 
 export function CreateProducts() {
   const inputFileRef = useRef<InputFileHandle>(null)
-  const { register, handleSubmit, reset } = useForm({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateFormData>({
     resolver: yupResolver(createFormSchema),
   });
 
   const toast = useToast();
 
-  const onSubmit: SubmitHandler<CreateFormData> = async values => {
+  const onSubmit: SubmitHandler<CreateFormData> = async (values: CreateFormData) => {
     try {
       await createProduct({
         name: values.name,
@@ -53,14 +55,20 @@ export function CreateProducts() {
         photos: inputFileRef.current.images,
       });
       
-      inputFileRef.current?.setImages({})
+      inputFileRef.current?.setImages([])
       reset();
+      toast({
+        title: 'Produto cadastrado com sucesso!',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
     } catch (error) {
       toast({
         title: 'Não foi possível cadastrar o produto',
         description: error.response?.data.message,
         status: 'error',
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
     }
@@ -73,20 +81,25 @@ export function CreateProducts() {
       w={400}
       bg="gray.800"
       p="8"
+      h={'48rem'}
       borderRadius={8}
       flexDir="column"
     >
-      <Text fontSize="3xl">Novo Produto</Text>
+      <Text fontSize="2xl">Novo Produto</Text>
       <Stack spacing="0.5">
-        <Input name="name" label="Nome" {...register('name')} />
-        <Input name="price" labelInside='R$' label="Preço" {...register('price')} />
-        <Textarea name="description" label="Descrição" {...register('description')} />
+        <Input error={errors.name} name="name" label="Nome" {...register('name')} />
+        <Input error={errors.price} type={'number'} name="price" label="Preço" {...register('price')} />
+        <Textarea error={errors.description} name="description" label="Descrição" {...register('description')} />
         <Input
+          type={'number'}
+          error={errors.debitPoints}
           name="debitPoints"
           label="Débito de Pontos"
           {...register('debitPoints')}
         />
         <Input
+          type={'number'}
+          error={errors.creditPoints}
           name="creditPoints"
           label="Crédito de Pontos"
           {...register('creditPoints')}

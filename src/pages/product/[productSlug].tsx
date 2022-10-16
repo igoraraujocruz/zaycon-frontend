@@ -5,33 +5,13 @@ import { useState } from 'react';
 import Zoom from 'react-medium-image-zoom';
 import { Footer } from '../../components/Footer';
 import { Header } from '../../components/Header';
-import { api } from '../../services/apiClient';
 import 'react-medium-image-zoom/dist/styles.css';
-import { useProduct } from '../../services/hooks/useProducts';
+import { ProductSlug, useProduct } from '../../services/hooks/useProducts';
 
-interface ProductProps {
-  product: {
-    id: string;
-    name: string;
-    description: string;
-    slug: string;
-    price: number;
-    creditPoints: number;
-    debitPoints: number;
-    photos: [
-      {
-        id: string;
-        name: string;
-        url: string;
-      },
-    ];
-  };
-}
-
-export default function Product({ product }: ProductProps) {
+export default function Product(productSlug: ProductSlug) {
   const [showImage, setShowImage] = useState('');
 
-  const { data, isLoading, error, isFetching } = useProduct(product.slug);
+  const { data, isLoading, error, isFetching } = useProduct(productSlug);
 
   return (
     <Box>
@@ -55,45 +35,49 @@ export default function Product({ product }: ProductProps) {
         ) : error ? (
           <Text>Falha ao obter dados</Text>
         ) : (
-          <Flex flexDir="column">
+          <Flex flexDir="column" align={['center', 'center', 'flex-start']}>
             <Heading>{data.name}</Heading>
 
             <Text w={['25rem', '25rem', '30rem']} fontSize="1.2rem" p="0.5rem">
               {data.description}
             </Text>
-            <Flex flexDir={['column', 'column', 'row']}>
+            <Flex h="100vh" flexDir={['column', 'column', 'row']} align={['center', 'center', 'flex-start']}>
               {!data.photos[0] ? (
                 <Box maxW={['350px', '350px', '650px']}>
                   <Image w={'50rem'} src="../imageNotFound2.svg" />
                 </Box>
               ) : (
                 <Zoom overlayBgColorEnd="gray.900">
-                  <Box maxW={['350px', '350px', '650px']}>
+                  <Box h="40rem" maxW={['350px', '350px', '650px']}>
                     <Image
+                      maxH={"70vh"}
+                      w={['90vw']}
                       src={showImage === '' ? data.photos[0].url : showImage}
                     />
+                    <Text fontSize={['1.5rem', '1.5rem', '4xl']} bg="black">
+                    R${data.price} ou {data.debitPoints} pontos
+                  </Text>
+                  <Text as="mark" fontSize={['1.2rem', '1.2rem', '3xl']}>
+                    Comprando {data.name}, você recebe {data.creditPoints}{' '}
+                    pontos
+                  </Text>
                   </Box>
                 </Zoom>
               )}
 
-              <Flex flexDir="column" justify="space-between" w="30rem">
-                <Box bg="black" w="20rem" h="2rem">
-                  <Text fontSize="4xl" bg="black">
-                    R${data.price} ou {data.debitPoints} pontos
-                  </Text>
-                  <Text as="mark" fontSize="3xl">
-                    Comprando {data.name}, você recebe {data.creditPoints}{' '}
-                    pontos
-                  </Text>
-                </Box>
-
-                <Flex mt="15rem" flexWrap="wrap" flexDir="row">
+              <Flex flexDir="column" justify="space-between" w="30rem" align={['center', 'center', 'flex-start']}>
+                <Flex flexWrap="wrap" flexDir="row">
                   {data.photos.map(photo => (
                     <Image
+                    _hover={{ opacity: 1 }} transition="opacity 200ms"
+                      mr='0.5rem'
+                      ml={['0', '0', '1rem']}
+                      mb='0.5rem'
                       key={photo.id}
+                      opacity={0.9}
                       cursor="pointer"
                       onClick={() => setShowImage(photo.url)}
-                      p="0.3rem"
+                      borderRadius={'1rem 1rem 0'}
                       w="7rem"
                       h="7rem"
                       src={photo.url}
@@ -105,19 +89,15 @@ export default function Product({ product }: ProductProps) {
           </Flex>
         )}
       </Flex>
-      <Footer />
+     <Footer />
     </Box>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
-  const { productId } = params;
-
-  const response = await api.get(`products/${productId}`);
-
-  const product = response.data;
+  const { productSlug } = params;
 
   return {
-    props: { product },
+    props: { productSlug },
   };
 };

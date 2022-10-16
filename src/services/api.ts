@@ -1,6 +1,5 @@
 import axios, { AxiosError } from 'axios';
 import { parseCookies, setCookie } from 'nookies';
-import { AuthTokenError } from '../errors/AuthTokenError';
 import { signOut } from './hooks/useAuth';
 
 interface AxiosErrorResponse {
@@ -24,7 +23,7 @@ export function setupAPIClient(ctx = undefined) {
       return response;
     },
     (error: AxiosError<AxiosErrorResponse>) => {
-      if (error.response.status === 401) {
+      if (error.response?.status === 401) {
         if (error.response.data.message === 'Invalid JWT token') {
           cookies = parseCookies(ctx);
 
@@ -85,16 +84,14 @@ export function setupAPIClient(ctx = undefined) {
             });
           });
         }
+        if (error.response.data.message === 'Não autorizado!') {
+          signOut();
+        }
       }
-      if (error.response.status === 400) {
+      if (error.response?.status === 400) {
         return Promise.reject(error);
       }
-      if (typeof window) {
-        signOut();
-      } else {
-        return Promise.reject(new AuthTokenError());
-      }
-
+      
       return Promise.reject(error);
     },
   );

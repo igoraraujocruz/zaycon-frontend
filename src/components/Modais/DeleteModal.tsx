@@ -13,11 +13,14 @@ import {
 } from '@chakra-ui/react';
 import { forwardRef, ForwardRefRenderFunction, useCallback, useImperativeHandle } from 'react';
 import { deleteClient } from '../../services/hooks/useClients';
-import { deleteProducts } from '../../services/hooks/useProducts';
+import { deleteUser } from '../../services/hooks/useUsers';
+import { deletePhoto, deleteProducts } from '../../services/hooks/useProducts';
 
 interface ImageModalProps {
   productId?: string;
   clientId?: string;
+  photoId?: string;
+  userId?: string;
 }
 
 export interface ModalDeleteHandle {
@@ -25,7 +28,7 @@ export interface ModalDeleteHandle {
   onClose: () => void;
 }
 
-const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> = ({ productId, clientId }: ImageModalProps, ref) => {
+const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> = ({ productId, clientId, photoId, userId }: ImageModalProps, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useImperativeHandle(ref, () => ({
@@ -36,16 +39,17 @@ const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> 
   const toast = useToast();
 
   function deleteObject() {
+
     if(productId) {
       try {
         deleteProducts(productId);
         onClose()
       } catch (error) {
         toast({
-          title: 'Não foi deletar o produto',
+          title: 'Não foi possível deletar o produto',
           description: error.message,
           status: 'error',
-          duration: 9000,
+          duration: 2000,
           isClosable: true,
         });
       }
@@ -57,10 +61,40 @@ const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> 
         onClose()
       } catch (error) {
         toast({
-          title: 'Não foi deletar o cliente',
+          title: 'Não foi possível deletar o cliente',
           description: error.message,
           status: 'error',
-          duration: 9000,
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    }
+
+    if(userId) {
+      try {
+        deleteUser(userId);
+        onClose()
+      } catch (error) {
+        toast({
+          title: 'Não foi possível deletar o usuário',
+          description: error.message,
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
+    }
+
+    if(photoId) {
+      try {
+        deletePhoto(photoId);
+        onClose()
+      } catch (error) {
+        toast({
+          title: 'Não foi possível deletar a imagem',
+          description: error.message,
+          status: 'error',
+          duration: 2000,
           isClosable: true,
         });
       }

@@ -29,7 +29,7 @@ export default function Home() {
 
   const onSubmit = async ({search}: SearchProps) => {
     try {
-      await api.get(`/products/search/${search}`)
+      await api.get(`/products?option=${search}`)
       .then(response => setItemFilters(response.data))
     } catch (err) {
       console.log(err)
@@ -60,7 +60,7 @@ export default function Home() {
           ]}
         >
           {(!isLoading && isFetching) || isLoading ? (
-            <Flex justify="center">
+            <Flex justify="center" mt={'2rem'}>
               <Spinner color="orange" />
             </Flex>
           ) : error ? (
@@ -121,7 +121,7 @@ export default function Home() {
                 </Flex>
               </Link>
             )) :
-            data.map(product => (
+            data.products.map(product => (
               <Link key={product.id} href={`/product/${product.slug}`}>
                 <Flex
                   key={product.id}

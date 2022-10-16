@@ -33,7 +33,7 @@ export function ForgotPasswordModal() {
   const [isSendingEmail, setIsSendingEmail] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, reset } = useForm({
     resolver: yupResolver(signInFormSchema),
   });
 
@@ -54,6 +54,7 @@ export function ForgotPasswordModal() {
       });
       setIsSendingEmail(false);
       onClose();
+      reset()
     } catch (err) {
       toast({
         title: 'E-mail não pode ser enviado.',
@@ -76,12 +77,12 @@ export function ForgotPasswordModal() {
             {isSendingEmail && <Spinner size="lg" color="#fff" />}
           </Flex>
 
-          <ModalHeader fontSize="1rem" color="#ffffff">
+          <ModalHeader fontSize="1.2rem" fontWeight={'normal'} color="#ffffff">
             Recuperação de senha
           </ModalHeader>
           <ModalCloseButton color="#fff" />
           <ModalBody>
-            <Text color="#ffffff">
+            <Text color="#fff">
               Insira seu e-mail e clique em enviar para que receba as instruções
               de recuperação de senha.
             </Text>
@@ -99,7 +100,7 @@ export function ForgotPasswordModal() {
                 type="submit"
                 mt="6"
                 bg="orange"
-                _hover={{ bg: '#953e00' }}
+                _hover={{ bg: 'orangeHover' }}
                 color="white"
                 size="lg"
               >
@@ -113,7 +114,6 @@ export function ForgotPasswordModal() {
               color="#fff"
               bg=""
               _hover={{ bg: 'orange' }}
-              mr={3}
               onClick={onClose}
             >
               Cancelar

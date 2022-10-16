@@ -7,21 +7,21 @@ import Link from 'next/link';
 export function Footer() {
   return (
     <Box>
-      <Box mt="-3rem" bg="black" opacity={1} h="5rem" w="100%" />
-      <Flex bg="#FF6B00" flexDir="column" alignItems="center" p="5rem">
-        <Text mt="-2.5rem" color="#fff" mb="1rem">
+      <Box bg="black" h="5rem" w="100%" />
+      <Flex h={'10rem'} bg="#FF6B00" flexDir="column" alignItems="center">
+        <Text mt={'2rem'} color="#fff">
           Vantagem válida para compras na loja física.
         </Text>
-        <HStack ml={10} spacing={5}>
+        <HStack align={'center'} spacing={5}>
           <Text color="#fff">Shopping Mestre Álvaro - 2º piso</Text>
           <Link href='#'>
             <Flex cursor={'pointer'}>
-              <GrInstagram color="white" size={43} />
+              <GrInstagram color="white" size={35} />
             </Flex>
           </Link>
           <Link href='#'>
             <Flex cursor={'pointer'}>
-              <BsWhatsapp color="white" size={43} />
+              <BsWhatsapp color="white" size={35} />
             </Flex>
           </Link>
         </HStack>

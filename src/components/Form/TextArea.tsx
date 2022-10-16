@@ -29,7 +29,7 @@ import {
         name={name}
         id={name}
         focusBorderColor="orange"
-        bgColor="gray.900"
+        bgColor={bg || "gray.900"}
         variant="filled"
         _hover={{
           bgColor: 'gray.900',

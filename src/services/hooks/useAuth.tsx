@@ -1,7 +1,18 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import Router from 'next/router';
-import { setCookie, destroyCookie } from 'nookies';
+import { setCookie, destroyCookie, parseCookies } from 'nookies';
 import { api } from '../apiClient';
+
+type User = {
+  name: string;
+  email: string;
+  permissions: [
+    {
+      id: string;
+      name: string;
+    }
+  ]
+}
 
 type SignInCredentials = {
   username: string;
@@ -11,6 +22,8 @@ type SignInCredentials = {
 type AuthContextData = {
   signIn(credentials: SignInCredentials): Promise<void>;
   signOut(): void;
+  isAuthenticated: boolean;
+  user: User;
 };
 
 type AuthProviderProps = {
@@ -25,12 +38,16 @@ export function signOut() {
   destroyCookie(undefined, 'snap.token', { path: '/' });
   destroyCookie(undefined, 'snap.refreshToken', { path: '/' });
 
-  authChannel.postMessage('signOut');
+  authChannel?.postMessage('signOut');
 
   Router.push('/admin');
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
+
+  const [user, setUser] = useState<User>({permissions: [{}]} as User)
+  const isAuthenticated = !!user;
+
   useEffect(() => {
     authChannel = new BroadcastChannel('auth');
     authChannel.onmessage = message => {
@@ -44,8 +61,21 @@ function AuthProvider({ children }: AuthProviderProps) {
     };
   }, []);
 
+  useEffect(() => {
+    const { 'snap.token': token } = parseCookies()
+   
+    if (token) {
+        api.get('users/get/me').then(response => {
+        const { email, permissions, name } = response.data
+
+        setUser({ email, permissions, name })
+      }).catch(() => {
+        signOut()
+      })
+    }
+  }, [])
+
   async function signIn({ username, password }: SignInCredentials) {
-    try {
       const response = await api.post('sessions', {
         username,
         password,
@@ -63,16 +93,19 @@ function AuthProvider({ children }: AuthProviderProps) {
         path: '/',
       });
 
+      setUser({
+        name: user.name,
+        permissions: user.permissions,
+        email: user.email
+      })
+
       api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
       Router.push('/admin/products');
-    } catch (err) {
-      console.log(err);
-    }
   }
 
   return (
-    <AuthContext.Provider value={{ signIn, signOut }}>
+    <AuthContext.Provider value={{ signIn, signOut, isAuthenticated, user }}>
       {children}
     </AuthContext.Provider>
   );

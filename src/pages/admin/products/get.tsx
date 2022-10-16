@@ -14,26 +14,29 @@ import {
 } from '@chakra-ui/react';
 import 'react-medium-image-zoom/dist/styles.css';
 import { BsTrashFill } from 'react-icons/bs';
-import UploadImageModal, { UploadImageModalHandle } from '../../../components/Modais/UploadImageModal';
+import DetailsProductModal, { DetailsProductModalHandle } from '../../../components/Modais/DetailsProductModal';
 import { Product, useProducts } from '../../../services/hooks/useProducts';
 import { useCallback, useRef, useState } from 'react';
 import DeleteModal, { ModalDeleteHandle } from '../../../components/Modais/DeleteModal';
 import { SearchInput } from '../../../components/Form/SearchInput';
 import { useForm } from 'react-hook-form';
 import { api } from '../../../services/apiClient';
+import { Pagination } from '../../../components/Pagination'
 
 interface SearchProps {
   search: string;
 }
 
 export function GetProducts() {
-  const { data, isLoading, error, isFetching } = useProducts();
   const modalDelete = useRef<ModalDeleteHandle>(null);
-  const modalUploadImage = useRef<UploadImageModalHandle>(null);
+  const modalUploadImage = useRef<DetailsProductModalHandle>(null);
   const [productId, setProductId] = useState('')
   const [product, setProduct] = useState({} as Product)
   const [itemFilters, setItemFilters] = useState<Product[]>([])
   const { register, handleSubmit } = useForm()
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+  const { data, isLoading, error, isFetching } = useProducts(currentPage, itemsPerPage);
 
   const openDeleteModal = useCallback((productId: string) => {
     setProductId(productId)
@@ -47,7 +50,7 @@ export function GetProducts() {
 
   const onSubmit = async ({search}: SearchProps) => {
     try {
-      await api.get(`/products/search/${search}`)
+      await api.get(`/products?option=${search}`)
       .then(response => setItemFilters(response.data))
     } catch (err) {
       console.log(err)
@@ -57,11 +60,8 @@ export function GetProducts() {
   return (
     <Flex w="70vw" flexDir="column">
       <DeleteModal productId={productId} ref={modalDelete} />
-      <UploadImageModal product={product} ref={modalUploadImage} />
-      <Heading alignSelf="flex-start" size="lg" borderBottom={'0.5rem solid #FF6B00'} fontWeight="normal">
-        Produtos
-      </Heading>
-      <HStack as={'form'} onSubmit={handleSubmit(onSubmit)} justify={'flex-end'}>
+      <DetailsProductModal product={product} ref={modalUploadImage} />
+      <HStack as={'form'} mt={'2rem'} onSubmit={handleSubmit(onSubmit)} justify={'flex-end'}>
         <SearchInput w={'18rem'} borderColor='gray.600' name='search' {...register('search', {
           onChange() {
             setItemFilters([])
@@ -69,15 +69,20 @@ export function GetProducts() {
         })} />
         <Button bg={'orange'} _hover={{ bg: 'orangeHover' }} type={'submit'}>Procurar</Button>
       </HStack>
-      <Flex h={'2rem'}>  
+      <Pagination
+        registersPerPage={itemsPerPage}
+        totalCountOfRegisters={data?.quantityOfProduct}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
+      <Flex h={'1rem'} align='center' justify={'center'}>  
       {!isLoading && isFetching && (
-          <Spinner size="sm" color="gray.500" ml="4" />
+          <Spinner size="md" color="gray.500" />
       )}
       </Flex>
-
       {isLoading ? (
-        <Flex justify="center">
-          <Spinner />
+        <Flex align='center' justify={'center'}>
+          <Spinner size="md" color="gray.500" />
         </Flex>
       ) : error ? (
         <Flex justify="center">
@@ -107,7 +112,7 @@ export function GetProducts() {
               <Td onClick={() => openUploadModal(product)} cursor='pointer' color="#c30000">- {product.debitPoints}</Td>
               <Td onClick={() => openUploadModal(product)} cursor='pointer' color="#0064cf">+ {product.creditPoints}</Td>
               <Td onClick={() => openUploadModal(product)} cursor='pointer'>{product.slug}</Td>
-              <Td onClick={() => openUploadModal(product)} cursor='pointer'>{product.user.name}</Td>
+              <Td onClick={() => openUploadModal(product)} cursor='pointer'>{product.user ? product.user.name : 'Usuário Excluído'}</Td>
               <Td onClick={() => openUploadModal(product)} cursor='pointer'>
                 {
                   new Date(product.createdAt).toLocaleDateString('pt-BR', {
@@ -122,15 +127,15 @@ export function GetProducts() {
               </Td>
             </Tr>
             ) :
-            data.map(product => (
+            data.products.map(product => (
               <Tr key={product.id}>
                 <Td onClick={() => openUploadModal(product)} cursor='pointer'>{product.name}</Td>
-                <Td onClick={() => openUploadModal(product)} cursor='pointer'>{product.description}</Td>
+                <Td onClick={() => openUploadModal(product)} cursor='pointer' maxW={'0.5rem'} overflow={'hidden'} whiteSpace={'nowrap'} textOverflow={'ellipsis'}>{product.description}</Td>
                 <Td onClick={() => openUploadModal(product)} cursor='pointer'>R$ {product.price}</Td>
                 <Td onClick={() => openUploadModal(product)} cursor='pointer' color="#c30000">- {product.debitPoints}</Td>
                 <Td onClick={() => openUploadModal(product)} cursor='pointer' color="#0064cf">+ {product.creditPoints}</Td>
                 <Td onClick={() => openUploadModal(product)} cursor='pointer'>{product.slug}</Td>
-                <Td onClick={() => openUploadModal(product)} cursor='pointer'>{product.user.name}</Td>
+                <Td onClick={() => openUploadModal(product)} cursor='pointer'>{product.user ? product.user.name : 'Usuário Excluído'}</Td>
                 <Td onClick={() => openUploadModal(product)} cursor='pointer'>{product.createdAt}</Td>
                 <Td color={'gray.600'} _hover={{ color: '#FF6B00'}} transition="color 200ms">
                   <BsTrashFill size={25} onClick={() => openDeleteModal(product.id)} cursor="pointer" />

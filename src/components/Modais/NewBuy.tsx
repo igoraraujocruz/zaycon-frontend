@@ -12,12 +12,19 @@ import {
   Heading,
   HStack,
   Select,
+  VStack,
+  Image,
+  Flex,
+  useToast,
 } from '@chakra-ui/react';
-import { forwardRef, ForwardRefRenderFunction, useImperativeHandle } from 'react';
+import { forwardRef, ForwardRefRenderFunction, useCallback, useImperativeHandle, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { SelectProduct } from '../Form/SelectProduct';
 import { ProductQuantity } from '../Form/SelectProductQuantity';
 import { createShop } from '../../services/hooks/useShop'
+import { api } from '../../services/apiClient';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 export interface ModalNewBuyHandle {
   onOpen: () =>  void;
@@ -55,18 +62,34 @@ interface ClientProps {
   }
 }
 
+interface Photo {
+  id: string;
+  url: string;
+}
+
+const schema = yup.object().shape({
+  product: yup.string().required('Produto obrigatório'),
+  quantity: yup.string().required('Quantidade obrigatória'),
+  typeOfPayment: yup.string().required('Tipo de pagamento obrigatório'),
+});
+
 const NewBuyModal: ForwardRefRenderFunction<ModalNewBuyHandle, ClientProps> = ({client}: ClientProps, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { register, handleSubmit, reset } = useForm()
+  const { register, handleSubmit, reset, formState: { errors} } = useForm({
+    resolver: yupResolver(schema),
+  })
+  const [imgUrl, setImgUrl] = useState({} as Photo)
+
+  const toast = useToast();
 
   useImperativeHandle(ref, () => ({
     onOpen,
     onClose,
   }));
 
-  const onSubmit = (values: any) => {
+  const onSubmit = async (values: any) => {
     try {
-      createShop({
+      await createShop({
         clientId: client.id,
         productId: values.product,
         quantity: values.quantity,
@@ -74,13 +97,35 @@ const NewBuyModal: ForwardRefRenderFunction<ModalNewBuyHandle, ClientProps> = ({
       })
       onClose()
       reset()
-    } catch(err) {
-      console.log(err)
+      setImgUrl(null)
+      toast({
+        title: 'Compra efetuada com sucesso',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+    } catch(error) {
+      toast({
+        title: 'Não foi possível efetuar a compra',
+        description: error.response.data.message,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      });
     }
   }
 
+  const handleOnchange = useCallback(async(productId: string) => {
+    if (productId) {
+      await api.get(`/products/?productId=${productId}`)
+      .then(response => setImgUrl(response.data.photos[0]))
+    }
+  } ,[])
+
+  
+
   return (
-      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size="sm" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg="gray.900" as={'form'} onSubmit={handleSubmit(onSubmit)}>
           <ModalCloseButton
@@ -88,25 +133,35 @@ const NewBuyModal: ForwardRefRenderFunction<ModalNewBuyHandle, ClientProps> = ({
             _hover={{ bg: 'orange' }}
             color="black"
           />
-          <ModalHeader>
+          <ModalHeader textAlign={'center'}>
             <Heading>{client.name}</Heading>
             <Text>{client.mobilePhone}</Text>
             <Text>{client.birthday}</Text>
             <Text>{client.email}</Text>
           </ModalHeader>
           <ModalBody>
-            <HStack>
-                <Select {...register('typeOfPayment')} placeholder='Tipo de pagamento' w={['52rem', '52rem', '30rem']}>
-                <option value='creditCard'>Cartão de Crédito</option>
-                <option value='debitCard'>Cartão de Débito</option>
-                <option value='money'>Dinheiro</option>
-                <option value='pix'>Pix</option>
-                <option value='picpay'>Picpay</option>
-                <option value='creditPoints'>Snap Points</option>
-              </Select>
-              <ProductQuantity name='quantity' {...register('quantity')} w={['6rem']} />
-            </HStack>
-            <SelectProduct name='product' w={['52rem', '52rem', '30rem']} {...register('product')} />
+              <Flex justify={'center'} h={'15rem'}>
+
+                {imgUrl?.url && 
+                <Image borderRadius='2xl'
+                  boxSize='15rem' src={imgUrl.url} alt='imagem do produto' />
+                }
+              </Flex>
+            <VStack mt={'2rem'} align={'flex-start'}>
+              <HStack>
+                <SelectProduct maxW={'13.5rem'} name='product' {...register('product')} onChange={(e) => handleOnchange(e.target?.value)} />
+                <ProductQuantity name='quantity' {...register('quantity')} w={['6rem']} />
+              </HStack>
+              
+              <Select maxW={'13.5rem'} name='typeOfPayment' {...register('typeOfPayment')} style={{ background: '#181B23' }} placeholder="Tipo de pagamento">
+                  <option style={{ background: '#181B23' }} value='creditCard'>Cartão de Crédito</option>
+                  <option style={{ background: '#181B23' }} value='debitCard'>Cartão de Débito</option>
+                  <option style={{ background: '#181B23' }} value='money'>Dinheiro</option>
+                  <option style={{ background: '#181B23' }} value='pix'>Pix</option>
+                  <option style={{ background: '#181B23' }} value='picpay'>Picpay</option>
+                  <option style={{ background: '#181B23' }} value='creditPoints'>Snap Points</option>
+                </Select>
+            </VStack>
           </ModalBody>
           <ModalFooter>
             <HStack>

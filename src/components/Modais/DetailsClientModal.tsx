@@ -71,7 +71,7 @@ const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, Client> =
   }));
 
   return (
-      <Modal size="3xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size="4xl" isOpen={isOpen} onClose={onClose}>
         <ModalNewBuy ref={newBuyModalRef} client={client} />
         <ModalOverlay />
         <ModalContent bg="gray.900">
@@ -107,6 +107,9 @@ const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, Client> =
                     Data da Compra
                   </Th>
                   <Th>
+                    Forma de pagamento
+                  </Th>
+                  <Th>
                     Total de pontos ganhos ou retirados
                   </Th>
                 </Tr>
@@ -135,6 +138,14 @@ const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, Client> =
                           year: 'numeric',
                         })
                       }
+                    </Td>
+                    <Td>
+                      {purchase.typeOfPayment === 'creditCard' && 'Cartão de Crédito'}
+                      {purchase.typeOfPayment === 'debitCard' && 'Cartão de Debito'}
+                      {purchase.typeOfPayment === 'money' && 'Dinheiro'}
+                      {purchase.typeOfPayment === 'pix' && 'Pix'}
+                      {purchase.typeOfPayment === 'picpay' && 'Picpay'}
+                      {purchase.typeOfPayment === 'creditPoints' && 'SnapPoints'}
                     </Td>
                     <Td>
                       {purchase.typeOfPayment == 'creditPoints' ? `- ${purchase.quantity * purchase.product.debitPoints}`

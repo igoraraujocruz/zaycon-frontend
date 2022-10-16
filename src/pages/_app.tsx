@@ -5,21 +5,21 @@ import { theme } from '../styles/theme';
 import { queryClient } from '../services/queryClient';
 import { AuthProvider } from '../services/hooks/useAuth';
 
-// import { makeServer } from '../services/mirage';
+/* import { makeServer } from '../services/mirage';
 
-// if (process.env.NODE_ENV === 'development') {
-//   makeServer();
-// }
-
+if (process.env.NODE_ENV === 'development') {
+  makeServer();
+}
+ */
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <ChakraProvider theme={theme}>
+    <QueryClientProvider client={queryClient}>
+      <ChakraProvider theme={theme}>
+        <AuthProvider>
           <Component {...pageProps} />
-        </ChakraProvider>
-      </QueryClientProvider>
-    </AuthProvider>
+        </AuthProvider>
+      </ChakraProvider>
+    </QueryClientProvider>
   );
 }
 

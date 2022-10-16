@@ -39,10 +39,15 @@ interface CreateClientProps {
   email: string;
 }
 
-export const getClients = async (): Promise<Client[]> => {
-  const { data } = await api.get('/clients');
+interface ClientsAndQuantityOfClients {
+  clients: Client[]
+  quantityOfClient: number
+}
 
-  const clients = data.map((client: Client) => {
+export const getClients = async (page: number, clientsPerPage: number): Promise<ClientsAndQuantityOfClients> => {
+  const { data } = await api.get(`/clients?page=${page}&clientsPerPage=${clientsPerPage}`);
+
+  const clients = data.clients.map((client: Client) => {
     return {
       id: client.id,
       name: client.name,
@@ -63,11 +68,11 @@ export const getClients = async (): Promise<Client[]> => {
     };
   });
 
-  return clients;
+  return { quantityOfClient: data.quantityOfClient, clients};
 };
 
-export function useClients() {
-  return useQuery(['clients'], () => getClients());
+export function useClients(page: number, clientsPerPage: number) {
+  return useQuery(['clients', page, clientsPerPage], () => getClients(page, clientsPerPage));
 }
 
 const getClientById = async (clientId: string): Promise<Client> => {

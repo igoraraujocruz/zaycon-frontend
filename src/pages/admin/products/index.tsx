@@ -1,5 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { AdminHeader } from '../../../components/AdminHeader';
+import { Can } from '../../../components/Can';
 
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
 import { CreateProducts } from './create';
@@ -9,23 +10,30 @@ const Products = () => (
   <Box>
     <AdminHeader />
     <Flex
-      w={'100%'}
       justify="center"
-      mt="5rem"
       flexDir={['column', 'column', 'row']}
     >
-      <Flex justify={['center']}>
-        <CreateProducts />
-      </Flex>
-      <Flex justify={'center'} pl='2rem'>
-        <GetProducts />
-      </Flex>
+      <Can permissions={['Cadastrar Produto']}>
+        <Flex mt={'2rem'} justify={['center']}>
+          <CreateProducts />
+        </Flex>
+      </Can>
+      <Can permissions={['Listar Produto']}>
+        <Flex justify={'center'} pl='2rem'>
+          <GetProducts />
+        </Flex>
+      </Can>
     </Flex>
   </Box>
 );
 
 export default Products;
 
-export const getServerSideProps = withSSRAuth(async ctx => ({
-  props: {},
-}));
+export const getServerSideProps = withSSRAuth(async ctx => {
+  return {
+      props: {}
+  }
+}, {
+      permissions: ['Cadastrar Produto', 'Deletar Produto', 'Listar Produto', 'Editar Produto']
+  }
+);

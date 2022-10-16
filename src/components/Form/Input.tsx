@@ -1,5 +1,4 @@
 import {
-  Box,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -8,24 +7,25 @@ import {
   InputProps as ChakraInputProps,
   Text,
 } from '@chakra-ui/react';
-import { forwardRef, ForwardRefRenderFunction, useState } from 'react';
+import { ComponentType, forwardRef, ForwardRefRenderFunction, useState } from 'react';
 import { FieldError } from 'react-hook-form';
+import { IconBaseProps } from 'react-icons';
+
 
 interface InputProps extends ChakraInputProps {
   name: string;
   label?: string;
   error?: FieldError;
   bg?: string;
-  labelInside?: string;
-  mask?: string;
+  icon?: ComponentType<IconBaseProps>;
 }
 
 const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { name, labelInside, label, error = null, mask, bg, ...rest },
+  { name, label, error = null, icon: Icon, bg, ...rest },
   ref,
 ) => {
   const [focus, setFocus] = useState(false)
-  const teste = () => {
+  const changeFocus = () => {
     setFocus(!focus)
   }
 
@@ -36,14 +36,13 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         {label}
       </FormLabel>
     )}
-    <Flex onBlur={() => teste()} onFocus={() => teste()} align={'center'} bg="gray.900" border={focus ? '0.15rem solid #FF6B00' : '0.15rem solid transparent'} borderRadius='0.3rem'>
-      <Text ml='0.7rem'>{labelInside}</Text>
+    <Flex onBlur={() => changeFocus()} onFocus={() => changeFocus()} align={'center'} bg="gray.900" border={focus ? '0.15rem solid #FF6B00' : '0.15rem solid transparent'} borderRadius='0.3rem'>
+        {Icon && <Icon size={20} />}
         <ChakraInput
-          mask={mask}
           name={name}
           id={name}
           border='0'
-          bgColor="gray.900"
+          bgColor={bg || "gray.900"}
           variant="filled"
           _hover={{
             bgColor: 'gray.900',

@@ -30,13 +30,13 @@ const createFormSchema = yup.object().shape({
 });
 
 export function CreateClients() {
-  const { register, handleSubmit, reset } = useForm({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateFormData>({
     resolver: yupResolver(createFormSchema),
   });
 
   const toast = useToast();
 
-  const onSubmit: SubmitHandler<CreateFormData> = async values => {
+  const onSubmit: SubmitHandler<CreateFormData> = async (values: CreateFormData) => {
     try {
       await createClients({
         name: values.name,
@@ -50,7 +50,7 @@ export function CreateClients() {
       toast({
         title: 'Cliente cadastrado com sucesso',
         status: 'success',
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
     } catch (error) {
@@ -58,7 +58,7 @@ export function CreateClients() {
         title: 'Não foi possível cadastrar o cliente',
         description: error.response.data.message,
         status: 'error',
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
     }
@@ -72,15 +72,17 @@ export function CreateClients() {
       maxWidth={500}
       bg="gray.800"
       p="8"
+      h={'39rem'}
       borderRadius={8}
       flexDir="column"
     >
-      <Text fontSize="3xl">Novo Cliente</Text>
+      <Text fontSize="2xl">Novo Cliente</Text>
 
       <Stack spacing="0.5">
-        <Input name="name" label="Nome" {...register('name')} />
-        <Input name="cpf" label="Cpf" {...register('cpf')} />
+        <Input name="name" error={errors.name} label="Nome" {...register('name')} />
+        <Input name="cpf" error={errors.cpf} label="Cpf" {...register('cpf')} />
         <Input
+          error={errors.birthday}
           type="date"
           name="birthday"
           label="Data da Nascimento"
@@ -93,11 +95,12 @@ export function CreateClients() {
           {...register('birthday')}
         />
         <Input
+          error={errors.mobilePhone}
           name="mobilePhone"
           label="Nº de celular"
           {...register('mobilePhone')}
         />
-        <Input name="email" label="Email" {...register('email')} />
+        <Input error={errors.email} name="email" label="Email" {...register('email')} />
       </Stack>
       <Button bg={'#FF6B00'} _hover={{bg: 'orangeHover'}} type="submit" mt="6" size="lg">
         Cadastrar

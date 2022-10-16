@@ -1,4 +1,6 @@
 import {
+    Flex,
+    Image,
     Select,
     SelectProps as ChakraSelectProps,
   } from '@chakra-ui/react';
@@ -22,18 +24,25 @@ interface ProductsProps {
 
 const SelectProductBase = ({w, name, ...rest}: SelectProps, ref) => {
     const [products, setProducts] = useState<ProductsProps[]>([])
+    const [imageUrl, setImageUrl] = useState('')
 
     useEffect(() => {
         api.get('products')
         .then(response => setProducts(response.data))
     }, [])
+
+    const handleOnchange = (imageUrl: string) => {
+        console.log('teste')
+        setImageUrl(imageUrl)
+    }
     
     return (
-        <Select name={name} w={w} placeholder='Selecione um produto' {...rest} ref={ref}>
-            {products.map(product => 
-                <option key={product.id} value={product.id}>{product.name}</option>
-            )}
-        </Select>
+            <Select name={name} w={w} placeholder='Selecione um produto' {...rest} ref={ref}>
+                {products.map(product => 
+                    <option style={{ background: '#181B23' }} key={product.id} value={product.id}>{product.name}</option>
+                )}
+            </Select>
+        
     )
 }
 

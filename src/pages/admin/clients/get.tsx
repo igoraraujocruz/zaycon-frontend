@@ -1,7 +1,6 @@
 import {
   Button,
   Flex,
-  Heading,
   HStack,
   Spinner,
   Table,
@@ -20,17 +19,20 @@ import DetailsClientModal, { ModalDetailsClient } from '../../../components/Moda
 import { SearchInput } from '../../../components/Form/SearchInput';
 import { useForm } from 'react-hook-form';
 import { api } from '../../../services/apiClient';
+import { Pagination } from '../../../components/Pagination';
 
 interface SearchProps {
   search: string;
 }
 
 export function GetClients() {
-  const { data, isLoading, error, isFetching } = useClients();
   const [clientId, setClientId] = useState('')
   const [client, setClient] = useState({} as Client)
   const { register, handleSubmit } = useForm()
   const [itemFilters, setItemFilters] = useState<Client[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+  const { data, isLoading, error, isFetching } = useClients(currentPage, itemsPerPage);
 
   const modalDelete = useRef<ModalDeleteHandle>(null);
   const modalDetailsClientModal = useRef<ModalDetailsClient>(null);
@@ -47,7 +49,7 @@ export function GetClients() {
 
   const onSubmit = async ({search}: SearchProps) => {
     try {
-      await api.get(`/clients/search/${search}`)
+      await api.get(`/clients?option=${search}`)
       .then(response => setItemFilters(response.data))
     } catch (err) {
       console.log(err)
@@ -58,10 +60,7 @@ export function GetClients() {
     <Flex w={'70vw'} flexDir="column">
       <DeleteModal clientId={clientId} ref={modalDelete} />
       <DetailsClientModal client={client} ref={modalDetailsClientModal} />
-      <Heading alignSelf="flex-start" borderBottom={'0.5rem solid #FF6B00'} size="lg" fontWeight="normal">
-        Clientes
-      </Heading>
-      <HStack as={'form'} onSubmit={handleSubmit(onSubmit)} justify={'flex-end'}>
+      <HStack mt={'2rem'} as={'form'} onSubmit={handleSubmit(onSubmit)} justify={'flex-end'}>
         <SearchInput w={'18rem'} borderColor='gray.600' name='search' {...register('search', {
           onChange() {
             setItemFilters([])
@@ -69,15 +68,21 @@ export function GetClients() {
         })} />
         <Button bg={'orange'} _hover={{ bg: 'orangeHover' }} type={'submit'}>Procurar</Button>
       </HStack>
-      <Flex h={'2rem'}>  
+      <Pagination
+        registersPerPage={itemsPerPage}
+        totalCountOfRegisters={data?.quantityOfClient}
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+      />
+      <Flex h={'1rem'} justify="center" align={'center'}>  
       {!isLoading && isFetching && (
-          <Spinner size="sm" color="gray.500" ml="4" />
+          <Spinner size="md" color="gray.500" />
       )}
       </Flex>
 
       {isLoading ? (
-        <Flex justify="center">
-          <Spinner />
+        <Flex h={'1rem'} justify="center" align={'center'}>
+          <Spinner size="md" color="gray.500" />
         </Flex>
       ) : error ? (
         <Flex justify="center">
@@ -124,7 +129,7 @@ export function GetClients() {
               </Td>
             </Tr>
             ) :
-            data.map(client => (
+            data.clients.map(client => (
               <Tr key={client.id} cursor={'pointer'}>
                 <Td  onClick={() => openDetailsClientModal(client)}>{client.name}</Td>
                 <Td  onClick={() => openDetailsClientModal(client)}>{client.email}</Td>

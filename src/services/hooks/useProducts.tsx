@@ -33,48 +33,75 @@ interface CreateProductProps {
   photos: File[];
 }
 
+interface UpdateProductProps {
+  id: string;
+  name?: string;
+  description?: string;
+  price?: number;
+  creditPoints?: number;
+  debitPoints?: number;
+}
+
 interface PhotosProps {
   photos: File[];
   productId: string;
 }
 
-export const getProducts = async (): Promise<Product[]> => {
-  const { data } = await api.get('/products');
-
-  const products = data.map(product => {
-    return {
-      id: product.id,
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      slug: product.slug,
-      creditPoints: product.creditPoints,
-      debitPoints: product.debitPoints,
-      photos: product.photos,
-      createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      }),
-      user: product.user,
-    };
-  });
-
-  return products;
-};
-
-export function useProducts() {
-  return useQuery(['products'], () => getProducts());
+export interface ProductSlug {
+  productSlug: string;
 }
 
-export const getProduct = async (productSlug: string): Promise<Product> => {
-  const { data } = await api.get(`/products/${productSlug}`);
+interface ProductsAndQuantityOfProducts {
+  quantityOfProduct: number;
+  products: Product[]
+}
+
+export const getProducts = async (page: number, perPage: number): Promise<ProductsAndQuantityOfProducts> => {
+
+  if(page && perPage) {
+    const { data } = await api.get(`/products?page=${page}&perPage=${perPage}`);
+    const products = data.products.map(product => {
+        return {
+          id: product.id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          slug: product.slug,
+          creditPoints: product.creditPoints,
+          debitPoints: product.debitPoints,
+          photos: product.photos,
+          createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          }),
+          user: product.user,
+        };
+      });
+
+    return {products, quantityOfProduct: data.quantityOfProduct};
+  }
+
+  const { data } = await api.get(`/products`);
+  
 
   return data;
 };
 
-export function useProduct(productSlug: string) {
-  return useQuery(['product'], () => getProduct(productSlug));
+export function useProducts(page?: number, perPage?: number) {
+  return useQuery(['products', page, perPage], () => getProducts(page, perPage));
+}
+
+export const getProduct = async ({ productSlug }: ProductSlug): Promise<Product> => {
+  if (productSlug) {
+    const { data } = await api.get(`/products/?productSlug=${productSlug}`);
+
+    return data;
+  }
+};
+
+export function useProduct(productSlug: ProductSlug) {
+  return useQuery(['product', productSlug], () => getProduct(productSlug));
 }
 
 export const getProductById = async (productId: string): Promise<Product> => {
@@ -129,6 +156,19 @@ export async function createPhotos({ productId, photos }: PhotosProps) {
   };
 
   await api.post(`/photos/${productId}`, formData, config);
+
+  queryClient.invalidateQueries('productById');
+}
+
+export async function updateProduct(product: UpdateProductProps) {
+
+  await api.put('/products/', product);
+
+  queryClient.invalidateQueries('products');
+}
+
+export async function deletePhoto(photosId: string) {
+  await api.delete(`/photos/${photosId}`);
 
   queryClient.invalidateQueries('productById');
 }

@@ -1,12 +1,12 @@
 
 import { Box, Flex } from '@chakra-ui/react';
 import { AdminHeader } from '../../../components/AdminHeader';
-import { Can } from '../../../components/Can';
+import { Can } from "../../../components/Can";
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
-import { CreateClients } from './create';
-import { GetClients } from './get';
+import { CreateUser } from './create';
+import { GetUsers } from './get';
 
-const Clients = () => {
+const Users = () => {
     return (
         <Box>
             <AdminHeader />
@@ -14,28 +14,29 @@ const Clients = () => {
             justify="center"
             flexDir={['column', 'column', 'row']}
             >
-                <Can permissions={['Cadastrar Cliente']}>
+                <Can permissions={['Cadastrar Usuario']}>
                     <Flex mt={'2rem'} justify={'center'}>
-                        <CreateClients />
+                        <CreateUser />
                     </Flex>
                 </Can>
-                <Can permissions={['Listar Cliente']}>
+                <Can permissions={['Listar Usuario']}>
                     <Flex justify={'center'} pl='2rem'>
-                        <GetClients />
-                    </Flex> 
-                </Can>          
+                        <GetUsers />
+                    </Flex>   
+                </Can>        
             </Flex>
         </Box>
     )
 }
 
-export default Clients;
+export default Users;
+
 
 export const getServerSideProps = withSSRAuth(async ctx => {
     return {
         props: {}
     }
 }, {
-        permissions: ['Cadastrar Cliente', 'Deletar Cliente', 'Editar Cliente', 'Listar Cliente']
+        permissions: ['Cadastrar Usuario', 'Deletar Usuario', 'Listar Usuario', 'Editar Usuario']
     }
 );

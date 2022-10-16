@@ -1,4 +1,4 @@
-import { Flex, Button, Stack, Image, Heading } from '@chakra-ui/react';
+import { Flex, Button, Stack, Image, Heading, useToast } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -6,6 +6,8 @@ import { Input } from '../../components/Form/Input';
 import { useAuth } from '../../services/hooks/useAuth';
 import { withSSRGuest } from '../../utils/WithSSRGuest';
 import { ForgotPasswordModal } from '../../components/Modais/ForgotPasswordModal';
+import { AiOutlineUser } from 'react-icons/ai'
+import { RiLockPasswordLine } from 'react-icons/ri'
 
 type SignInFormData = {
   username: string;
@@ -24,11 +26,23 @@ function Login() {
     resolver: yupResolver(signInFormSchema),
   });
 
+  const toast = useToast();
+
   const handleSignIn: SubmitHandler<SignInFormData> = async values => {
-    await signIn({
-      username: values.username,
-      password: values.password,
-    });
+    try {
+      await signIn({
+        username: values.username,
+        password: values.password,
+      });
+    } catch(err) {
+      toast({
+        title: 'Não foi possível acessar a plataforma',
+        description: err.response?.data.message,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      });
+    }
   };
   return (
     <Flex flexDir="column" w="100vw" h="100vh" align="center" justify="center">
@@ -56,8 +70,8 @@ function Login() {
         flexDir="column"
       >
         <Stack spacing="4">
-          <Input name="username" label="Username" {...register('username')} />
-          <Input name="password" type={'password'} label="Senha" {...register('password')} />
+          <Input icon={AiOutlineUser} name="username" label="Username" {...register('username')} />
+          <Input icon={RiLockPasswordLine} name="password" type={'password'} label="Senha" {...register('password')} />
         </Stack>
         <Button
           type="submit"

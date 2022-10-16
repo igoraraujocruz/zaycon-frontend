@@ -1,6 +1,12 @@
-import { Box, Button, Flex, HStack, Image, Text } from '@chakra-ui/react'
+import { Button, Flex, HStack, Image, Text } from '@chakra-ui/react'
 import Link from 'next/link'
+import { Can } from "../Can";
 import { signOut } from '../../services/hooks/useAuth'
+import { NavLink } from '../ActiveLink';
+
+const theme = {
+  color: 'red'
+}
 
 export const AdminHeader = () => {
     return (
@@ -21,12 +27,21 @@ export const AdminHeader = () => {
         </Flex>
         <Flex>
           <HStack mt={'1rem'} spacing={'2rem'}>
-              <Link href={'/admin/products'}>
-                <Text cursor={'pointer'}>Produtos</Text>
-              </Link>
-              <Link href={'/admin/clients'}>
-                <Text cursor={'pointer'}>Clientes</Text>
-              </Link>
+            <Can permissions={['Cadastrar Produto', 'Editar Produto', 'Listar Produto', 'Deletar Produto']}> 
+              <NavLink mr={4} to='/admin/products'>
+                Produtos
+              </NavLink>
+            </Can>
+            <Can permissions={['Cadastrar Cliente', 'Editar Cliente', 'Listar Cliente', 'Deletar Cliente']}>  
+              <NavLink mr={4} to='/admin/clients'>
+                Clientes
+              </NavLink>
+            </Can>  
+              <Can permissions={['Criar Usuário', 'Editar Usuario', 'Listar Usuario', 'Deletar Usuario']}>
+                <NavLink mr={4} to='/admin/users'>
+                  Usuários
+                </NavLink>
+              </Can>
           </HStack>
         </Flex>
         <Flex w={'100%'} justify={'end'}>
