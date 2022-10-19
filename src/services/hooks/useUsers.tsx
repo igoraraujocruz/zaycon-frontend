@@ -40,7 +40,9 @@ interface UsersAndQuantityOfUsers{
 export const getUsers = async (page: number, usersPerPage: number): Promise<UsersAndQuantityOfUsers> => {
   const { data } = await api.get(`/users?page=${page}&usersPerPage=${usersPerPage}`);
 
-  const users = data.users.map((user: User) => {
+  const { data: total } = await api.get(`/users`);
+
+  const users = data.map((user: User) => {
     return {
       id: user.id,
       name: user.name,
@@ -61,7 +63,7 @@ export const getUsers = async (page: number, usersPerPage: number): Promise<User
     };
   });
 
-  return { quantityOfUsers: data.quantityOfUsers, users};
+  return {users,  quantityOfUsers: total.length};
 };
 
 export function useUsers(page: number, usersPerPage: number) {

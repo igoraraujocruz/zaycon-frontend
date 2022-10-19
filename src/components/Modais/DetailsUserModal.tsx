@@ -68,7 +68,6 @@ const DetailsUserModal: ForwardRefRenderFunction<ModalDetailsUserProps, User> = 
         duration: 2000,
         isClosable: true,
       });
-      console.log(err)
     }
   } ,[userId])
 

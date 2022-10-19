@@ -15,6 +15,7 @@ import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
 import { ReactElement, useEffect, useState } from 'react';
 import { api } from '../../../services/apiClient';
+import InputMask from 'react-input-mask'
 
 type CreateFormData = {
   name: string;
@@ -32,7 +33,7 @@ type Permission = {
 
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome é obrigatório'),
-  mobilePhone: yup.string().required('Nº de Celular é obrigatório').min(11).max(11),
+  mobilePhone: yup.string().required('Nº de Celular é obrigatório').matches(/^\([1-9]{2}\) (?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/, 'Número de telefone inválido'),
   email: yup.string().required('Email é obrigatório').email(),
   username: yup.string().required('Nome é obrigatório'),
   password: yup.string().required('Nome é obrigatório').min(5),
@@ -72,7 +73,7 @@ export function CreateUser() {
         name: values.name,
         username: values.username,
         password: values.password,
-        mobilePhone: values.mobilePhone,
+        mobilePhone: values.mobilePhone.replace(/\D/g, ''),
         email: values.email,
         permissions: removeAllFalsyValues
       });
@@ -112,7 +113,11 @@ export function CreateUser() {
         <Input name="username" label="Username" {...register('username')} />
         <Input name="password"  type={'password'} label="Senha" {...register('password')} />
         <Input name="email" label="E-mail" {...register('email')} />
-        <Input name="mobilePhone" label="Nº do Celular" {...register('mobilePhone')} />
+        <Input name="mobilePhone" label="Celular"
+          as={InputMask}
+         mask="(99) 99999-9999"
+         placeholder="(DD) 99999-9999"
+         {...register('mobilePhone')} />
       </Stack>
       <Grid templateColumns='repeat(3, 1fr)' columnGap={3} rowGap={2} mb={'2rem'}>
       {permissions.map(

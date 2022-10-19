@@ -8,6 +8,7 @@ import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
 import { InputFile, InputFileHandle } from '../../../components/Form/InputFile'
 import { Textarea } from '../../../components/Form/TextArea';
+import CurrencyInput from 'react-currency-masked-input'
 
 type CreateFormData = {
   name: string;
@@ -38,10 +39,10 @@ const createFormSchema = yup.object().shape({
 
 export function CreateProducts() {
   const inputFileRef = useRef<InputFileHandle>(null)
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateFormData>({
+  const { register, handleSubmit, reset, resetField, formState: { errors } } = useForm<CreateFormData>({
     resolver: yupResolver(createFormSchema),
   });
-
+  
   const toast = useToast();
 
   const onSubmit: SubmitHandler<CreateFormData> = async (values: CreateFormData) => {
@@ -72,7 +73,7 @@ export function CreateProducts() {
         isClosable: true,
       });
     }
-  };
+  }; 
 
   return (
     <Flex
@@ -88,13 +89,13 @@ export function CreateProducts() {
       <Text fontSize="2xl">Novo Produto</Text>
       <Stack spacing="0.5">
         <Input error={errors.name} name="name" label="Nome" {...register('name')} />
-        <Input error={errors.price} type={'number'} name="price" label="Preço" {...register('price')} />
+        <Input error={errors.price} as={CurrencyInput} name="price" label="Preço" {...register('price')} />
         <Textarea error={errors.description} name="description" label="Descrição" {...register('description')} />
         <Input
           type={'number'}
           error={errors.debitPoints}
           name="debitPoints"
-          label="Débito de Pontos"
+          label="Pontos necessários para a retirada"
           {...register('debitPoints')}
         />
         <Input

@@ -3,7 +3,8 @@ import {
   Flex,
   Stack,
   Text,
-  useToast
+  useToast,
+  Input as T
 } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -11,7 +12,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { createClients } from '../../../services/hooks/useClients';
 import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
-import { css } from '@emotion/react';
+import InputMask from 'react-input-mask'
 
 type CreateFormData = {
   name: string;
@@ -23,9 +24,9 @@ type CreateFormData = {
 
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome é obrigatório'),
-  cpf: yup.string().required('Cpf é obrigatório').min(11).max(11),
+  cpf: yup.string().required('Cpf é obrigatório').matches(/^[0-9]{3}\.?[0-9]{3}\.?[0-9]{3}\-?[0-9]{2}$/, "CPF Invalido"),
   birthday: yup.string().required('Data de Nascimento é obrigatório'),
-  mobilePhone: yup.string().required('Nº de Celular é obrigatório').min(11).max(11),
+  mobilePhone: yup.string().required('Nº de Celular é obrigatório').matches(/^\([1-9]{2}\) (?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/, 'Número de telefone inválido'),
   email: yup.string().required('Email é obrigatório').email(),
 });
 
@@ -40,9 +41,9 @@ export function CreateClients() {
     try {
       await createClients({
         name: values.name,
-        cpf: values.cpf,
+        cpf: values.cpf.replace(/\D/g, ''),
         birthday: values.birthday,
-        mobilePhone: values.mobilePhone,
+        mobilePhone: values.mobilePhone.replace(/\D/g, ''),
         email: values.email,
       });
 
@@ -80,24 +81,21 @@ export function CreateClients() {
 
       <Stack spacing="0.5">
         <Input name="name" error={errors.name} label="Nome" {...register('name')} />
-        <Input name="cpf" error={errors.cpf} label="Cpf" {...register('cpf')} />
+        <Input as={InputMask} mask="999.999.999-99" name="cpf" error={errors.cpf} label="Cpf" {...register('cpf')} />
         <Input
           error={errors.birthday}
           type="date"
           name="birthday"
           label="Data da Nascimento"
-          css={css`
-                        ::-webkit-calendar-picker-indicator {
-                            background: url(https://cdn3.iconfinder.com/data/icons/linecons-free-vector-icons-pack/32/calendar-16.png) center/80% no-repeat;
-                            color: black;
-                        }
-                    `}
+          max="2999-12-31"
           {...register('birthday')}
         />
         <Input
-          error={errors.mobilePhone}
+         as={InputMask}
+         mask="(99) 99999-9999"
+         error={errors.mobilePhone}
           name="mobilePhone"
-          label="Nº de celular"
+          label="Celular"
           {...register('mobilePhone')}
         />
         <Input error={errors.email} name="email" label="Email" {...register('email')} />

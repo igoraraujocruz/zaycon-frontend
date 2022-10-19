@@ -26,13 +26,13 @@ interface SearchProps {
 }
 
 export function GetClients() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
+  const { data, isLoading, error, isFetching } = useClients(currentPage, itemsPerPage);
   const [clientId, setClientId] = useState('')
   const [client, setClient] = useState({} as Client)
   const { register, handleSubmit } = useForm()
   const [itemFilters, setItemFilters] = useState<Client[]>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
-  const { data, isLoading, error, isFetching } = useClients(currentPage, itemsPerPage);
 
   const modalDelete = useRef<ModalDeleteHandle>(null);
   const modalDetailsClientModal = useRef<ModalDetailsClient>(null);
@@ -70,7 +70,7 @@ export function GetClients() {
       </HStack>
       <Pagination
         registersPerPage={itemsPerPage}
-        totalCountOfRegisters={data?.quantityOfClient}
+        totalCountOfRegisters={data?.quantityOfClients}
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       />

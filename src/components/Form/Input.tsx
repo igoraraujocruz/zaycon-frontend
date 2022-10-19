@@ -4,13 +4,12 @@ import {
   FormErrorMessage,
   FormLabel,
   Input as ChakraInput,
-  InputProps as ChakraInputProps,
-  Text,
+  InputProps as ChakraInputProps
 } from '@chakra-ui/react';
 import { ComponentType, forwardRef, ForwardRefRenderFunction, useState } from 'react';
 import { FieldError } from 'react-hook-form';
 import { IconBaseProps } from 'react-icons';
-
+import InputMask from 'react-input-mask';
 
 interface InputProps extends ChakraInputProps {
   name: string;
@@ -18,10 +17,11 @@ interface InputProps extends ChakraInputProps {
   error?: FieldError;
   bg?: string;
   icon?: ComponentType<IconBaseProps>;
+  mask?: string
 }
 
 const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { name, label, error = null, icon: Icon, bg, ...rest },
+  { name, label, error = null, mask, icon: Icon, bg, ...rest },
   ref,
 ) => {
   const [focus, setFocus] = useState(false)
@@ -39,6 +39,8 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
     <Flex onBlur={() => changeFocus()} onFocus={() => changeFocus()} align={'center'} bg="gray.900" border={focus ? '0.15rem solid #FF6B00' : '0.15rem solid transparent'} borderRadius='0.3rem'>
         {Icon && <Icon size={20} />}
         <ChakraInput
+          mask={mask}
+          maskChar={null}
           name={name}
           id={name}
           border='0'

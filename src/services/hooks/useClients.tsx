@@ -41,43 +41,67 @@ interface CreateClientProps {
 
 interface ClientsAndQuantityOfClients {
   clients: Client[]
-  quantityOfClient: number
+  quantityOfClients: number
 }
 
 export const getClients = async (page: number, clientsPerPage: number): Promise<ClientsAndQuantityOfClients> => {
-  const { data } = await api.get(`/clients?page=${page}&clientsPerPage=${clientsPerPage}`);
+  if (page) {
+    const { data } = await api.get(`/clients?page=${page}&clientsPerPage=${clientsPerPage}`);
+    const { data: total } = await api.get(`/clients`);
 
-  const clients = data.clients.map((client: Client) => {
-    return {
-      id: client.id,
-      name: client.name,
-      email: client.email,
-      mobilePhone: client.mobilePhone,
-      birthday: new Date(client.birthday).toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric',
-      }),
-      points: client.points,
-      shop: client.shop,
-      createdAt: new Date(client.createdAt).toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      }),
-    };
-  });
+    const clients = data.map((client: Client) => {
+      return {
+        id: client.id,
+        name: client.name,
+        email: client.email,
+        mobilePhone: client.mobilePhone,
+        birthday: new Date(client.birthday).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        }),
+        points: client.points,
+        shop: client.shop,
+        createdAt: new Date(client.createdAt).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        }),
+      };
+    });
 
-  return { quantityOfClient: data.quantityOfClient, clients};
-};
+    return {clients, quantityOfClients: total.length};
+  }
 
-export function useClients(page: number, clientsPerPage: number) {
+    const { data } = await api.get('/clients');
+
+    const clients = data.map((client: Client) => {
+      return {
+        id: client.id,
+        name: client.name,
+        email: client.email,
+        mobilePhone: client.mobilePhone,
+        birthday: new Date(client.birthday).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        }),
+        points: client.points,
+        shop: client.shop,
+        createdAt: client.createdAt,
+      };
+    });
+
+    return {clients, quantityOfClients: data.length};
+}
+
+export function useClients(page?: number, clientsPerPage?: number) {
   return useQuery(['clients', page, clientsPerPage], () => getClients(page, clientsPerPage));
 }
 
 const getClientById = async (clientId: string): Promise<Client> => {
   if(clientId) {
-    const { data } = await api.get(`/clients/${clientId}`);
+    const { data } = await api.get(`/clients/?clientId=${clientId}`);
 
     return data;
   }

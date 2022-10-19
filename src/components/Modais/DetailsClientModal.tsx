@@ -17,10 +17,15 @@ import {
   Tbody,
   Td,
   Tfoot,
+  VStack,
+  Flex,
+  Box,
 } from '@chakra-ui/react';
 import { forwardRef, ForwardRefRenderFunction, useImperativeHandle, useRef } from 'react';
 import { useClient } from '../../services/hooks/useClients';
 import ModalNewBuy, { ModalNewBuyHandle } from './NewBuy'
+import { ApexOptions } from 'apexcharts';
+import dynamic from 'next/dynamic';
 
 export interface ModalDetailsClient {
   onOpen: () =>  void;
@@ -58,17 +63,113 @@ interface Client {
   }
 }
 
+const Chart = dynamic(() => import('react-apexcharts'), {
+  ssr: false,
+})
+
 
 const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, Client> = ({ client }: Client, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const newBuyModalRef = useRef<ModalNewBuyHandle>(null)
   const { data: clientData } = useClient(client.id)
+  const shopsCreatedAt = []
+  const shopsCreatedAtRemoveDuplicateDays = []
+  const shopResults = []
+  const count = [];
+
+  clientData?.shop.map(shop => shopsCreatedAt.push(new Date(shop.createdAt).toLocaleDateString('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+})))
+
+clientData?.shop.map(shop => shopsCreatedAtRemoveDuplicateDays.push(new Date(shop.createdAt).toLocaleDateString('pt-BR', {
+  day: '2-digit',
+  month: '2-digit',
+  year: 'numeric',
+})))
+
+const duplicateDaysRemoved = shopsCreatedAtRemoveDuplicateDays.filter((item, index) => shopsCreatedAtRemoveDuplicateDays.indexOf(item) === index);
+
+    shopsCreatedAt.forEach(element => {
+        count[element] = (count[element] || 0) + 1;
+    }) 
+
+    duplicateDaysRemoved.forEach((item) => shopResults.push(count[item]))
 
 
   useImperativeHandle(ref, () => ({
     onOpen,
     onClose,
   }));
+
+  /* console.log(clientData?.shop)
+  console.log(count)
+  console.log(duplicateDaysRemoved) */
+  console.log(shopResults)
+
+
+  /* console.log(duplicateDaysRemoved.toString()) */
+
+  const options:ApexOptions = {
+    plotOptions: {
+      bar: {
+          columnWidth: '20%'
+      }
+    },
+    chart: {
+        toolbar: {
+            show: false,
+        },
+        zoom: {
+            enabled: false,
+        },
+        foreColor: '#FF6B00',
+    },
+    colors: ['#FF6B00'],
+    grid: {
+        show: false,
+    },
+    dataLabels: {
+        enabled: true,
+    },
+    tooltip: {
+        enabled: false,
+    },
+    xaxis: {
+        type: 'category',
+        axisBorder: {
+            color: '#FF6B00'
+        },
+        axisTicks: {
+            color: '#FF6B00'
+        },
+        categories: duplicateDaysRemoved,
+    },
+    yaxis: {
+      labels: {
+        formatter: function (val) {
+          return val.toFixed()
+        }
+      }
+    },
+    fill: {
+        opacity: 0.6,
+        type: 'gradient',
+        gradient: {
+            shade: 'dark',
+            opacityFrom: 0.6,
+            opacityTo: 0.9,
+        }
+    }
+}
+
+const series = [
+    {
+        name: "Clients",
+        data: shopResults
+    }
+]
 
   return (
       <Modal size="4xl" isOpen={isOpen} onClose={onClose}>
@@ -77,16 +178,19 @@ const DetailsClientModal: ForwardRefRenderFunction<ModalDetailsClient, Client> =
         <ModalContent bg="gray.900">
           <ModalCloseButton
             bg="orange"
-            _hover={{ bg: 'orange' }}
+            _hover={{ bg: 'orange', cursor: 'pointer' }}
             color="#fff"
           />
           <ModalHeader>
-            <Heading>{client.name}</Heading>
-            <Text>{client.mobilePhone}</Text>
-            <Text>{client.birthday}</Text>
-            <Text>{client.email}</Text>
-            <Button bg={'orange'} _hover={{ bg: 'gray.900'}} onClick={() => newBuyModalRef.current.onOpen()}>Nova Compra</Button>
+              <VStack align={'flex-start'}>
+                <Heading>{client.name}</Heading>
+                <Text>{client.mobilePhone}</Text>
+                <Text>{client.birthday}</Text>
+                <Text>{client.email}</Text>
+                <Button bg={'orange'} _hover={{ bg: 'gray.900'}} onClick={() => newBuyModalRef.current.onOpen()}>Nova Compra</Button>
+              </VStack>
           </ModalHeader>
+          <Chart options={options} series={series} type="bar" height={180} width={875} />
           <ModalBody>
             <Table>
               <Thead>
