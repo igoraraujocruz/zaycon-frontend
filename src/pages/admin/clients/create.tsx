@@ -4,7 +4,6 @@ import {
   Stack,
   Text,
   useToast,
-  Input as T
 } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -12,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { createClients } from '../../../services/hooks/useClients';
 import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
-import InputMask from 'react-input-mask'
+import { MaskedInput } from '../../../components/Form/MaskedInput';
 
 type CreateFormData = {
   name: string;
@@ -31,14 +30,14 @@ const createFormSchema = yup.object().shape({
 });
 
 export function CreateClients() {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateFormData>({
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<CreateFormData>({
     resolver: yupResolver(createFormSchema),
   });
 
   const toast = useToast();
 
   const onSubmit: SubmitHandler<CreateFormData> = async (values: CreateFormData) => {
-    try {
+   try {
       await createClients({
         name: values.name,
         cpf: values.cpf.replace(/\D/g, ''),
@@ -80,8 +79,23 @@ export function CreateClients() {
       <Text fontSize="2xl">Novo Cliente</Text>
 
       <Stack spacing="0.5">
-        <Input name="name" error={errors.name} label="Nome" {...register('name')} />
-        <Input as={InputMask} mask="999.999.999-99" name="cpf" error={errors.cpf} label="Cpf" {...register('cpf')} />
+        <Input name="name" error={errors.name} label="Nome" {...register('name')} />        
+        <MaskedInput mask={[
+              /\d/,
+              /\d/,
+              /\d/,
+              ".",
+              /\d/,
+              /\d/,
+              /\d/,
+              ".",
+              /\d/,
+              /\d/,
+              /\d/,
+              "-",
+              /\d/,
+              /\d/
+            ]} name="cpf" error={errors.cpf} label="Cpf" {...register("cpf")} />
         <Input
           error={errors.birthday}
           type="date"
@@ -90,10 +104,25 @@ export function CreateClients() {
           max="2999-12-31"
           {...register('birthday')}
         />
-        <Input
-         as={InputMask}
-         mask="(99) 99999-9999"
-         error={errors.mobilePhone}
+        <MaskedInput
+          mask={[
+            "(",
+            /\d/,
+            /\d/,
+            ")",
+            " ",
+            /\d/,
+            /\d/,
+            /\d/,
+            /\d/,
+            /\d/,
+            "-",
+            /\d/,
+            /\d/,
+            /\d/,
+            /\d/
+          ]}
+          error={errors.mobilePhone}
           name="mobilePhone"
           label="Celular"
           {...register('mobilePhone')}

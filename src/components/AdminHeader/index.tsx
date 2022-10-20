@@ -17,8 +17,9 @@ export const AdminHeader = () => {
       bg='gray.700'
     >
         <Flex w={'100%'} justify={'center'}>
-          <Image w={'10rem'} src="../logo.svg"/>
-          
+          <NavLink to='/'>
+            <Image w={'10rem'} src="../logo.svg"/>
+          </NavLink>          
         </Flex>
         <Flex>
           <HStack mt={'1rem'} spacing={'2rem'}>

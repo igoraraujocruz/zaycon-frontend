@@ -26,9 +26,10 @@
     "react-dom": "18.2.0",
     "react-hook-form": "^7.33.0",
     "react-icons": "^4.4.0",
-    "react-input-mask": "^2.0.4",
     "react-medium-image-zoom": "^4.4.3",
     "react-query": "^3.39.1",
+    "react-text-mask": "^5.5.0",
+    "text-mask-addons": "^3.8.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
@@ -38,6 +39,7 @@
     "@types/react": "^18.0.14",
     "@types/react-datepicker": "^4.4.2",
     "@types/react-input-mask": "^3.0.1",
+    "@types/react-text-mask": "^5.4.11",
     "@typescript-eslint/eslint-plugin": "^5.28.0",
     "@typescript-eslint/parser": "^5.28.0",
     "eslint": "^8.18.0",

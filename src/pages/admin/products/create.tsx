@@ -1,5 +1,5 @@
 import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRef } from 'react';
@@ -9,11 +9,14 @@ import { withSSRAuth } from '../../../utils/WithSSRAuth';
 import { InputFile, InputFileHandle } from '../../../components/Form/InputFile'
 import { Textarea } from '../../../components/Form/TextArea';
 import CurrencyInput from 'react-currency-masked-input'
+import { MaskedInput } from '../../../components/Form/MaskedInput';
+import { realMask } from '../../../utils/realMask';
+import { convertRealToNumber } from '../../../utils/convertRealToNumber';
 
 type CreateFormData = {
   name: string;
   description: string;
-  price: number;
+  price: string;
   debitPoints: number;
   creditPoints: number;
   photos: File[];
@@ -22,7 +25,7 @@ type CreateFormData = {
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome do produto é obrigatório'),
   description: yup.string().required('Descrição do produto é obrigatória'),
-  price: yup.number().typeError('Insira um valor').required('Preço do produto é obrigatório'),
+  price: yup.string().typeError('Insira um valor').required('Preço do produto é obrigatório'),
   debitPoints: yup
     .number()
     .typeError('Insira um valor')
@@ -39,18 +42,19 @@ const createFormSchema = yup.object().shape({
 
 export function CreateProducts() {
   const inputFileRef = useRef<InputFileHandle>(null)
-  const { register, handleSubmit, reset, resetField, formState: { errors } } = useForm<CreateFormData>({
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateFormData>({
     resolver: yupResolver(createFormSchema),
   });
   
   const toast = useToast();
 
   const onSubmit: SubmitHandler<CreateFormData> = async (values: CreateFormData) => {
+    console.log(convertRealToNumber(values.price))
     try {
       await createProduct({
         name: values.name,
         description: values.description,
-        price: values.price,
+        price: convertRealToNumber(values.price),
         debitPoints: values.debitPoints,
         creditPoints: values.creditPoints,
         photos: inputFileRef.current.images,
@@ -89,7 +93,7 @@ export function CreateProducts() {
       <Text fontSize="2xl">Novo Produto</Text>
       <Stack spacing="0.5">
         <Input error={errors.name} name="name" label="Nome" {...register('name')} />
-        <Input error={errors.price} as={CurrencyInput} name="price" label="Preço" {...register('price')} />
+        <MaskedInput mask={realMask} error={errors.price} name="price" label="Preço" {...register('price')} />
         <Textarea error={errors.description} name="description" label="Descrição" {...register('description')} />
         <Input
           type={'number'}

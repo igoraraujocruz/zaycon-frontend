@@ -15,7 +15,7 @@ import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
 import { ReactElement, useEffect, useState } from 'react';
 import { api } from '../../../services/apiClient';
-import InputMask from 'react-input-mask'
+import { MaskedInput } from '../../../components/Form/MaskedInput';
 
 type CreateFormData = {
   name: string;
@@ -24,12 +24,38 @@ type CreateFormData = {
   username: string;
   password: string;
   permissions: string[];
+  "Listar Produto": boolean;
+  "Editar Produto": boolean;
+  "Cadastrar Produto": boolean;
+  "Deletar Produto": boolean;
+  "Listar Cliente": boolean;
+  "Editar Cliente": boolean;
+  "Cadastrar Cliente": boolean;
+  "Deletar Cliente": boolean;
+  "Listar Usuario": boolean;
+  "Editar Usuario": boolean;
+  "Cadastrar Usuario": boolean;
+  "Deletar Usuario": boolean;
 };
 
 type Permission = {
   id: string;
   name: string;
 }
+
+type TCheckBoxNames = 
+"Listar Produto"
+| "Editar Produto"
+| "Cadastrar Produto"
+| "Deletar Produto"
+| "Listar Cliente"
+| "Editar Cliente"
+| "Cadastrar Cliente"
+| "Deletar Cliente"
+| "Listar Usuario"
+| "Editar Usuario"
+| "Cadastrar Usuario"
+| "Deletar Usuario";
 
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome é obrigatório'),
@@ -40,7 +66,7 @@ const createFormSchema = yup.object().shape({
 });
 
 export function CreateUser() {
-  const { register, handleSubmit, reset, control, formState: { errors } } = useForm({
+  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<CreateFormData>({
     resolver: yupResolver(createFormSchema)
   });
 
@@ -54,7 +80,7 @@ export function CreateUser() {
   
   const toast = useToast();
   const onSubmit: SubmitHandler<CreateFormData> = async (values: CreateFormData) => {
-    const removeAllFalsyValues = [
+    const permissionsWithoutFalsyValues = [
       values['Listar Produto'] === true && 'Listar Produto',
       values['Editar Produto'] === true && 'Editar Produto',
       values['Cadastrar Produto'] === true && 'Cadastrar Produto',
@@ -75,7 +101,7 @@ export function CreateUser() {
         password: values.password,
         mobilePhone: values.mobilePhone.replace(/\D/g, ''),
         email: values.email,
-        permissions: removeAllFalsyValues
+        permissions: permissionsWithoutFalsyValues
       });
       reset();
       toast({
@@ -109,23 +135,37 @@ export function CreateUser() {
       <Text fontSize="2xl">Novo Usuário</Text>
 
       <Stack spacing="0.5">
-        <Input name="name" label="Nome" {...register('name')} />
-        <Input name="username" label="Username" {...register('username')} />
-        <Input name="password"  type={'password'} label="Senha" {...register('password')} />
-        <Input name="email" label="E-mail" {...register('email')} />
-        <Input name="mobilePhone" label="Celular"
-          as={InputMask}
-         mask="(99) 99999-9999"
-         placeholder="(DD) 99999-9999"
+        <Input name="name" error={errors.name} label="Nome" {...register('name')} />
+        <Input name="username" error={errors.username}  label="Username" {...register('username')} />
+        <Input name="password" error={errors.password} type={'password'} label="Senha" {...register('password')} />
+        <Input name="email" error={errors.email} label="E-mail" {...register('email')} />
+        <MaskedInput error={errors.mobilePhone} name="mobilePhone" label="Celular"
+         mask={[
+          "(",
+          /\d/,
+          /\d/,
+          ")",
+          " ",
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/,
+          "-",
+          /\d/,
+          /\d/,
+          /\d/,
+          /\d/
+        ]}
          {...register('mobilePhone')} />
       </Stack>
       <Grid templateColumns='repeat(3, 1fr)' columnGap={3} rowGap={2} mb={'2rem'}>
       {permissions.map(
               (permission): ReactElement => {
                 return (
-                  <Controller
+                <Controller
                     control={control}
-                    name={permission.name}
+                    name={permission.name as TCheckBoxNames}
                     key={permission.id}
                     defaultValue={false}
                     render={({ field: { onChange, value, ref } }) => (
