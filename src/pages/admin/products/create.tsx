@@ -1,14 +1,13 @@
 import { Button, Flex, Stack, Text, useToast } from '@chakra-ui/react';
-import { SubmitHandler, useForm, Controller } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRef } from 'react';
 import { createProduct } from '../../../services/hooks/useProducts';
 import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
-import { InputFile, InputFileHandle } from '../../../components/Form/InputFile'
+import { InputFile, InputFileHandle } from '../../../components/Form/InputFile';
 import { Textarea } from '../../../components/Form/TextArea';
-import CurrencyInput from 'react-currency-masked-input'
 import { MaskedInput } from '../../../components/Form/MaskedInput';
 import { realMask } from '../../../utils/realMask';
 import { convertRealToNumber } from '../../../utils/convertRealToNumber';
@@ -25,7 +24,10 @@ type CreateFormData = {
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome do produto é obrigatório'),
   description: yup.string().required('Descrição do produto é obrigatória'),
-  price: yup.string().typeError('Insira um valor').required('Preço do produto é obrigatório'),
+  price: yup
+    .string()
+    .typeError('Insira um valor')
+    .required('Preço do produto é obrigatório'),
   debitPoints: yup
     .number()
     .typeError('Insira um valor')
@@ -41,15 +43,22 @@ const createFormSchema = yup.object().shape({
 });
 
 export function CreateProducts() {
-  const inputFileRef = useRef<InputFileHandle>(null)
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<CreateFormData>({
+  const inputFileRef = useRef<InputFileHandle>(null);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CreateFormData>({
     resolver: yupResolver(createFormSchema),
   });
-  
+
   const toast = useToast();
 
-  const onSubmit: SubmitHandler<CreateFormData> = async (values: CreateFormData) => {
-    console.log(convertRealToNumber(values.price))
+  const onSubmit: SubmitHandler<CreateFormData> = async (
+    values: CreateFormData,
+  ) => {
+    console.log(convertRealToNumber(values.price));
     try {
       await createProduct({
         name: values.name,
@@ -59,8 +68,8 @@ export function CreateProducts() {
         creditPoints: values.creditPoints,
         photos: inputFileRef.current.images,
       });
-      
-      inputFileRef.current?.setImages([])
+
+      inputFileRef.current?.setImages([]);
       reset();
       toast({
         title: 'Produto cadastrado com sucesso!',
@@ -77,7 +86,7 @@ export function CreateProducts() {
         isClosable: true,
       });
     }
-  }; 
+  };
 
   return (
     <Flex
@@ -86,34 +95,57 @@ export function CreateProducts() {
       w={400}
       bg="gray.800"
       p="8"
-      h={'48rem'}
+      h="48rem"
       borderRadius={8}
       flexDir="column"
     >
       <Text fontSize="2xl">Novo Produto</Text>
       <Stack spacing="0.5">
-        <Input error={errors.name} name="name" label="Nome" {...register('name')} />
-        <MaskedInput mask={realMask} error={errors.price} name="price" label="Preço" {...register('price')} />
-        <Textarea error={errors.description} name="description" label="Descrição" {...register('description')} />
         <Input
-          type={'number'}
+          error={errors.name}
+          name="name"
+          label="Nome"
+          {...register('name')}
+        />
+        <MaskedInput
+          mask={realMask}
+          error={errors.price}
+          name="price"
+          label="Preço"
+          {...register('price')}
+        />
+        <Textarea
+          error={errors.description}
+          name="description"
+          label="Descrição"
+          {...register('description')}
+        />
+        <Input
+          type="number"
           error={errors.debitPoints}
           name="debitPoints"
           label="Pontos necessários para a retirada"
           {...register('debitPoints')}
         />
         <Input
-          type={'number'}
+          type="number"
           error={errors.creditPoints}
           name="creditPoints"
           label="Crédito de Pontos"
           {...register('creditPoints')}
         />
-        </Stack>
-        <Flex justify={'center'}>
-          <InputFile mt={'1rem'} ref={inputFileRef} />
-        </Flex>     
-      <Button bg={'#FF6B00'}  _hover={{bg: 'orangeHover'}} type="submit" mt="6" colorScheme="orange" size="lg">
+      </Stack>
+      <Flex justify="center">
+        <InputFile mt="1rem" ref={inputFileRef} />
+      </Flex>
+      <Button
+        bg="#FF6B00"
+        _hover={{ bg: 'orangeHover' }}
+        type="submit"
+        mt="6"
+        colorScheme="orange"
+        size="lg"
+      >
         Cadastrar
       </Button>
     </Flex>

@@ -91,7 +91,7 @@ export function setupAPIClient(ctx = undefined) {
       if (error.response?.status === 400) {
         return Promise.reject(error);
       }
-      
+
       return Promise.reject(error);
     },
   );

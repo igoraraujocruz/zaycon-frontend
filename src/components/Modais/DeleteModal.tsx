@@ -11,7 +11,11 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { forwardRef, ForwardRefRenderFunction, useCallback, useImperativeHandle } from 'react';
+import {
+  forwardRef,
+  ForwardRefRenderFunction,
+  useImperativeHandle,
+} from 'react';
 import { deleteClient } from '../../services/hooks/useClients';
 import { deleteUser } from '../../services/hooks/useUsers';
 import { deletePhoto, deleteProducts } from '../../services/hooks/useProducts';
@@ -28,7 +32,10 @@ export interface ModalDeleteHandle {
   onClose: () => void;
 }
 
-const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> = ({ productId, clientId, photoId, userId }: ImageModalProps, ref) => {
+const DeleteModal: ForwardRefRenderFunction<
+  ModalDeleteHandle,
+  ImageModalProps
+> = ({ productId, clientId, photoId, userId }: ImageModalProps, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useImperativeHandle(ref, () => ({
@@ -39,11 +46,10 @@ const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> 
   const toast = useToast();
 
   function deleteObject() {
-
-    if(productId) {
+    if (productId) {
       try {
         deleteProducts(productId);
-        onClose()
+        onClose();
       } catch (error) {
         toast({
           title: 'Não foi possível deletar o produto',
@@ -54,11 +60,11 @@ const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> 
         });
       }
     }
-  
-    if(clientId) {
+
+    if (clientId) {
       try {
         deleteClient(clientId);
-        onClose()
+        onClose();
       } catch (error) {
         toast({
           title: 'Não foi possível deletar o cliente',
@@ -70,10 +76,10 @@ const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> 
       }
     }
 
-    if(userId) {
+    if (userId) {
       try {
         deleteUser(userId);
-        onClose()
+        onClose();
       } catch (error) {
         toast({
           title: 'Não foi possível deletar o usuário',
@@ -85,10 +91,10 @@ const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> 
       }
     }
 
-    if(photoId) {
+    if (photoId) {
       try {
         deletePhoto(photoId);
-        onClose()
+        onClose();
       } catch (error) {
         toast({
           title: 'Não foi possível deletar a imagem',
@@ -102,40 +108,40 @@ const DeleteModal: ForwardRefRenderFunction<ModalDeleteHandle, ImageModalProps> 
   }
 
   return (
-      <Modal isCentered isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent bg={'gray.900'}>
-          <ModalHeader fontSize="1.5rem" fontWeight={'normal'}>
-            Tem certeza que deseja deletar?
-          </ModalHeader>
-          <ModalCloseButton color="#fff" />
-          <ModalBody>
-            <Text>Não será possível recuperar depois.</Text>
-          </ModalBody>
+    <Modal isCentered isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent bg="gray.900">
+        <ModalHeader fontSize="1.5rem" fontWeight="normal">
+          Tem certeza que deseja deletar?
+        </ModalHeader>
+        <ModalCloseButton color="#fff" />
+        <ModalBody>
+          <Text>Não será possível recuperar depois.</Text>
+        </ModalBody>
 
-          <ModalFooter>
-            <Button
-              bg="transparent"
-              fontWeight={'normal'}
-              _hover={{ bg: '#ff0118' }}
-              mr={3}
-              onClick={deleteObject}
-            >
-              Deletar
-            </Button>
-            <Button
-              fontWeight={'normal'}
-              bg="transparent"
-              _hover={{ bg: 'orange' }}
-              mr={3}
-              onClick={onClose}
-            >
-              Cancelar
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+        <ModalFooter>
+          <Button
+            bg="transparent"
+            fontWeight="normal"
+            _hover={{ bg: '#ff0118' }}
+            mr={3}
+            onClick={deleteObject}
+          >
+            Deletar
+          </Button>
+          <Button
+            fontWeight="normal"
+            bg="transparent"
+            _hover={{ bg: 'orange' }}
+            mr={3}
+            onClick={onClose}
+          >
+            Cancelar
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
-}
+};
 
-export default forwardRef(DeleteModal)
+export default forwardRef(DeleteModal);

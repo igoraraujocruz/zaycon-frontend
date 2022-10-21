@@ -4,9 +4,14 @@ import {
   FormErrorMessage,
   FormLabel,
   Input as ChakraInput,
-  InputProps as ChakraInputProps
+  InputProps as ChakraInputProps,
 } from '@chakra-ui/react';
-import { ComponentType, forwardRef, ForwardRefRenderFunction, useState } from 'react';
+import {
+  ComponentType,
+  forwardRef,
+  ForwardRefRenderFunction,
+  useState,
+} from 'react';
 import { FieldError } from 'react-hook-form';
 import { IconBaseProps } from 'react-icons';
 
@@ -22,25 +27,32 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
   { name, label, error = null, icon: Icon, bg, ...rest },
   ref,
 ) => {
-  const [focus, setFocus] = useState(false)
+  const [focus, setFocus] = useState(false);
   const changeFocus = () => {
-    setFocus(!focus)
-  }
+    setFocus(!focus);
+  };
 
   return (
-  <FormControl isInvalid={!!error}>
-    {!!label && (
-      <FormLabel id={`label-${name}`} htmlFor={name}>
-        {label}
-      </FormLabel>
-    )}
-    <Flex onBlur={() => changeFocus()} onFocus={() => changeFocus()} align={'center'} bg="gray.900" border={focus ? '0.15rem solid #FF6B00' : '0.15rem solid transparent'} borderRadius='0.3rem'>
+    <FormControl isInvalid={!!error}>
+      {!!label && (
+        <FormLabel id={`label-${name}`} htmlFor={name}>
+          {label}
+        </FormLabel>
+      )}
+      <Flex
+        onBlur={() => changeFocus()}
+        onFocus={() => changeFocus()}
+        align="center"
+        bg="gray.900"
+        border={focus ? '0.15rem solid #FF6B00' : '0.15rem solid transparent'}
+        borderRadius="0.3rem"
+      >
         {Icon && <Icon size={20} />}
         <ChakraInput
           name={name}
           id={name}
-          border='0'
-          bgColor={bg || "gray.900"}
+          border="0"
+          bgColor={bg || 'gray.900'}
           variant="filled"
           _hover={{
             bgColor: 'gray.900',
@@ -51,8 +63,8 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         />
       </Flex>
       {!!error && <FormErrorMessage>{error.message}</FormErrorMessage>}
-  </FormControl>
-  )
+    </FormControl>
+  );
 };
 
 export const Input = forwardRef(InputBase);

@@ -8,19 +8,19 @@ export function Footer() {
   return (
     <Box>
       <Box bg="black" h="5rem" w="100%" />
-      <Flex h={'10rem'} bg="#FF6B00" flexDir="column" alignItems="center">
-        <Text mt={'2rem'} color="#fff">
+      <Flex h="10rem" bg="#FF6B00" flexDir="column" alignItems="center">
+        <Text mt="2rem" color="#fff">
           Vantagem válida para compras na loja física.
         </Text>
-        <HStack align={'center'} spacing={5}>
+        <HStack align="center" spacing={5}>
           <Text color="#fff">Shopping Mestre Álvaro - 2º piso</Text>
-          <Link href='#'>
-            <Flex cursor={'pointer'}>
+          <Link href="/">
+            <Flex cursor="pointer">
               <GrInstagram color="white" size={35} />
             </Flex>
           </Link>
-          <Link href='#'>
-            <Flex cursor={'pointer'}>
+          <Link href="/">
+            <Flex cursor="pointer">
               <BsWhatsapp color="white" size={35} />
             </Flex>
           </Link>

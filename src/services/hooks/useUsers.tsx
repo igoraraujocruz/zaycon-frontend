@@ -14,8 +14,8 @@ export interface User {
     {
       id: string;
       name: string;
-    }
-  ]
+    },
+  ];
 }
 
 interface CreateUserProps {
@@ -29,16 +29,21 @@ interface CreateUserProps {
 
 interface UserPermissions {
   userId: string;
-  permissions: string[]
+  permissions: string[];
 }
 
-interface UsersAndQuantityOfUsers{
-  users: User[]
-  quantityOfUsers: number
+interface UsersAndQuantityOfUsers {
+  users: User[];
+  quantityOfUsers: number;
 }
 
-export const getUsers = async (page: number, usersPerPage: number): Promise<UsersAndQuantityOfUsers> => {
-  const { data } = await api.get(`/users?page=${page}&usersPerPage=${usersPerPage}`);
+export const getUsers = async (
+  page: number,
+  usersPerPage: number,
+): Promise<UsersAndQuantityOfUsers> => {
+  const { data } = await api.get(
+    `/users?page=${page}&usersPerPage=${usersPerPage}`,
+  );
 
   const { data: total } = await api.get(`/users`);
 
@@ -63,17 +68,19 @@ export const getUsers = async (page: number, usersPerPage: number): Promise<User
     };
   });
 
-  return {users,  quantityOfUsers: total.length};
+  return { users, quantityOfUsers: total.length };
 };
 
 export function useUsers(page: number, usersPerPage: number) {
-  return useQuery(['users', page, usersPerPage], () => getUsers(page, usersPerPage));
+  return useQuery(['users', page, usersPerPage], () =>
+    getUsers(page, usersPerPage),
+  );
 }
 
 export async function createUser(user: CreateUserProps) {
-    await api.post('/users', user);
+  await api.post('/users', user);
 
-    queryClient.invalidateQueries('users');
+  queryClient.invalidateQueries('users');
 }
 
 export async function deleteUser(userId: string) {
@@ -82,20 +89,26 @@ export async function deleteUser(userId: string) {
   queryClient.invalidateQueries('users');
 }
 
-export async function updateUserPermissions({ userId, permissions }: UserPermissions) {
-  if (typeof(permissions) === 'string') {
+export async function updateUserPermissions({
+  userId,
+  permissions,
+}: UserPermissions) {
+  if (typeof permissions === 'string') {
     await api.patch(`/users/${userId}`, { permissions: [] });
   } else {
-    await api.patch(`/users/${userId}`, { permissions })
+    await api.patch(`/users/${userId}`, { permissions });
 
     queryClient.invalidateQueries('users');
   }
 }
 
-export async function resetPassword(token: string, newPassword: string, newPasswordConfirm: string) {
-
+export async function resetPassword(
+  token: string,
+  newPassword: string,
+  newPasswordConfirm: string,
+) {
   await api.post(`password/reset/${token}`, {
     password: newPassword,
-    password_confirmation: newPasswordConfirm
+    password_confirmation: newPasswordConfirm,
   });
 }

@@ -54,7 +54,7 @@ export function ForgotPasswordModal() {
       });
       setIsSendingEmail(false);
       onClose();
-      reset()
+      reset();
     } catch (err) {
       toast({
         title: 'E-mail não pode ser enviado.',
@@ -77,7 +77,7 @@ export function ForgotPasswordModal() {
             {isSendingEmail && <Spinner size="lg" color="#fff" />}
           </Flex>
 
-          <ModalHeader fontSize="1.2rem" fontWeight={'normal'} color="#ffffff">
+          <ModalHeader fontSize="1.2rem" fontWeight="normal" color="#ffffff">
             Recuperação de senha
           </ModalHeader>
           <ModalCloseButton color="#fff" />

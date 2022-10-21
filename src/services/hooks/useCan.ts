@@ -1,21 +1,21 @@
-import { validateUserPermissions } from "../../utils/validateUserPermissions"
-import { useAuth } from "./useAuth"
+import { validateUserPermissions } from '../../utils/validateUserPermissions';
+import { useAuth } from './useAuth';
 
 type UseCanParams = {
-    permissions?: string[]
-}
+  permissions?: string[];
+};
 
-export function useCan({permissions}: UseCanParams) {
-    const { user, isAuthenticated } = useAuth()
+export function useCan({ permissions }: UseCanParams) {
+  const { user, isAuthenticated } = useAuth();
 
-    if (!isAuthenticated) {
-        return false
-    }
+  if (!isAuthenticated) {
+    return false;
+  }
 
-    const hasPermission = validateUserPermissions({
-        user,
-        permissions
-    })
+  const hasPermission = validateUserPermissions({
+    user,
+    permissions,
+  });
 
-    return hasPermission;
+  return hasPermission;
 }

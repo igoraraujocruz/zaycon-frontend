@@ -1,8 +1,8 @@
-import createNumberMask from "text-mask-addons/dist/createNumberMask";
+import createNumberMask from 'text-mask-addons/dist/createNumberMask';
 
 export const realMask = createNumberMask({
-  prefix: "R$ ",
-  thousandsSeparatorSymbol: ".",
+  prefix: 'R$ ',
+  thousandsSeparatorSymbol: '.',
   allowDecimal: true,
-  decimalSymbol: ","
+  decimalSymbol: ',',
 });

@@ -24,28 +24,41 @@ interface SearchProps {
 
 export default function Home() {
   const { data, isLoading, error, isFetching } = useProducts();
-  const { register, handleSubmit } = useForm()
-  const [itemFilters, setItemFilters] = useState<Product[]>([])
+  const { register, handleSubmit } = useForm();
+  const [itemFilters, setItemFilters] = useState<Product[]>([]);
 
-  const onSubmit = async ({search}: SearchProps) => {
+  const onSubmit = async ({ search }: SearchProps) => {
     try {
-      await api.get(`/products?option=${search}`)
-      .then(response => setItemFilters(response.data))
+      await api
+        .get(`/products?option=${search}`)
+        .then(response => setItemFilters(response.data));
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
   return (
-    <Flex flexDir={'column'}>
+    <Flex flexDir="column">
       <Header />
-      <HStack as="form" onSubmit={handleSubmit(onSubmit)} justify={'center'} align={'center'}>
-        <SearchInput w={'18rem'} borderColor='gray.600' name='search' {...register('search', {
-          onChange() {
-            setItemFilters([])
-          },
-        })} />
-        <Button bg={'orange'} _hover={{ bg: 'orangeHover' }} type={'submit'}>Procurar</Button>
+      <HStack
+        as="form"
+        onSubmit={handleSubmit(onSubmit)}
+        justify="center"
+        align="center"
+      >
+        <SearchInput
+          w="18rem"
+          borderColor="gray.600"
+          name="search"
+          {...register('search', {
+            onChange() {
+              setItemFilters([]);
+            },
+          })}
+        />
+        <Button bg="orange" _hover={{ bg: 'orangeHover' }} type="submit">
+          Procurar
+        </Button>
       </HStack>
       <Flex justify="center" minH="70vh">
         <Grid
@@ -60,15 +73,15 @@ export default function Home() {
           ]}
         >
           {(!isLoading && isFetching) || isLoading ? (
-            <Flex justify="center" mt={'2rem'}>
+            <Flex justify="center" mt="2rem">
               <Spinner color="orange" />
             </Flex>
           ) : error ? (
             <Flex justify="center">
               <Text>Falha ao obter dados</Text>
             </Flex>
-          ) : (
-            itemFilters.length ? itemFilters.map(product => (
+          ) : itemFilters.length ? (
+            itemFilters.map(product => (
               <Link key={product.id} href={`/product/${product.slug}`}>
                 <Flex
                   key={product.id}
@@ -100,27 +113,23 @@ export default function Home() {
                     <Text align="center" fontSize="1.5rem">
                       R${product.price} ou {product.debitPoints} pontos
                     </Text>
-                    <HStack justify={'center'}>
-                    <Text
-                      color={'orange'}
-                      align="center"
-                      fontSize="1.5rem"
-                    >
-                      Recebe
-                    </Text>
-                    <Text
-                      align="center"
-                      fontSize="1.5rem"
-                      borderBottom={'0.1rem solid #FF6B00'}
-                    >
-                      {product.creditPoints} pontos
-                    </Text>
-
+                    <HStack justify="center">
+                      <Text color="orange" align="center" fontSize="1.5rem">
+                        Recebe
+                      </Text>
+                      <Text
+                        align="center"
+                        fontSize="1.5rem"
+                        borderBottom="0.1rem solid #FF6B00"
+                      >
+                        {product.creditPoints} pontos
+                      </Text>
                     </HStack>
                   </Box>
                 </Flex>
               </Link>
-            )) :
+            ))
+          ) : (
             data.products.map(product => (
               <Link key={product.id} href={`/product/${product.slug}`}>
                 <Flex
@@ -153,22 +162,17 @@ export default function Home() {
                     <Text align="center" fontSize="1.5rem">
                       R${product.price} ou {product.debitPoints} pontos
                     </Text>
-                    <HStack justify={'center'}>
-                    <Text
-                      color={'orange'}
-                      align="center"
-                      fontSize="1.5rem"
-                    >
-                      Recebe
-                    </Text>
-                    <Text
-                      align="center"
-                      fontSize="1.5rem"
-                      borderBottom={'0.1rem solid #FF6B00'}
-                    >
-                      {product.creditPoints} pontos
-                    </Text>
-
+                    <HStack justify="center">
+                      <Text color="orange" align="center" fontSize="1.5rem">
+                        Recebe
+                      </Text>
+                      <Text
+                        align="center"
+                        fontSize="1.5rem"
+                        borderBottom="0.1rem solid #FF6B00"
+                      >
+                        {product.creditPoints} pontos
+                      </Text>
                     </HStack>
                   </Box>
                 </Flex>

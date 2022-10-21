@@ -5,15 +5,15 @@ import {
   Stack,
   Text,
   useToast,
-  Checkbox
+  Checkbox,
 } from '@chakra-ui/react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { ReactElement, useEffect, useState } from 'react';
 import { createUser } from '../../../services/hooks/useUsers';
 import { Input } from '../../../components/Form/Input';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
-import { ReactElement, useEffect, useState } from 'react';
 import { api } from '../../../services/apiClient';
 import { MaskedInput } from '../../../components/Form/MaskedInput';
 
@@ -24,62 +24,74 @@ type CreateFormData = {
   username: string;
   password: string;
   permissions: string[];
-  "Listar Produto": boolean;
-  "Editar Produto": boolean;
-  "Cadastrar Produto": boolean;
-  "Deletar Produto": boolean;
-  "Listar Cliente": boolean;
-  "Editar Cliente": boolean;
-  "Cadastrar Cliente": boolean;
-  "Deletar Cliente": boolean;
-  "Listar Usuario": boolean;
-  "Editar Usuario": boolean;
-  "Cadastrar Usuario": boolean;
-  "Deletar Usuario": boolean;
+  'Listar Produto': boolean;
+  'Editar Produto': boolean;
+  'Cadastrar Produto': boolean;
+  'Deletar Produto': boolean;
+  'Listar Cliente': boolean;
+  'Editar Cliente': boolean;
+  'Cadastrar Cliente': boolean;
+  'Deletar Cliente': boolean;
+  'Listar Usuario': boolean;
+  'Editar Usuario': boolean;
+  'Cadastrar Usuario': boolean;
+  'Deletar Usuario': boolean;
 };
 
 type Permission = {
   id: string;
   name: string;
-}
+};
 
-type TCheckBoxNames = 
-"Listar Produto"
-| "Editar Produto"
-| "Cadastrar Produto"
-| "Deletar Produto"
-| "Listar Cliente"
-| "Editar Cliente"
-| "Cadastrar Cliente"
-| "Deletar Cliente"
-| "Listar Usuario"
-| "Editar Usuario"
-| "Cadastrar Usuario"
-| "Deletar Usuario";
+type TCheckBoxNames =
+  | 'Listar Produto'
+  | 'Editar Produto'
+  | 'Cadastrar Produto'
+  | 'Deletar Produto'
+  | 'Listar Cliente'
+  | 'Editar Cliente'
+  | 'Cadastrar Cliente'
+  | 'Deletar Cliente'
+  | 'Listar Usuario'
+  | 'Editar Usuario'
+  | 'Cadastrar Usuario'
+  | 'Deletar Usuario';
 
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome é obrigatório'),
-  mobilePhone: yup.string().required('Nº de Celular é obrigatório').matches(/^\([1-9]{2}\) (?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/, 'Número de telefone inválido'),
+  mobilePhone: yup
+    .string()
+    .required('Nº de Celular é obrigatório')
+    .matches(
+      /^\([1-9]{2}\) (?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/,
+      'Número de telefone inválido',
+    ),
   email: yup.string().required('Email é obrigatório').email(),
   username: yup.string().required('Nome é obrigatório'),
   password: yup.string().required('Nome é obrigatório').min(5),
 });
 
 export function CreateUser() {
-  const { register, handleSubmit, reset, control, formState: { errors } } = useForm<CreateFormData>({
-    resolver: yupResolver(createFormSchema)
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<CreateFormData>({
+    resolver: yupResolver(createFormSchema),
   });
 
-  const [permissions, setPermissions] = useState<Permission[]>([])
+  const [permissions, setPermissions] = useState<Permission[]>([]);
 
-    useEffect(() => {
-        api.get('/permissions')
-        .then(response => setPermissions(response.data))
-      }, [])
-    
-  
+  useEffect(() => {
+    api.get('/permissions').then(response => setPermissions(response.data));
+  }, []);
+
   const toast = useToast();
-  const onSubmit: SubmitHandler<CreateFormData> = async (values: CreateFormData) => {
+  const onSubmit: SubmitHandler<CreateFormData> = async (
+    values: CreateFormData,
+  ) => {
     const permissionsWithoutFalsyValues = [
       values['Listar Produto'] === true && 'Listar Produto',
       values['Editar Produto'] === true && 'Editar Produto',
@@ -93,7 +105,7 @@ export function CreateUser() {
       values['Editar Usuario'] === true && 'Editar Usuario',
       values['Cadastrar Usuario'] === true && 'Cadastrar Usuario',
       values['Deletar Usuario'] === true && 'Deletar Usuario',
-    ].filter(Boolean)
+    ].filter(Boolean);
     try {
       await createUser({
         name: values.name,
@@ -101,7 +113,7 @@ export function CreateUser() {
         password: values.password,
         mobilePhone: values.mobilePhone.replace(/\D/g, ''),
         email: values.email,
-        permissions: permissionsWithoutFalsyValues
+        permissions: permissionsWithoutFalsyValues,
       });
       reset();
       toast({
@@ -135,55 +147,83 @@ export function CreateUser() {
       <Text fontSize="2xl">Novo Usuário</Text>
 
       <Stack spacing="0.5">
-        <Input name="name" error={errors.name} label="Nome" {...register('name')} />
-        <Input name="username" error={errors.username}  label="Username" {...register('username')} />
-        <Input name="password" error={errors.password} type={'password'} label="Senha" {...register('password')} />
-        <Input name="email" error={errors.email} label="E-mail" {...register('email')} />
-        <MaskedInput error={errors.mobilePhone} name="mobilePhone" label="Celular"
-         mask={[
-          "(",
-          /\d/,
-          /\d/,
-          ")",
-          " ",
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/,
-          "-",
-          /\d/,
-          /\d/,
-          /\d/,
-          /\d/
-        ]}
-         {...register('mobilePhone')} />
+        <Input
+          name="name"
+          error={errors.name}
+          label="Nome"
+          {...register('name')}
+        />
+        <Input
+          name="username"
+          error={errors.username}
+          label="Username"
+          {...register('username')}
+        />
+        <Input
+          name="password"
+          error={errors.password}
+          type="password"
+          label="Senha"
+          {...register('password')}
+        />
+        <Input
+          name="email"
+          error={errors.email}
+          label="E-mail"
+          {...register('email')}
+        />
+        <MaskedInput
+          error={errors.mobilePhone}
+          name="mobilePhone"
+          label="Celular"
+          mask={[
+            '(',
+            /\d/,
+            /\d/,
+            ')',
+            ' ',
+            /\d/,
+            /\d/,
+            /\d/,
+            /\d/,
+            /\d/,
+            '-',
+            /\d/,
+            /\d/,
+            /\d/,
+            /\d/,
+          ]}
+          {...register('mobilePhone')}
+        />
       </Stack>
-      <Grid templateColumns='repeat(3, 1fr)' columnGap={3} rowGap={2} mb={'2rem'}>
-      {permissions.map(
-              (permission): ReactElement => {
-                return (
-                <Controller
-                    control={control}
-                    name={permission.name as TCheckBoxNames}
-                    key={permission.id}
-                    defaultValue={false}
-                    render={({ field: { onChange, value, ref } }) => (
-                      <Checkbox
-                        onChange={onChange}
-                        textTransform="capitalize"
-                        ref={ref}
-                        isChecked={value}
-                      >
-                        {permission.name}
-                      </Checkbox>
-                    )}
-                  />
-                );
-              }
-            )}
+      <Grid templateColumns="repeat(3, 1fr)" columnGap={3} rowGap={2} mb="2rem">
+        {permissions.map((permission): ReactElement => {
+          return (
+            <Controller
+              control={control}
+              name={permission.name as TCheckBoxNames}
+              key={permission.id}
+              defaultValue={false}
+              render={({ field: { onChange, value, ref } }) => (
+                <Checkbox
+                  onChange={onChange}
+                  textTransform="capitalize"
+                  ref={ref}
+                  isChecked={value}
+                >
+                  {permission.name}
+                </Checkbox>
+              )}
+            />
+          );
+        })}
       </Grid>
-      <Button bg={'#FF6B00'} _hover={{bg: 'orangeHover'}} type="submit" size="lg">
+      <Button
+        bg="#FF6B00"
+        _hover={{ bg: 'orangeHover' }}
+        type="submit"
+        size="lg"
+      >
         Cadastrar
       </Button>
     </Flex>

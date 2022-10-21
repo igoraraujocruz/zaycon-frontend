@@ -4,7 +4,7 @@
       "es2021": true
   },
   "extends": [
-    "plugin:@typescript-eslint/recommended",
+      "plugin:@typescript-eslint/recommended",
       "plugin:react/recommended",
       "airbnb",
       "plugin:prettier/recommended"
@@ -24,6 +24,10 @@
       "prettier"
   ],
   "rules": {
+    "no-plusplus": "off",
+    "no-useless-escape": "off",
+    "react/jsx-no-useless-fragment": "off",
+    "no-undef": "off",
     "react/jsx-no-bind": "off",
     "dot-notation": "off",
     "consistent-return": "off",

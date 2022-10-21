@@ -9,17 +9,14 @@ import { GetProducts } from './get';
 const Products = () => (
   <Box>
     <AdminHeader />
-    <Flex
-      justify="center"
-      flexDir={['column', 'column', 'row']}
-    >
+    <Flex justify="center" flexDir={['column', 'column', 'row']}>
       <Can permissions={['Cadastrar Produto']}>
-        <Flex mt={'2rem'} justify={['center']}>
+        <Flex mt="2rem" justify={['center']}>
           <CreateProducts />
         </Flex>
       </Can>
       <Can permissions={['Listar Produto']}>
-        <Flex justify={'center'} pl='2rem'>
+        <Flex justify="center" pl="2rem">
           <GetProducts />
         </Flex>
       </Can>
@@ -29,11 +26,18 @@ const Products = () => (
 
 export default Products;
 
-export const getServerSideProps = withSSRAuth(async ctx => {
-  return {
-      props: {}
-  }
-}, {
-      permissions: ['Cadastrar Produto', 'Deletar Produto', 'Listar Produto', 'Editar Produto']
-  }
+export const getServerSideProps = withSSRAuth(
+  async ctx => {
+    return {
+      props: {},
+    };
+  },
+  {
+    permissions: [
+      'Cadastrar Produto',
+      'Deletar Produto',
+      'Listar Produto',
+      'Editar Produto',
+    ],
+  },
 );

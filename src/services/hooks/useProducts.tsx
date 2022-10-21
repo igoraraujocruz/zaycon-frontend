@@ -53,65 +53,72 @@ export interface ProductSlug {
 
 interface ProductsAndQuantityOfProducts {
   quantityOfProduct: number;
-  products: Product[]
+  products: Product[];
 }
 
-export const getProducts = async (page: number, perPage: number): Promise<ProductsAndQuantityOfProducts> => {  
-  if(page) {
+export const getProducts = async (
+  page: number,
+  perPage: number,
+): Promise<ProductsAndQuantityOfProducts> => {
+  if (page) {
     const { data } = await api.get(`/products?page=${page}&perPage=${perPage}`);
     const { data: total } = await api.get(`/products`);
 
     const products = data.map((product: Product) => {
-        return {
-          id: product.id,
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          slug: product.slug,
-          creditPoints: product.creditPoints,
-          debitPoints: product.debitPoints,
-          photos: product.photos,
-          createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          }),
-          user: product.user,
-        };
-      });
+      return {
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.price,
+        slug: product.slug,
+        creditPoints: product.creditPoints,
+        debitPoints: product.debitPoints,
+        photos: product.photos,
+        createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+        }),
+        user: product.user,
+      };
+    });
 
-    return {products, quantityOfProduct: total.length};
+    return { products, quantityOfProduct: total.length };
   }
 
-    const { data } = await api.get('/products');
+  const { data } = await api.get('/products');
 
-    const products = data.map((product: Product) => {
-        return {
-          id: product.id,
-          name: product.name,
-          description: product.description,
-          price: product.price,
-          slug: product.slug,
-          creditPoints: product.creditPoints,
-          debitPoints: product.debitPoints,
-          photos: product.photos,
-          createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          }),
-          user: product.user,
-        };
-      });
+  const products = data.map((product: Product) => {
+    return {
+      id: product.id,
+      name: product.name,
+      description: product.description,
+      price: product.price,
+      slug: product.slug,
+      creditPoints: product.creditPoints,
+      debitPoints: product.debitPoints,
+      photos: product.photos,
+      createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      }),
+      user: product.user,
+    };
+  });
 
-    return {products, quantityOfProduct: data.length};
-}
+  return { products, quantityOfProduct: data.length };
+};
 
 export function useProducts(page?: number, perPage?: number) {
-  return useQuery(['products', page, perPage], () => getProducts(page, perPage));
+  return useQuery(['products', page, perPage], () =>
+    getProducts(page, perPage),
+  );
 }
 
-export const getProduct = async ({ productSlug }: ProductSlug): Promise<Product> => {
+export const getProduct = async ({
+  productSlug,
+}: ProductSlug): Promise<Product> => {
   if (productSlug) {
     const { data } = await api.get(`/products/?productSlug=${productSlug}`);
 
@@ -180,7 +187,6 @@ export async function createPhotos({ productId, photos }: PhotosProps) {
 }
 
 export async function updateProduct(product: UpdateProductProps) {
-
   await api.put('/products/', product);
 
   queryClient.invalidateQueries('products');

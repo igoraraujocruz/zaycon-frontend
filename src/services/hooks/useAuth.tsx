@@ -1,4 +1,10 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import Router from 'next/router';
 import { setCookie, destroyCookie, parseCookies } from 'nookies';
 import { api } from '../apiClient';
@@ -10,9 +16,9 @@ type User = {
     {
       id: string;
       name: string;
-    }
-  ]
-}
+    },
+  ];
+};
 
 type SignInCredentials = {
   username: string;
@@ -44,8 +50,7 @@ export function signOut() {
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
-
-  const [user, setUser] = useState<User>({permissions: [{}]} as User)
+  const [user, setUser] = useState<User>({ permissions: [{}] } as User);
   const isAuthenticated = !!user;
 
   useEffect(() => {
@@ -62,46 +67,49 @@ function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   useEffect(() => {
-    const { 'snap.token': token } = parseCookies()
-   
-    if (token) {
-        api.get('users/get/me').then(response => {
-        const { email, permissions, name } = response.data
+    const { 'snap.token': token } = parseCookies();
 
-        setUser({ email, permissions, name })
-      }).catch(() => {
-        signOut()
-      })
+    if (token) {
+      api
+        .get('users/get/me')
+        .then(response => {
+          const { email, permissions, name } = response.data;
+
+          setUser({ email, permissions, name });
+        })
+        .catch(() => {
+          signOut();
+        });
     }
-  }, [])
+  }, []);
 
   async function signIn({ username, password }: SignInCredentials) {
-      const response = await api.post('sessions', {
-        username,
-        password,
-      });
+    const response = await api.post('sessions', {
+      username,
+      password,
+    });
 
-      const { token, refreshToken, user } = response.data;
+    const { token, refreshToken, user } = response.data;
 
-      setCookie(undefined, 'snap.token', token, {
-        maxAge: 60 * 60 * 24 * 30,
-        path: '/',
-      });
+    setCookie(undefined, 'snap.token', token, {
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+    });
 
-      setCookie(undefined, 'snap.refreshToken', refreshToken, {
-        maxAge: 60 * 60 * 24 * 30,
-        path: '/',
-      });
+    setCookie(undefined, 'snap.refreshToken', refreshToken, {
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+    });
 
-      setUser({
-        name: user.name,
-        permissions: user.permissions,
-        email: user.email
-      })
+    setUser({
+      name: user.name,
+      permissions: user.permissions,
+      email: user.email,
+    });
 
-      api.defaults.headers['Authorization'] = `Bearer ${token}`;
+    api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
-      Router.push('/admin/products');
+    Router.push('/admin/products');
   }
 
   return (

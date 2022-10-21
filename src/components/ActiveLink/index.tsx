@@ -1,33 +1,38 @@
-import { Link as ChakraLink, LinkProps, useColorModeValue } from '@chakra-ui/react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { ReactNode } from 'react'
+import {
+  Link as ChakraLink,
+  LinkProps,
+  useColorModeValue,
+} from '@chakra-ui/react';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { ReactNode } from 'react';
 
 interface NavLinkProps extends LinkProps {
-  children?: string | ReactNode
-  to: string
-  activeProps?: LinkProps
-  _hover?: LinkProps
+  children?: string | ReactNode;
+  to: string;
+  activeProps?: LinkProps;
+  _hover?: LinkProps;
 }
 
-export function NavLink({ to, activeProps, children, _hover, ...props }: NavLinkProps) {
-  const router = useRouter()
-  const isActive = router.pathname === to
-  const color = useColorModeValue('orange', 'selected')
+export function NavLink({ to, activeProps, children, ...props }: NavLinkProps) {
+  const router = useRouter();
+  const isActive = router.pathname === to;
+  const color = useColorModeValue('orange', 'selected');
 
   if (isActive) {
     return (
       <Link href={to}>
         <ChakraLink
-          fontWeight='bold'
+          fontWeight="bold"
           {...props}
           {...activeProps}
           _hover={{ color: 'selected' }}
-          color={color}>
+          color={color}
+        >
           {children}
         </ChakraLink>
       </Link>
-    )
+    );
   }
 
   return (
@@ -36,5 +41,5 @@ export function NavLink({ to, activeProps, children, _hover, ...props }: NavLink
         {children}
       </ChakraLink>
     </Link>
-  )
+  );
 }

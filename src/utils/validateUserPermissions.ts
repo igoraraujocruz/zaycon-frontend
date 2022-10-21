@@ -1,29 +1,32 @@
-
 type Permission = {
-    id: string;
-    name: string;
-  }
+  id: string;
+  name: string;
+};
 
 type User = {
-    permissions?: Permission[]
-}
+  permissions?: Permission[];
+};
 
 type ValidadeUserPermissionsParams = {
-    user: User;
-    permissions?: string[];
-}
+  user: User;
+  permissions?: string[];
+};
 
-export function validateUserPermissions({ user, permissions }: ValidadeUserPermissionsParams) {
-    if (permissions?.length > 0) {
-        
-        const hasAllPermissions = permissions.some(permission => {
-            return user.permissions.find(userPermissions => userPermissions.name?.includes(permission))
-        });
+export function validateUserPermissions({
+  user,
+  permissions,
+}: ValidadeUserPermissionsParams) {
+  if (permissions?.length > 0) {
+    const hasAllPermissions = permissions.some(permission => {
+      return user.permissions.find(userPermissions =>
+        userPermissions.name?.includes(permission),
+      );
+    });
 
-        if(!hasAllPermissions) {
-            return false;
-        }
+    if (!hasAllPermissions) {
+      return false;
     }
+  }
 
-    return true;
+  return true;
 }

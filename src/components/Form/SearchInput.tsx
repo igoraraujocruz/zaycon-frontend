@@ -12,23 +12,23 @@ interface SearchInputProps extends ChakraSearchInputProps {
   bg?: string;
 }
 
-const SearchInputBase: ForwardRefRenderFunction<HTMLInputElement, SearchInputProps> = (
-  { name, label, error = null, bg, ...rest },
-  ref,
-) => (
-    <ChakraSearchInput
-      name={name}
-      id={name}
-      focusBorderColor="orange"
-      bgColor="gray.900"
-      variant="filled"
-      _hover={{
-        bgColor: 'gray.900',
-      }}
-      size="lg"
-      {...rest}
-      ref={ref}
-    />
+const SearchInputBase: ForwardRefRenderFunction<
+  HTMLInputElement,
+  SearchInputProps
+> = ({ name, label, error = null, bg, ...rest }, ref) => (
+  <ChakraSearchInput
+    name={name}
+    id={name}
+    focusBorderColor="orange"
+    bgColor="gray.900"
+    variant="filled"
+    _hover={{
+      bgColor: 'gray.900',
+    }}
+    size="lg"
+    {...rest}
+    ref={ref}
+  />
 );
 
 export const SearchInput = forwardRef(SearchInputBase);

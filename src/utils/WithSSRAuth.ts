@@ -9,11 +9,13 @@ import { validateUserPermissions } from './validateUserPermissions';
 import { setupAPIClient } from '../services/api';
 
 type withSSRAuthOptions = {
-  permissions?: string[]
-}
+  permissions?: string[];
+};
 
-export function withSSRAuth<P>(fn: GetServerSideProps<P>, options?: withSSRAuthOptions): GetServerSideProps {
-
+export function withSSRAuth<P>(
+  fn: GetServerSideProps<P>,
+  options?: withSSRAuthOptions,
+): GetServerSideProps {
   return async (
     ctx: GetServerSidePropsContext,
   ): Promise<GetServerSidePropsResult<P>> => {
@@ -31,25 +33,25 @@ export function withSSRAuth<P>(fn: GetServerSideProps<P>, options?: withSSRAuthO
     }
 
     if (options) {
-        const apiClient = setupAPIClient(ctx)
-        const response = await apiClient.get('/users/get/me')
-        const user = response.data
+      const apiClient = setupAPIClient(ctx);
+      const response = await apiClient.get('/users/get/me');
+      const user = response.data;
 
-        const { permissions } = options;
+      const { permissions } = options;
 
-        const userHasValidPermissions = validateUserPermissions({
-          user,
-          permissions
-        })
+      const userHasValidPermissions = validateUserPermissions({
+        user,
+        permissions,
+      });
 
-        if (!userHasValidPermissions) {
-          return {
-            redirect: {
-              destination: '/admin/products',
-              permanent: false
-            }
-          }
-        }
+      if (!userHasValidPermissions) {
+        return {
+          redirect: {
+            destination: '/admin/products',
+            permanent: false,
+          },
+        };
+      }
     }
 
     try {
