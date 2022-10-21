@@ -62,11 +62,13 @@ export default function Home() {
       </HStack>
       <Flex justify="center" minH="70vh">
         {(!isLoading && isFetching) || isLoading ? (
-          <Flex justify="center" align="center" mt="2rem">
+          <Flex justify="center" align="center">
             <Spinner color="orange" />
           </Flex>
         ) : error ? (
-          <Text>Falha ao obter dados</Text>
+          <Flex justify="center" align="center">
+            <Text>Falha ao obter dados</Text>
+          </Flex>
         ) : itemFilters.length ? (
           <Grid
             templateColumns={[
