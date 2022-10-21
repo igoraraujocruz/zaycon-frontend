@@ -61,27 +61,25 @@ export default function Home() {
         </Button>
       </HStack>
       <Flex justify="center" minH="70vh">
-        <Grid
-          templateColumns={[
-            '1fr',
-            '1fr',
-            '1fr 1fr',
-            '1fr 1fr',
-            '1fr 1fr 1fr',
-            '1fr 1fr 1fr 1fr',
-            '1fr 1fr 1fr 1fr',
-          ]}
-        >
-          {(!isLoading && isFetching) || isLoading ? (
-            <Flex justify="center" mt="2rem">
-              <Spinner color="orange" />
-            </Flex>
-          ) : error ? (
-            <Flex justify="center">
-              <Text>Falha ao obter dados</Text>
-            </Flex>
-          ) : itemFilters.length ? (
-            itemFilters.map(product => (
+        {(!isLoading && isFetching) || isLoading ? (
+          <Flex justify="center" align="center" mt="2rem">
+            <Spinner color="orange" />
+          </Flex>
+        ) : error ? (
+          <Text>Falha ao obter dados</Text>
+        ) : itemFilters.length ? (
+          <Grid
+            templateColumns={[
+              '1fr',
+              '1fr',
+              '1fr 1fr',
+              '1fr 1fr',
+              '1fr 1fr 1fr',
+              '1fr 1fr 1fr 1fr',
+              '1fr 1fr 1fr 1fr',
+            ]}
+          >
+            {itemFilters.map(product => (
               <Link key={product.id} href={`/product/${product.slug}`}>
                 <Flex
                   key={product.id}
@@ -128,9 +126,21 @@ export default function Home() {
                   </Box>
                 </Flex>
               </Link>
-            ))
-          ) : (
-            data.products.map(product => (
+            ))}
+          </Grid>
+        ) : (
+          <Grid
+            templateColumns={[
+              '1fr',
+              '1fr',
+              '1fr 1fr',
+              '1fr 1fr',
+              '1fr 1fr 1fr',
+              '1fr 1fr 1fr 1fr',
+              '1fr 1fr 1fr 1fr',
+            ]}
+          >
+            {data.products.map(product => (
               <Link key={product.id} href={`/product/${product.slug}`}>
                 <Flex
                   key={product.id}
@@ -177,9 +187,9 @@ export default function Home() {
                   </Box>
                 </Flex>
               </Link>
-            ))
-          )}
-        </Grid>
+            ))}
+          </Grid>
+        )}
       </Flex>
       <Footer />
     </Flex>
