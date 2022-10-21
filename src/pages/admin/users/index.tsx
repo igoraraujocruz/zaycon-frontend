@@ -2,8 +2,8 @@ import { Box, Flex } from '@chakra-ui/react';
 import { AdminHeader } from '../../../components/AdminHeader';
 import { Can } from '../../../components/Can';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
-import { CreateUser } from './create';
-import { GetUsers } from './get';
+import CreateUser from './create';
+import GetUsers from './get';
 
 const Users = () => {
   return (

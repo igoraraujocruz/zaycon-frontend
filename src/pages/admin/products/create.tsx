@@ -42,7 +42,7 @@ const createFormSchema = yup.object().shape({
     ),
 });
 
-export function CreateProducts() {
+export default function CreateProducts() {
   const inputFileRef = useRef<InputFileHandle>(null);
   const {
     register,

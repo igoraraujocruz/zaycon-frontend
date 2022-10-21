@@ -3,8 +3,8 @@ import { AdminHeader } from '../../../components/AdminHeader';
 import { Can } from '../../../components/Can';
 
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
-import { CreateProducts } from './create';
-import { GetProducts } from './get';
+import CreateProducts from './create';
+import GetProducts from './get';
 
 const Products = () => (
   <Box>

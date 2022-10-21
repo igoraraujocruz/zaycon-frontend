@@ -29,7 +29,7 @@ interface SearchProps {
   search: string;
 }
 
-export function GetClients() {
+export default function GetClients() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const { data, isLoading, error, isFetching } = useClients(

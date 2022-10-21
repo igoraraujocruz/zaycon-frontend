@@ -4,8 +4,8 @@ import { ApexOptions } from 'apexcharts';
 import { AdminHeader } from '../../../components/AdminHeader';
 import { Can } from '../../../components/Can';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
-import { CreateClients } from './create';
-import { GetClients } from './get';
+import CreateClients from './create';
+import GetClients from './get';
 import { useClients } from '../../../services/hooks/useClients';
 
 const Chart = dynamic(() => import('react-apexcharts'), {

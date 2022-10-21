@@ -31,7 +31,7 @@ interface SearchProps {
   search: string;
 }
 
-export function GetProducts() {
+export default function GetProducts() {
   const modalDelete = useRef<ModalDeleteHandle>(null);
   const modalUploadImage = useRef<DetailsProductModalHandle>(null);
   const [productId, setProductId] = useState('');

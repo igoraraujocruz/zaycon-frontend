@@ -71,7 +71,7 @@ const createFormSchema = yup.object().shape({
   password: yup.string().required('Nome é obrigatório').min(5),
 });
 
-export function CreateUser() {
+export default function CreateUser() {
   const {
     register,
     handleSubmit,

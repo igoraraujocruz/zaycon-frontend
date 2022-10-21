@@ -32,7 +32,7 @@ const createFormSchema = yup.object().shape({
   email: yup.string().required('Email é obrigatório').email(),
 });
 
-export function CreateClients() {
+export default function CreateClients() {
   const {
     register,
     handleSubmit,
