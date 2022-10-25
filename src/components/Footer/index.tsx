@@ -1,12 +1,4 @@
-import {
-  Box,
-  color,
-  Flex,
-  HStack,
-  Text,
-  useMediaQuery,
-  VStack,
-} from '@chakra-ui/react';
+import { Box, Flex, HStack, Text, useMediaQuery } from '@chakra-ui/react';
 import { RiMapPin2Fill } from 'react-icons/ri';
 import { GrInstagram } from 'react-icons/gr';
 import { BsWhatsapp } from 'react-icons/bs';

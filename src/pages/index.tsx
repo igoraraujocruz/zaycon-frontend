@@ -38,7 +38,7 @@ export default function Home() {
   };
 
   return (
-    <Flex flexDir="column">
+    <Flex flexDir="column" w="100%">
       <Header />
       <HStack
         mt={['2rem', '2rem', '0rem']}
@@ -48,7 +48,7 @@ export default function Home() {
         align="center"
       >
         <SearchInput
-          w={['15rem', '15rem', '18rem']}
+          w={['11rem', '11rem', '15rem', '18rem']}
           borderColor="gray.600"
           border="0.1rem solid black"
           name="search"
@@ -110,7 +110,6 @@ export default function Home() {
                     zIndex={0}
                     bg="black"
                     p="1rem"
-                    w="22rem"
                   >
                     <Text align="center" fontSize="1.5rem">
                       R${product.price} ou {product.debitPoints} pontos
@@ -156,7 +155,7 @@ export default function Home() {
 
                   <Image
                     cursor="pointer"
-                    w="300px"
+                    w={['250px', '250px', '300px']}
                     zIndex={1}
                     h="324.29px"
                     src={
@@ -171,7 +170,6 @@ export default function Home() {
                     zIndex={0}
                     bg="black"
                     p="1rem"
-                    w="22rem"
                   >
                     <Text align="center" fontSize="1.5rem">
                       R${product.price} ou {product.debitPoints} pontos
