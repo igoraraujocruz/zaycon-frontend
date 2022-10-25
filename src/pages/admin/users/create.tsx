@@ -195,7 +195,13 @@ export default function CreateUser() {
           {...register('mobilePhone')}
         />
       </Stack>
-      <Grid templateColumns="repeat(3, 1fr)" columnGap={3} rowGap={2} mb="2rem">
+      <Grid
+        templateColumns="repeat(2, 1fr)"
+        columnGap={3}
+        rowGap={2}
+        mt="2rem"
+        mb="2rem"
+      >
         {permissions.map((permission): ReactElement => {
           return (
             <Controller

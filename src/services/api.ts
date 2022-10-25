@@ -12,7 +12,7 @@ let failedRequestsQueue = [];
 export function setupAPIClient(ctx = undefined) {
   let cookies = parseCookies(ctx);
   const api = axios.create({
-    baseURL: 'https://snap.forja.tech/',
+    baseURL: 'https://snap.forja.tech',
     headers: {
       Authorization: `Bearer ${cookies['snap.token']}`,
     },
