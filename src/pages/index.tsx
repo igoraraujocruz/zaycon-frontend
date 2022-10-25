@@ -41,6 +41,7 @@ export default function Home() {
     <Flex flexDir="column">
       <Header />
       <HStack
+        mt={['2rem', '2rem', '0rem']}
         as="form"
         onSubmit={handleSubmit(onSubmit)}
         justify="center"
