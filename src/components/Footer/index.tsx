@@ -7,7 +7,7 @@ import Link from 'next/link';
 export function Footer() {
   return (
     <Box>
-      <Box bg="black" h="5rem" w="100%" />
+      <Box bg="black" h="2rem" w="100%" />
       <Flex h="10rem" bg="#FF6B00" flexDir="column" alignItems="center">
         <Text mt="2rem" color="#fff">
           Vantagem válida para compras na loja física.

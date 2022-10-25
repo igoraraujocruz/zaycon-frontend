@@ -19,7 +19,7 @@ const SearchInputBase: ForwardRefRenderFunction<
   <ChakraSearchInput
     name={name}
     id={name}
-    focusBorderColor="orange"
+    focusBorderColor="#fff"
     bgColor="gray.900"
     variant="filled"
     _hover={{

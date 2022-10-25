@@ -47,8 +47,9 @@ export default function Home() {
         align="center"
       >
         <SearchInput
-          w="18rem"
+          w={['15rem', '15rem', '18rem']}
           borderColor="gray.600"
+          border="0.1rem solid black"
           name="search"
           {...register('search', {
             onChange() {
@@ -56,7 +57,7 @@ export default function Home() {
             },
           })}
         />
-        <Button bg="orange" _hover={{ bg: 'orangeHover' }} type="submit">
+        <Button bg="#000" _hover={{ bg: 'orangeHover' }} type="submit">
           Procurar
         </Button>
       </HStack>
