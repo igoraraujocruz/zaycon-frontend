@@ -9,14 +9,17 @@ const Users = () => {
   return (
     <Box>
       <AdminHeader />
-      <Flex justify="center" flexDir={['column', 'column', 'row']}>
+      <Flex
+        justify="center"
+        flexDir={['column', 'column', 'column', 'column', 'row']}
+      >
         <Can permissions={['Cadastrar Usuario']}>
           <Flex mt="2rem" justify="center">
             <CreateUser />
           </Flex>
         </Can>
         <Can permissions={['Listar Usuario']}>
-          <Flex justify="center" pl="2rem">
+          <Flex justify="center" pl={['0', '0', '2rem']}>
             <GetUsers />
           </Flex>
         </Can>

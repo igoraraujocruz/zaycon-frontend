@@ -137,10 +137,9 @@ export default function CreateUser() {
     <Flex
       onSubmit={handleSubmit(onSubmit)}
       as="form"
-      w={400}
-      maxWidth={500}
+      w={[300, 350, 400, 500, 350, 400]}
       bg="gray.800"
-      p="8"
+      p={['6', '6', '8']}
       borderRadius={8}
       flexDir="column"
     >

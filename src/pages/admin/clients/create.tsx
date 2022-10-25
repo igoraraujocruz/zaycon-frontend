@@ -78,10 +78,10 @@ export default function CreateClients() {
     <Flex
       onSubmit={handleSubmit(onSubmit)}
       as="form"
-      w={400}
+      w={[300, 350, 400, 500, 350, 400]}
       maxWidth={500}
       bg="gray.800"
-      p="8"
+      p={['6', '6', '8']}
       h="39rem"
       borderRadius={8}
       flexDir="column"

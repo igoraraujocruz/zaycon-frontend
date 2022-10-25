@@ -235,7 +235,7 @@ const DetailsClientModal: ForwardRefRenderFunction<
                   color={purchase.typeOfPayment === 'creditPoints' && 'orange'}
                 >
                   <Td>{purchase.quantity}</Td>
-                  <Td>{purchase.product.name}</Td>
+                  <Td>{purchase.product?.name}</Td>
                   <Td>R${purchase.product.price}</Td>
                   <Td>
                     {purchase.typeOfPayment === 'creditPoints'

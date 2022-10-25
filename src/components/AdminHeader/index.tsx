@@ -1,4 +1,4 @@
-import { Button, Flex, HStack, Image } from '@chakra-ui/react';
+import { Button, Flex, HStack, Image, VStack } from '@chakra-ui/react';
 import { Can } from '../Can';
 import { signOut } from '../../services/hooks/useAuth';
 import { NavLink } from '../ActiveLink';
@@ -6,6 +6,7 @@ import { NavLink } from '../ActiveLink';
 export const AdminHeader = () => {
   return (
     <Flex
+      flexDir="column"
       w="100vw"
       as="header"
       borderRadius="0 0 3rem 3rem"
@@ -16,13 +17,32 @@ export const AdminHeader = () => {
       h={['50px', '100px']}
       bg="gray.700"
     >
-      <Flex w="100%" justify="center">
-        <NavLink to="/">
-          <Image w="10rem" src="../logo.svg" />
-        </NavLink>
+      <Flex
+        w="100%"
+        mt={['0.5rem']}
+        ml="-2rem"
+        justify="flex-end"
+        align="center"
+      >
+        <Button
+          fontSize="0.8rem"
+          onClick={() => signOut()}
+          bg="gray.800"
+          size={['xs', 'md']}
+          _hover={{ bg: 'orangeHover' }}
+        >
+          Sair
+        </Button>
       </Flex>
-      <Flex>
-        <HStack mt="1rem" spacing="2rem">
+      <VStack mt="-1.5rem">
+        <NavLink to="/">
+          <Image w={['4rem', '7rem', '8rem']} src="../logo.svg" />
+        </NavLink>
+        <HStack
+          mt={['0', '0', '1rem']}
+          spacing={['0.5rem', '0.5rem', '2rem']}
+          fontSize={['0.8rem', '0.8rem', '1rem']}
+        >
           <Can
             permissions={[
               'Cadastrar Produto',
@@ -54,18 +74,7 @@ export const AdminHeader = () => {
             <NavLink to="/admin/users">Usuários</NavLink>
           </Can>
         </HStack>
-      </Flex>
-      <Flex w="100%" justify="end">
-        <Button
-          onClick={() => signOut()}
-          p="1.5rem"
-          mr="2rem"
-          bg="gray.800"
-          _hover={{ bg: 'orangeHover' }}
-        >
-          Sair
-        </Button>
-      </Flex>
+      </VStack>
     </Flex>
   );
 };

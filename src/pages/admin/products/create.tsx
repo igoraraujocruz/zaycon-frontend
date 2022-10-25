@@ -58,7 +58,6 @@ export default function CreateProducts() {
   const onSubmit: SubmitHandler<CreateFormData> = async (
     values: CreateFormData,
   ) => {
-    console.log(convertRealToNumber(values.price));
     try {
       await createProduct({
         name: values.name,
@@ -92,9 +91,9 @@ export default function CreateProducts() {
     <Flex
       onSubmit={handleSubmit(onSubmit)}
       as="form"
-      w={400}
+      w={[300, 350, 400, 500, 350, 400]}
       bg="gray.800"
-      p="8"
+      p={['6', '6', '8']}
       h="48rem"
       borderRadius={8}
       flexDir="column"

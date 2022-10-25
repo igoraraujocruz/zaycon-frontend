@@ -122,14 +122,17 @@ const Clients = () => {
       <Can permissions={['Listar Cliente']}>
         <Chart options={options} series={series} type="line" height={194} />
       </Can>
-      <Flex justify="center" flexDir={['column', 'column', 'row']}>
+      <Flex
+        justify="center"
+        flexDir={['column', 'column', 'column', 'column', 'row']}
+      >
         <Can permissions={['Cadastrar Cliente']}>
           <Flex mt="2rem" justify="center">
             <CreateClients />
           </Flex>
         </Can>
         <Can permissions={['Listar Cliente']}>
-          <Flex justify="center" pl="2rem">
+          <Flex justify="center" pl={['0', '0', '2rem']}>
             <GetClients />
           </Flex>
         </Can>

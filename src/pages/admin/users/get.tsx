@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Flex,
   HStack,
@@ -65,7 +66,7 @@ export default function GetUsers() {
   };
 
   return (
-    <Flex w="70vw" flexDir="column">
+    <Flex w={['90vw', '90vw', '90vw', '100vw', '70vw']} flexDir="column">
       <DeleteModal userId={userId} ref={modalDelete} />
       <DetailsUserModal
         name={user.name}
@@ -77,7 +78,7 @@ export default function GetUsers() {
         mt="2rem"
         as="form"
         onSubmit={handleSubmit(onSubmit)}
-        justify="flex-end"
+        justify={['center', 'center', 'center', 'center', 'flex-end']}
       >
         <SearchInput
           w="18rem"
@@ -99,12 +100,12 @@ export default function GetUsers() {
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       />
-      <Flex h="1rem" justify="center" align="center">
+      <Flex h="2.5rem" justify="center" align="center">
         {!isLoading && isFetching && <Spinner size="md" color="gray.500" />}
       </Flex>
 
       {isLoading ? (
-        <Flex justify="center" align="center">
+        <Flex h="2.5rem" justify="center" align="center">
           <Spinner size="md" color="gray.500" />
         </Flex>
       ) : error ? (
@@ -112,77 +113,90 @@ export default function GetUsers() {
           <Text>Falha ao obter dados dos usuários.</Text>
         </Flex>
       ) : (
-        <Table colorScheme="whiteAlpha">
-          <Thead>
-            <Tr>
-              <Th>Nome</Th>
-              <Th>Username</Th>
-              <Th>Celular</Th>
-              <Th>Email</Th>
-              <Th>Data do Cadastro</Th>
-              <Th />
-            </Tr>
-          </Thead>
-          <Tbody>
-            {itemFilters.length
-              ? itemFilters.map(user => (
-                  <Tr key={user.id} cursor="pointer">
-                    <Td onClick={() => openDetailsModal(user)}>{user.name}</Td>
-                    <Td onClick={() => openDetailsModal(user)}>
-                      {user.username}
-                    </Td>
-                    <Td onClick={() => openDetailsModal(user)}>
-                      {user.mobilePhone}
-                    </Td>
-                    <Td onClick={() => openDetailsModal(user)}>{user.email}</Td>
-                    <Td onClick={() => openDetailsModal(user)}>
-                      {new Date(user.createdAt).toLocaleDateString('pt-BR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                      })}
-                    </Td>
-                    <Td
-                      color="gray.600"
-                      _hover={{ color: '#FF6B00' }}
-                      transition="color 200ms"
-                    >
-                      <BsTrashFill
-                        size={25}
-                        onClick={() => openDeleteModal(user.id)}
-                        cursor="pointer"
-                      />
-                    </Td>
-                  </Tr>
-                ))
-              : data.users.map(user => (
-                  <Tr key={user.id} cursor="pointer">
-                    <Td onClick={() => openDetailsModal(user)}>{user.name}</Td>
-                    <Td onClick={() => openDetailsModal(user)}>
-                      {user.username}
-                    </Td>
-                    <Td onClick={() => openDetailsModal(user)}>
-                      {user.mobilePhone}
-                    </Td>
-                    <Td onClick={() => openDetailsModal(user)}>{user.email}</Td>
-                    <Td onClick={() => openDetailsModal(user)}>
-                      {user.createdAt}
-                    </Td>
-                    <Td
-                      color="gray.600"
-                      _hover={{ color: '#FF6B00' }}
-                      transition="color 200ms"
-                    >
-                      <BsTrashFill
-                        size={25}
-                        onClick={() => openDeleteModal(user.id)}
-                        cursor="pointer"
-                      />
-                    </Td>
-                  </Tr>
-                ))}
-          </Tbody>
-        </Table>
+        <Box overflowX="auto">
+          <Table
+            colorScheme="whiteAlpha"
+            size={['md', 'md', 'sm', 'sm', 'sm', 'md']}
+          >
+            <Thead>
+              <Tr>
+                <Th>Nome</Th>
+                <Th>Username</Th>
+                <Th>Celular</Th>
+                <Th>Email</Th>
+                <Th>Data do Cadastro</Th>
+                <Th />
+              </Tr>
+            </Thead>
+            <Tbody>
+              {itemFilters.length
+                ? itemFilters.map(user => (
+                    <Tr key={user.id} cursor="pointer">
+                      <Td onClick={() => openDetailsModal(user)}>
+                        {user.name}
+                      </Td>
+                      <Td onClick={() => openDetailsModal(user)}>
+                        {user.username}
+                      </Td>
+                      <Td onClick={() => openDetailsModal(user)}>
+                        {user.mobilePhone}
+                      </Td>
+                      <Td onClick={() => openDetailsModal(user)}>
+                        {user.email}
+                      </Td>
+                      <Td onClick={() => openDetailsModal(user)}>
+                        {new Date(user.createdAt).toLocaleDateString('pt-BR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        })}
+                      </Td>
+                      <Td
+                        color="gray.600"
+                        _hover={{ color: '#FF6B00' }}
+                        transition="color 200ms"
+                      >
+                        <BsTrashFill
+                          size={25}
+                          onClick={() => openDeleteModal(user.id)}
+                          cursor="pointer"
+                        />
+                      </Td>
+                    </Tr>
+                  ))
+                : data.users.map(user => (
+                    <Tr key={user.id} cursor="pointer">
+                      <Td onClick={() => openDetailsModal(user)}>
+                        {user.name}
+                      </Td>
+                      <Td onClick={() => openDetailsModal(user)}>
+                        {user.username}
+                      </Td>
+                      <Td onClick={() => openDetailsModal(user)}>
+                        {user.mobilePhone}
+                      </Td>
+                      <Td onClick={() => openDetailsModal(user)}>
+                        {user.email}
+                      </Td>
+                      <Td onClick={() => openDetailsModal(user)}>
+                        {user.createdAt}
+                      </Td>
+                      <Td
+                        color="gray.600"
+                        _hover={{ color: '#FF6B00' }}
+                        transition="color 200ms"
+                      >
+                        <BsTrashFill
+                          size={25}
+                          onClick={() => openDeleteModal(user.id)}
+                          cursor="pointer"
+                        />
+                      </Td>
+                    </Tr>
+                  ))}
+            </Tbody>
+          </Table>
+        </Box>
       )}
     </Flex>
   );

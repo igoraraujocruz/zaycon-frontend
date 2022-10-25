@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Flex,
   HStack,
@@ -65,14 +66,14 @@ export default function GetClients() {
   };
 
   return (
-    <Flex w="70vw" flexDir="column">
+    <Flex w={['90vw', '90vw', '90vw', '100vw', '70vw']} flexDir="column">
       <DeleteModal clientId={clientId} ref={modalDelete} />
       <DetailsClientModal client={client} ref={modalDetailsClientModal} />
       <HStack
         mt="2rem"
         as="form"
         onSubmit={handleSubmit(onSubmit)}
-        justify="flex-end"
+        justify={['center', 'center', 'center', 'center', 'flex-end']}
       >
         <SearchInput
           w="18rem"
@@ -84,7 +85,12 @@ export default function GetClients() {
             },
           })}
         />
-        <Button bg="orange" _hover={{ bg: 'orangeHover' }} type="submit">
+        <Button
+          bg="orange"
+          fontSize={['0.8rem', '0.8rem', '1rem']}
+          _hover={{ bg: 'orangeHover' }}
+          type="submit"
+        >
           Procurar
         </Button>
       </HStack>
@@ -94,12 +100,12 @@ export default function GetClients() {
         currentPage={currentPage}
         onPageChange={setCurrentPage}
       />
-      <Flex h="1rem" justify="center" align="center">
+      <Flex h="2.5rem" justify="center" align="center">
         {!isLoading && isFetching && <Spinner size="md" color="gray.500" />}
       </Flex>
 
       {isLoading ? (
-        <Flex h="1rem" justify="center" align="center">
+        <Flex h="2.5rem" justify="center" align="center">
           <Spinner size="md" color="gray.500" />
         </Flex>
       ) : error ? (
@@ -107,92 +113,100 @@ export default function GetClients() {
           <Text>Falha ao obter dados dos clientes.</Text>
         </Flex>
       ) : (
-        <Table colorScheme="whiteAlpha">
-          <Thead>
-            <Tr>
-              <Th>Nome</Th>
-              <Th>Email</Th>
-              <Th>Celular</Th>
-              <Th>Data de Nascimento</Th>
-              <Th>Data do cadastro</Th>
-              <Th>Pontos</Th>
-              <Th />
-            </Tr>
-          </Thead>
-          <Tbody>
-            {itemFilters.length
-              ? itemFilters.map(client => (
-                  <Tr key={client.id} cursor="pointer">
-                    <Td onClick={() => openDetailsClientModal(client)}>
-                      {client.name}
-                    </Td>
-                    <Td onClick={() => openDetailsClientModal(client)}>
-                      {client.email}
-                    </Td>
-                    <Td onClick={() => openDetailsClientModal(client)}>
-                      {client.mobilePhone}
-                    </Td>
-                    <Td onClick={() => openDetailsClientModal(client)}>
-                      {new Date(client.birthday).toLocaleDateString('pt-BR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                      })}
-                    </Td>
-                    <Td onClick={() => openDetailsClientModal(client)}>
-                      {new Date(client.createdAt).toLocaleDateString('pt-BR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                      })}
-                    </Td>
-                    <Td>{client.points}</Td>
-                    <Td
-                      color="gray.600"
-                      _hover={{ color: '#FF6B00' }}
-                      transition="color 200ms"
-                    >
-                      <BsTrashFill
-                        size={25}
-                        onClick={() => openDeleteModal(client.id)}
-                        cursor="pointer"
-                      />
-                    </Td>
-                  </Tr>
-                ))
-              : data.clients.map(client => (
-                  <Tr key={client.id} cursor="pointer">
-                    <Td onClick={() => openDetailsClientModal(client)}>
-                      {client.name}
-                    </Td>
-                    <Td onClick={() => openDetailsClientModal(client)}>
-                      {client.email}
-                    </Td>
-                    <Td onClick={() => openDetailsClientModal(client)}>
-                      {client.mobilePhone}
-                    </Td>
-                    <Td onClick={() => openDetailsClientModal(client)}>
-                      {client.birthday}
-                    </Td>
-                    <Td onClick={() => openDetailsClientModal(client)}>
-                      {client.createdAt}
-                    </Td>
-                    <Td>{client.points}</Td>
-                    <Td
-                      color="gray.600"
-                      _hover={{ color: '#FF6B00' }}
-                      transition="color 200ms"
-                    >
-                      <BsTrashFill
-                        size={25}
-                        onClick={() => openDeleteModal(client.id)}
-                        cursor="pointer"
-                      />
-                    </Td>
-                  </Tr>
-                ))}
-          </Tbody>
-        </Table>
+        <Box overflowX="auto">
+          <Table
+            colorScheme="whiteAlpha"
+            size={['md', 'md', 'sm', 'sm', 'sm', 'md']}
+          >
+            <Thead>
+              <Tr>
+                <Th>Nome</Th>
+                <Th>Email</Th>
+                <Th>Celular</Th>
+                <Th>Data de Nascimento</Th>
+                <Th>Data do cadastro</Th>
+                <Th>Pontos</Th>
+                <Th />
+              </Tr>
+            </Thead>
+            <Tbody>
+              {itemFilters.length
+                ? itemFilters.map(client => (
+                    <Tr key={client.id} cursor="pointer">
+                      <Td onClick={() => openDetailsClientModal(client)}>
+                        {client.name}
+                      </Td>
+                      <Td onClick={() => openDetailsClientModal(client)}>
+                        {client.email}
+                      </Td>
+                      <Td onClick={() => openDetailsClientModal(client)}>
+                        {client.mobilePhone}
+                      </Td>
+                      <Td onClick={() => openDetailsClientModal(client)}>
+                        {new Date(client.birthday).toLocaleDateString('pt-BR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                        })}
+                      </Td>
+                      <Td onClick={() => openDetailsClientModal(client)}>
+                        {new Date(client.createdAt).toLocaleDateString(
+                          'pt-BR',
+                          {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                          },
+                        )}
+                      </Td>
+                      <Td>{client.points}</Td>
+                      <Td
+                        color="gray.600"
+                        _hover={{ color: '#FF6B00' }}
+                        transition="color 200ms"
+                      >
+                        <BsTrashFill
+                          size={25}
+                          onClick={() => openDeleteModal(client.id)}
+                          cursor="pointer"
+                        />
+                      </Td>
+                    </Tr>
+                  ))
+                : data.clients.map(client => (
+                    <Tr key={client.id} cursor="pointer">
+                      <Td onClick={() => openDetailsClientModal(client)}>
+                        {client.name}
+                      </Td>
+                      <Td onClick={() => openDetailsClientModal(client)}>
+                        {client.email}
+                      </Td>
+                      <Td onClick={() => openDetailsClientModal(client)}>
+                        {client.mobilePhone}
+                      </Td>
+                      <Td onClick={() => openDetailsClientModal(client)}>
+                        {client.birthday}
+                      </Td>
+                      <Td onClick={() => openDetailsClientModal(client)}>
+                        {client.createdAt}
+                      </Td>
+                      <Td>{client.points}</Td>
+                      <Td
+                        color="gray.600"
+                        _hover={{ color: '#FF6B00' }}
+                        transition="color 200ms"
+                      >
+                        <BsTrashFill
+                          size={25}
+                          onClick={() => openDeleteModal(client.id)}
+                          cursor="pointer"
+                        />
+                      </Td>
+                    </Tr>
+                  ))}
+            </Tbody>
+          </Table>
+        </Box>
       )}
     </Flex>
   );

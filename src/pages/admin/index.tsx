@@ -57,12 +57,12 @@ function Login() {
         <Image
           mt="2rem"
           mb="2rem"
-          maxW={[225, 225, 300]}
+          maxW={[180, 180, 225, 300]}
           src="../logo.svg"
           sizes="10rem"
           alt="Snap Logo"
         />
-        <Heading ml={-4} color="white">
+        <Heading ml={[-2, -2, -4]} color="white">
           oints
         </Heading>
       </Flex>
@@ -70,9 +70,9 @@ function Login() {
         onSubmit={handleSubmit(handleSignIn)}
         as="form"
         w="100%"
-        maxWidth={360}
+        maxWidth={[270, 270, 360]}
         bg="gray.800"
-        p="8"
+        p={['4', '4', '8']}
         borderRadius={8}
         flexDir="column"
       >
@@ -93,7 +93,7 @@ function Login() {
         </Stack>
         <Button
           type="submit"
-          mt="6"
+          mt={['4', '4', '6']}
           bg="orange"
           _hover={{ bg: '#953e00' }}
           color="white"
