@@ -120,7 +120,7 @@ const Clients = () => {
     <Box>
       <AdminHeader />
       <Can permissions={['Listar Cliente']}>
-        <Chart options={options} series={series} type="line" height={194} />
+        <Chart options={options} series={series} type="line" height={162} />
       </Can>
       <Flex
         justify="center"
