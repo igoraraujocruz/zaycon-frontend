@@ -35,7 +35,7 @@ export default function Product(productSlug: ProductSlug) {
         </Link>
       </Flex>
 
-      <Flex minH="100vh" flexDir="column" justify="center" align="center">
+      <Flex minH="50vh" flexDir="column" justify="center" align="center">
         {(!isLoading && isFetching) || isLoading ? (
           <Spinner color="orange" />
         ) : error ? (
@@ -43,9 +43,7 @@ export default function Product(productSlug: ProductSlug) {
         ) : (
           <Flex flexDir="column" align={['center', 'center', 'flex-start']}>
             <Heading fontSize={['2xl', '4xl']}>{data.name}</Heading>
-
             <Text
-              align="center"
               w={['17.4rem', '17.4rem', '22.2rem', '33.8rem']}
               fontSize={['0.8rem', '1.2rem']}
             >
