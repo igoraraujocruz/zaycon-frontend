@@ -47,7 +47,7 @@ export function withSSRAuth<P>(
       if (!userHasValidPermissions) {
         return {
           redirect: {
-            destination: '/admin/products',
+            destination: '/panel',
             permanent: false,
           },
         };

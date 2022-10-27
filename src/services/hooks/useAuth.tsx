@@ -109,7 +109,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
-    Router.push('/admin/products');
+    Router.push('/panel');
   }
 
   return (

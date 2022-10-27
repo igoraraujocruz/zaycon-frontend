@@ -14,7 +14,7 @@ export function withSSRGuest<P>(fn: GetServerSideProps<P>) {
     if (cookies['snap.token']) {
       return {
         redirect: {
-          destination: '/admin/products',
+          destination: '/panel',
           permanent: false,
         },
       };
