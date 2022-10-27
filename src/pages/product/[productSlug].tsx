@@ -59,9 +59,31 @@ export default function Product(productSlug: ProductSlug) {
                 align={['center', 'center', 'flex-start']}
               >
                 {!data.photos[0] ? (
-                  <Box maxW={['350px', '350px', '650px']}>
-                    <Image w={['90vw']} src="../imageNotFound2.svg" />
-                  </Box>
+                  <VStack spacing={0} mb="2rem">
+                    <Image
+                      border="0.5rem solid #FF6B00"
+                      maxH={['50vh', '50vh', '75vh']}
+                      src="../imageNotFound2.svg"
+                    />
+                    <Text
+                      p={['1.3rem', '1.3rem']}
+                      flexWrap="wrap"
+                      fontSize={['1.5rem', '2xl', '3xl']}
+                      bg="black"
+                    >
+                      R${data.price} ou {data.debitPoints} pontos
+                    </Text>
+                    <Text
+                      p={['1rem', '1rem']}
+                      border="0.5rem solid black"
+                      flexWrap="wrap"
+                      as="mark"
+                      fontSize={['0.8rem', '1rem', '2xl']}
+                    >
+                      Comprando {data.name}, você recebe {data.creditPoints}{' '}
+                      pontos
+                    </Text>
+                  </VStack>
                 ) : (
                   <Zoom overlayBgColorEnd="gray.900">
                     <VStack spacing={0} mb="2rem">
