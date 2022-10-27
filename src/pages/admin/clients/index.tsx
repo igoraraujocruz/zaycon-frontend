@@ -1,6 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import { ApexOptions } from 'apexcharts';
+import Head from 'next/head';
 import { AdminHeader } from '../../../components/AdminHeader';
 import { Can } from '../../../components/Can';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
@@ -117,27 +118,32 @@ const Clients = () => {
   ];
 
   return (
-    <Box>
-      <AdminHeader />
-      <Can permissions={['Listar Cliente']}>
-        <Chart options={options} series={series} type="line" height={162} />
-      </Can>
-      <Flex
-        justify="center"
-        flexDir={['column', 'column', 'column', 'column', 'row']}
-      >
-        <Can permissions={['Cadastrar Cliente']}>
-          <Flex mt="2rem" justify="center">
-            <CreateClients />
-          </Flex>
-        </Can>
+    <>
+      <Head>
+        <title>Clientes | Snap</title>
+      </Head>
+      <Box>
+        <AdminHeader />
         <Can permissions={['Listar Cliente']}>
-          <Flex justify="center" pl={['0', '0', '2rem']}>
-            <GetClients />
-          </Flex>
+          <Chart options={options} series={series} type="line" height={162} />
         </Can>
-      </Flex>
-    </Box>
+        <Flex
+          justify="center"
+          flexDir={['column', 'column', 'column', 'column', 'row']}
+        >
+          <Can permissions={['Cadastrar Cliente']}>
+            <Flex mt="2rem" justify="center">
+              <CreateClients />
+            </Flex>
+          </Can>
+          <Can permissions={['Listar Cliente']}>
+            <Flex justify="center" pl={['0', '0', '2rem']}>
+              <GetClients />
+            </Flex>
+          </Can>
+        </Flex>
+      </Box>
+    </>
   );
 };
 

@@ -11,6 +11,7 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AiOutlineUser } from 'react-icons/ai';
 import { RiLockPasswordLine } from 'react-icons/ri';
+import Head from 'next/head';
 import { Input } from '../../components/Form/Input';
 import { useAuth } from '../../services/hooks/useAuth';
 import { withSSRGuest } from '../../utils/WithSSRGuest';
@@ -52,59 +53,70 @@ function Login() {
     }
   };
   return (
-    <Flex flexDir="column" w="100vw" h="100vh" align="center" justify="center">
-      <Flex alignItems="center">
-        <Image
-          mt="2rem"
-          mb="2rem"
-          maxW={[180, 180, 225, 300]}
-          src="../logo.svg"
-          sizes="10rem"
-          alt="Snap Logo"
-        />
-        <Heading ml={[-2, -2, -4]} color="white">
-          oints
-        </Heading>
-      </Flex>
+    <>
+      <Head>
+        <title>Admin | Snap</title>
+      </Head>
       <Flex
-        onSubmit={handleSubmit(handleSignIn)}
-        as="form"
-        w="100%"
-        maxWidth={[270, 270, 360]}
-        bg="gray.800"
-        p={['4', '4', '8']}
-        borderRadius={8}
         flexDir="column"
+        w="100vw"
+        h="100vh"
+        align="center"
+        justify="center"
       >
-        <Stack spacing="4">
-          <Input
-            icon={AiOutlineUser}
-            name="username"
-            label="Username"
-            {...register('username')}
+        <Flex alignItems="center">
+          <Image
+            mt="2rem"
+            mb="2rem"
+            maxW={[180, 180, 225, 300]}
+            src="../logo.svg"
+            sizes="10rem"
+            alt="Snap Logo"
           />
-          <Input
-            icon={RiLockPasswordLine}
-            name="password"
-            type="password"
-            label="Senha"
-            {...register('password')}
-          />
-        </Stack>
-        <Button
-          type="submit"
-          mt={['4', '4', '6']}
-          bg="orange"
-          _hover={{ bg: '#953e00' }}
-          color="white"
-          size="lg"
+          <Heading ml={[-2, -2, -4]} color="white">
+            oints
+          </Heading>
+        </Flex>
+        <Flex
+          onSubmit={handleSubmit(handleSignIn)}
+          as="form"
+          w="100%"
+          maxWidth={[270, 270, 360]}
+          bg="gray.800"
+          p={['4', '4', '8']}
+          borderRadius={8}
+          flexDir="column"
         >
-          Entrar
-        </Button>
+          <Stack spacing="4">
+            <Input
+              icon={AiOutlineUser}
+              name="username"
+              label="Username"
+              {...register('username')}
+            />
+            <Input
+              icon={RiLockPasswordLine}
+              name="password"
+              type="password"
+              label="Senha"
+              {...register('password')}
+            />
+          </Stack>
+          <Button
+            type="submit"
+            mt={['4', '4', '6']}
+            bg="orange"
+            _hover={{ bg: '#953e00' }}
+            color="white"
+            size="lg"
+          >
+            Entrar
+          </Button>
 
-        <ForgotPasswordModal />
+          <ForgotPasswordModal />
+        </Flex>
       </Flex>
-    </Flex>
+    </>
   );
 }
 

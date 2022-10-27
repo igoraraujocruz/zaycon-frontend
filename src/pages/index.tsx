@@ -9,6 +9,7 @@ import {
   HStack,
   Button,
 } from '@chakra-ui/react';
+import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -38,162 +39,167 @@ export default function Home() {
   };
 
   return (
-    <Flex flexDir="column" w="100%">
-      <Header />
-      <HStack
-        mt={['2rem', '2rem', '0rem']}
-        as="form"
-        onSubmit={handleSubmit(onSubmit)}
-        justify="center"
-        align="center"
-      >
-        <SearchInput
-          w={['11rem', '11rem', '15rem', '18rem']}
-          borderColor="gray.600"
-          border="0.1rem solid black"
-          name="search"
-          {...register('search', {
-            onChange() {
-              setItemFilters([]);
-            },
-          })}
-        />
-        <Button bg="#000" _hover={{ bg: 'orangeHover' }} type="submit">
-          Procurar
-        </Button>
-      </HStack>
-      <Flex justify="center" minH="70vh">
-        {(!isLoading && isFetching) || isLoading ? (
-          <Flex justify="center" align="center">
-            <Spinner color="orange" />
-          </Flex>
-        ) : error ? (
-          <Flex justify="center" align="center">
-            <Text>Falha ao obter dados</Text>
-          </Flex>
-        ) : itemFilters.length ? (
-          <Grid
-            templateColumns={[
-              '1fr',
-              '1fr',
-              '1fr 1fr',
-              '1fr 1fr',
-              '1fr 1fr 1fr',
-              '1fr 1fr 1fr 1fr',
-              '1fr 1fr 1fr 1fr',
-            ]}
-          >
-            {itemFilters.map(product => (
-              <Link key={product.id} href={`/product/${product.slug}`}>
-                <Flex
-                  key={product.id}
-                  p="2rem"
-                  flexDir="column"
-                  alignItems="center"
-                >
-                  <Heading cursor="pointer">{product.name}</Heading>
-
-                  <Image
-                    cursor="pointer"
-                    w="300px"
-                    zIndex={1}
-                    h="324.29px"
-                    src={
-                      !product.photos[0]
-                        ? 'imageNotFound2.svg'
-                        : product.photos[0].url
-                    }
-                  />
-                  <Box
-                    cursor="pointer"
-                    mt="-1rem"
-                    zIndex={0}
-                    bg="black"
-                    p="1rem"
+    <>
+      <Head>
+        <title>Loja | Snap</title>
+      </Head>
+      <Flex flexDir="column" w="100%">
+        <Header />
+        <HStack
+          mt={['2rem', '2rem', '0rem']}
+          as="form"
+          onSubmit={handleSubmit(onSubmit)}
+          justify="center"
+          align="center"
+        >
+          <SearchInput
+            w={['11rem', '11rem', '15rem', '18rem']}
+            borderColor="gray.600"
+            border="0.1rem solid black"
+            name="search"
+            {...register('search', {
+              onChange() {
+                setItemFilters([]);
+              },
+            })}
+          />
+          <Button bg="#000" _hover={{ bg: 'orangeHover' }} type="submit">
+            Procurar
+          </Button>
+        </HStack>
+        <Flex justify="center" minH="70vh">
+          {(!isLoading && isFetching) || isLoading ? (
+            <Flex justify="center" align="center">
+              <Spinner color="orange" />
+            </Flex>
+          ) : error ? (
+            <Flex justify="center" align="center">
+              <Text>Falha ao obter dados</Text>
+            </Flex>
+          ) : itemFilters.length ? (
+            <Grid
+              templateColumns={[
+                '1fr',
+                '1fr',
+                '1fr 1fr',
+                '1fr 1fr',
+                '1fr 1fr 1fr',
+                '1fr 1fr 1fr 1fr',
+                '1fr 1fr 1fr 1fr',
+              ]}
+            >
+              {itemFilters.map(product => (
+                <Link key={product.id} href={`/product/${product.slug}`}>
+                  <Flex
+                    key={product.id}
+                    p="2rem"
+                    flexDir="column"
+                    alignItems="center"
                   >
-                    <Text align="center" fontSize="1.5rem">
-                      R${product.price} ou {product.debitPoints} pontos
-                    </Text>
-                    <HStack justify="center">
-                      <Text color="orange" align="center" fontSize="1.5rem">
-                        Recebe
-                      </Text>
-                      <Text
-                        align="center"
-                        fontSize="1.5rem"
-                        borderBottom="0.1rem solid #FF6B00"
-                      >
-                        {product.creditPoints} pontos
-                      </Text>
-                    </HStack>
-                  </Box>
-                </Flex>
-              </Link>
-            ))}
-          </Grid>
-        ) : (
-          <Grid
-            templateColumns={[
-              '1fr',
-              '1fr',
-              '1fr 1fr',
-              '1fr 1fr',
-              '1fr 1fr 1fr',
-              '1fr 1fr 1fr 1fr',
-              '1fr 1fr 1fr 1fr',
-            ]}
-          >
-            {data.products.map(product => (
-              <Link key={product.id} href={`/product/${product.slug}`}>
-                <Flex
-                  key={product.id}
-                  p="2rem"
-                  flexDir="column"
-                  alignItems="center"
-                >
-                  <Heading cursor="pointer">{product.name}</Heading>
+                    <Heading cursor="pointer">{product.name}</Heading>
 
-                  <Image
-                    cursor="pointer"
-                    w={['250px', '250px', '300px']}
-                    zIndex={1}
-                    h="324.29px"
-                    src={
-                      !product.photos[0]
-                        ? 'imageNotFound2.svg'
-                        : product.photos[0].url
-                    }
-                  />
-                  <Box
-                    cursor="pointer"
-                    mt="-1rem"
-                    zIndex={0}
-                    bg="black"
-                    p="1rem"
+                    <Image
+                      cursor="pointer"
+                      w="300px"
+                      zIndex={1}
+                      h="324.29px"
+                      src={
+                        !product.photos[0]
+                          ? 'imageNotFound2.svg'
+                          : product.photos[0].url
+                      }
+                    />
+                    <Box
+                      cursor="pointer"
+                      mt="-1rem"
+                      zIndex={0}
+                      bg="black"
+                      p="1rem"
+                    >
+                      <Text align="center" fontSize="1.5rem">
+                        R${product.price} ou {product.debitPoints} pontos
+                      </Text>
+                      <HStack justify="center">
+                        <Text color="orange" align="center" fontSize="1.5rem">
+                          Recebe
+                        </Text>
+                        <Text
+                          align="center"
+                          fontSize="1.5rem"
+                          borderBottom="0.1rem solid #FF6B00"
+                        >
+                          {product.creditPoints} pontos
+                        </Text>
+                      </HStack>
+                    </Box>
+                  </Flex>
+                </Link>
+              ))}
+            </Grid>
+          ) : (
+            <Grid
+              templateColumns={[
+                '1fr',
+                '1fr',
+                '1fr 1fr',
+                '1fr 1fr',
+                '1fr 1fr 1fr',
+                '1fr 1fr 1fr 1fr',
+                '1fr 1fr 1fr 1fr',
+              ]}
+            >
+              {data.products.map(product => (
+                <Link key={product.id} href={`/product/${product.slug}`}>
+                  <Flex
+                    key={product.id}
+                    p="2rem"
+                    flexDir="column"
+                    alignItems="center"
                   >
-                    <Text align="center" fontSize="1.5rem">
-                      R${product.price} ou {product.debitPoints} pontos
-                    </Text>
-                    <HStack justify="center">
-                      <Text color="orange" align="center" fontSize="1.5rem">
-                        Recebe
+                    <Heading cursor="pointer">{product.name}</Heading>
+
+                    <Image
+                      cursor="pointer"
+                      w={['250px', '250px', '300px']}
+                      zIndex={1}
+                      h="324.29px"
+                      src={
+                        !product.photos[0]
+                          ? 'imageNotFound2.svg'
+                          : product.photos[0].url
+                      }
+                    />
+                    <Box
+                      cursor="pointer"
+                      mt="-1rem"
+                      zIndex={0}
+                      bg="black"
+                      p="1rem"
+                    >
+                      <Text align="center" fontSize="1.5rem">
+                        R${product.price} ou {product.debitPoints} pontos
                       </Text>
-                      <Text
-                        align="center"
-                        fontSize="1.5rem"
-                        borderBottom="0.1rem solid #FF6B00"
-                      >
-                        {product.creditPoints} pontos
-                      </Text>
-                    </HStack>
-                  </Box>
-                </Flex>
-              </Link>
-            ))}
-          </Grid>
-        )}
+                      <HStack justify="center">
+                        <Text color="orange" align="center" fontSize="1.5rem">
+                          Recebe
+                        </Text>
+                        <Text
+                          align="center"
+                          fontSize="1.5rem"
+                          borderBottom="0.1rem solid #FF6B00"
+                        >
+                          {product.creditPoints} pontos
+                        </Text>
+                      </HStack>
+                    </Box>
+                  </Flex>
+                </Link>
+              ))}
+            </Grid>
+          )}
+        </Flex>
+        <Footer />
       </Flex>
-      <Footer />
-    </Flex>
+    </>
   );
 }

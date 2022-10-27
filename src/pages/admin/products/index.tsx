@@ -1,4 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react';
+import Head from 'next/head';
 import { AdminHeader } from '../../../components/AdminHeader';
 import { Can } from '../../../components/Can';
 
@@ -7,24 +8,29 @@ import CreateProducts from './create';
 import GetProducts from './get';
 
 const Products = () => (
-  <Box>
-    <AdminHeader />
-    <Flex
-      justify="center"
-      flexDir={['column', 'column', 'column', 'column', 'row']}
-    >
-      <Can permissions={['Cadastrar Produto']}>
-        <Flex mt="2rem" justify={['center']}>
-          <CreateProducts />
-        </Flex>
-      </Can>
-      <Can permissions={['Listar Produto']}>
-        <Flex justify="center" pl={['0', '0', '2rem']}>
-          <GetProducts />
-        </Flex>
-      </Can>
-    </Flex>
-  </Box>
+  <>
+    <Head>
+      <title>Produtos | Snap</title>
+    </Head>
+    <Box>
+      <AdminHeader />
+      <Flex
+        justify="center"
+        flexDir={['column', 'column', 'column', 'column', 'row']}
+      >
+        <Can permissions={['Cadastrar Produto']}>
+          <Flex mt="2rem" justify={['center']}>
+            <CreateProducts />
+          </Flex>
+        </Can>
+        <Can permissions={['Listar Produto']}>
+          <Flex justify="center" pl={['0', '0', '2rem']}>
+            <GetProducts />
+          </Flex>
+        </Can>
+      </Flex>
+    </Box>
+  </>
 );
 
 export default Products;

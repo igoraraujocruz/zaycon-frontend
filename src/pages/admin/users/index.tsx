@@ -1,4 +1,5 @@
 import { Box, Flex } from '@chakra-ui/react';
+import Head from 'next/head';
 import { AdminHeader } from '../../../components/AdminHeader';
 import { Can } from '../../../components/Can';
 import { withSSRAuth } from '../../../utils/WithSSRAuth';
@@ -7,24 +8,29 @@ import GetUsers from './get';
 
 const Users = () => {
   return (
-    <Box>
-      <AdminHeader />
-      <Flex
-        justify="center"
-        flexDir={['column', 'column', 'column', 'column', 'row']}
-      >
-        <Can permissions={['Cadastrar Usuario']}>
-          <Flex mt="2rem" justify="center">
-            <CreateUser />
-          </Flex>
-        </Can>
-        <Can permissions={['Listar Usuario']}>
-          <Flex justify="center" pl={['0', '0', '2rem']}>
-            <GetUsers />
-          </Flex>
-        </Can>
-      </Flex>
-    </Box>
+    <>
+      <Head>
+        <title>Usuários | Snap</title>
+      </Head>
+      <Box>
+        <AdminHeader />
+        <Flex
+          justify="center"
+          flexDir={['column', 'column', 'column', 'column', 'row']}
+        >
+          <Can permissions={['Cadastrar Usuario']}>
+            <Flex mt="2rem" justify="center">
+              <CreateUser />
+            </Flex>
+          </Can>
+          <Can permissions={['Listar Usuario']}>
+            <Flex justify="center" pl={['0', '0', '2rem']}>
+              <GetUsers />
+            </Flex>
+          </Can>
+        </Flex>
+      </Box>
+    </>
   );
 };
 
