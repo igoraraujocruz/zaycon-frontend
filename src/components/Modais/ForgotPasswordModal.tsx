@@ -40,8 +40,8 @@ export function ForgotPasswordModal() {
   const toast = useToast();
 
   const handleSignIn: SubmitHandler<SignInFormData> = async values => {
+    setIsSendingEmail(true);
     try {
-      setIsSendingEmail(true);
       await api.post('/password/forgot', {
         email: values.email,
       });
@@ -49,17 +49,18 @@ export function ForgotPasswordModal() {
       toast({
         title: 'E-mail enviado com sucesso.',
         status: 'success',
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
       setIsSendingEmail(false);
       onClose();
       reset();
     } catch (err) {
+      setIsSendingEmail(false);
       toast({
         title: 'E-mail não pode ser enviado.',
         status: 'error',
-        duration: 9000,
+        duration: 2000,
         isClosable: true,
       });
     }
