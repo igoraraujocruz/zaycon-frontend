@@ -30,6 +30,7 @@ Tecnologias que foram usadas para desenvolver este cliente web.
 
 - [NextJS](https://nextjs.org/)
 - [TypeScript](https://www.typescriptlang.org/)
+- [ChakraUi](https://chakra-ui.com/)
 - [React Icons](https://react-icons.netlify.com/#/)
 - [React Hook Form](https://react-hook-form.com/)
 - [ApexCharts](https://apexcharts.com/)
