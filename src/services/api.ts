@@ -15,7 +15,7 @@ export function setupAPIClient(ctx = undefined) {
     baseURL:
       process.env.NODE_ENV === 'development'
         ? 'http://localhost:3333'
-        : 'https://snap.forja.tech',
+        : 'https://api.zaycon.shop',
     headers: {
       Authorization: `Bearer ${cookies['snap.token']}`,
     },
