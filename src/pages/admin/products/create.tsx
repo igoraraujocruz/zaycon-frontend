@@ -15,31 +15,26 @@ import { convertRealToNumber } from '../../../utils/convertRealToNumber';
 type CreateFormData = {
   name: string;
   description: string;
+  quantity: number,
   price: string;
-  debitPoints: number;
-  creditPoints: number;
+  points: number;
   photos: File[];
 };
 
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome do produto é obrigatório'),
+  quantity: yup.number().required('A quantidade é necessária'),
   description: yup.string().required('Descrição do produto é obrigatória'),
   price: yup
     .string()
     .typeError('Insira um valor')
     .required('Preço do produto é obrigatório'),
-  debitPoints: yup
+    points: yup
     .number()
     .typeError('Insira um valor')
     .required(
       'Informar quantos pontos são necessários para adquirir o produto',
-    ),
-  creditPoints: yup
-    .number()
-    .typeError('Insira um valor')
-    .required(
-      'Informar quantidade de pontos que se ganha ao comprar este produto',
-    ),
+    )
 });
 
 export default function CreateProducts() {
@@ -58,13 +53,14 @@ export default function CreateProducts() {
   const onSubmit: SubmitHandler<CreateFormData> = async (
     values: CreateFormData,
   ) => {
+    
     try {
       await createProduct({
         name: values.name,
         description: values.description,
+        quantity: values.quantity,
         price: convertRealToNumber(values.price),
-        debitPoints: values.debitPoints,
-        creditPoints: values.creditPoints,
+        points: values.points,
         photos: inputFileRef.current.images,
       });
 
@@ -94,7 +90,7 @@ export default function CreateProducts() {
       w={[300, 350, 400, 500, 350, 400]}
       bg="gray.800"
       p={['6', '6', '8']}
-      h="48rem"
+      h="46rem"
       borderRadius={8}
       flexDir="column"
     >
@@ -120,18 +116,17 @@ export default function CreateProducts() {
           {...register('description')}
         />
         <Input
-          type="number"
-          error={errors.debitPoints}
-          name="debitPoints"
-          label="Pontos necessários para a retirada"
-          {...register('debitPoints')}
+          error={errors.name}
+          name="quantity"
+          label="Quantidade"
+          {...register('quantity')}
         />
         <Input
           type="number"
-          error={errors.creditPoints}
-          name="creditPoints"
-          label="Crédito de Pontos"
-          {...register('creditPoints')}
+          error={errors.points}
+          name="points"
+          label="Pontos"
+          {...register('points')}
         />
       </Stack>
       <Flex justify="center">

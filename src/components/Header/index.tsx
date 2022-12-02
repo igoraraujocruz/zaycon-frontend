@@ -12,16 +12,8 @@ export function Header() {
     >
       <Box>
         <Flex alignItems="center">
-          <Image
-            mt="2rem"
-            mb="2rem"
-            maxW={[225, 225, 300]}
-            src="../logo.svg"
-            sizes="10rem"
-            alt="Snap Logo"
-          />
-          <Heading ml={-4} color="white">
-            oints
+          <Heading color="white">
+            sss
           </Heading>
         </Flex>
       </Box>

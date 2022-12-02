@@ -63,7 +63,7 @@ export default function Product(productSlug: ProductSlug) {
                     <Image
                       border="0.5rem solid #FF6B00"
                       maxH={['50vh', '50vh', '75vh']}
-                      src="../imageNotFound2.svg"
+                      src="../placeholder.png"
                     />
                     <Text
                       p={['1.3rem', '1.3rem']}
@@ -71,17 +71,7 @@ export default function Product(productSlug: ProductSlug) {
                       fontSize={['1.5rem', '2xl', '3xl']}
                       bg="black"
                     >
-                      R${data.price} ou {data.debitPoints} pontos
-                    </Text>
-                    <Text
-                      p={['1rem', '1rem']}
-                      border="0.5rem solid black"
-                      flexWrap="wrap"
-                      as="mark"
-                      fontSize={['0.8rem', '1rem', '2xl']}
-                    >
-                      Comprando {data.name}, você recebe {data.creditPoints}{' '}
-                      pontos
+                      R${data.price} ou {data.points} pontos
                     </Text>
                   </VStack>
                 ) : (
@@ -98,17 +88,7 @@ export default function Product(productSlug: ProductSlug) {
                         fontSize={['1.5rem', '2xl', '3xl']}
                         bg="black"
                       >
-                        R${data.price} ou {data.debitPoints} pontos
-                      </Text>
-                      <Text
-                        p={['1rem', '1rem']}
-                        border="0.5rem solid black"
-                        flexWrap="wrap"
-                        as="mark"
-                        fontSize={['0.8rem', '1rem', '2xl']}
-                      >
-                        Comprando {data.name}, você recebe {data.creditPoints}{' '}
-                        pontos
+                        R${data.price} ou {data.points} pontos
                       </Text>
                     </VStack>
                   </Zoom>

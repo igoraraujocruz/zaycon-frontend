@@ -48,8 +48,7 @@ interface ProductProps {
     description: string;
     price: number;
     slug: string;
-    creditPoints: number;
-    debitPoints: number;
+    points: number;
     createdAt: string;
     photos: [
       {
@@ -73,8 +72,7 @@ type EditFormData = {
   name: string;
   description: string;
   price: number;
-  debitPoints: number;
-  creditPoints: number;
+  points: number;
 };
 
 export interface DetailsProductModalHandle {
@@ -86,16 +84,11 @@ const editFormSchema = yup.object().shape({
   name: yup.string().required('Nome do produto é obrigatório'),
   description: yup.string().required('Descrição do produto é obrigatória'),
   price: yup.number().required('Preço do produto é obrigatório'),
-  debitPoints: yup
+  points: yup
     .number()
     .required(
-      'Informar quantos pontos são necessários para adquirir o produto',
-    ),
-  creditPoints: yup
-    .number()
-    .required(
-      'Informar quantidade de pontos que se ganha ao comprar este produto',
-    ),
+      'Informar a quantidade de pontos que se ganha',
+    )
 });
 
 const DetailsProductModal: ForwardRefRenderFunction<
@@ -169,8 +162,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
         name: getValues('name'),
         description: getValues('description'),
         price: getValues('price'),
-        creditPoints: getValues('creditPoints'),
-        debitPoints: getValues('debitPoints'),
+        points: getValues('points')
       });
       toast({
         title: 'Produto atualizado com sucesso!',
@@ -247,13 +239,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
                     bg="gray.800"
                     name="debitPoints"
                     label="Débito de Pontos"
-                    {...register('debitPoints')}
-                  />
-                  <Input
-                    bg="gray.800"
-                    name="creditPoints"
-                    label="Crédito de Pontos"
-                    {...register('creditPoints')}
+                    {...register('points')}
                   />
                 </Stack>
                 <Button

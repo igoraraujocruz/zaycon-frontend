@@ -6,15 +6,14 @@ export interface Product {
   id: string;
   name: string;
   description: string;
+  amount: number;
   price: number;
   slug: string;
-  creditPoints: number;
-  debitPoints: number;
+  points: number;
   createdAt: string;
   photos: [
     {
       id: string;
-      name: string;
       url: string;
     },
   ];
@@ -28,8 +27,8 @@ interface CreateProductProps {
   name: string;
   description: string;
   price: number;
-  creditPoints: number;
-  debitPoints: number;
+  points: number;
+  quantity: number;
   photos: File[];
 }
 
@@ -38,8 +37,7 @@ interface UpdateProductProps {
   name?: string;
   description?: string;
   price?: number;
-  creditPoints?: number;
-  debitPoints?: number;
+  points?: number;
 }
 
 interface PhotosProps {
@@ -71,8 +69,7 @@ export const getProducts = async (
         description: product.description,
         price: product.price,
         slug: product.slug,
-        creditPoints: product.creditPoints,
-        debitPoints: product.debitPoints,
+        points: product.points,
         photos: product.photos,
         createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
           day: '2-digit',
@@ -88,15 +85,16 @@ export const getProducts = async (
 
   const { data } = await api.get('/products');
 
+
   const products = data.map((product: Product) => {
     return {
       id: product.id,
       name: product.name,
       description: product.description,
+      amount: product.amount,
       price: product.price,
       slug: product.slug,
-      creditPoints: product.creditPoints,
-      debitPoints: product.debitPoints,
+      points: product.points,
       photos: product.photos,
       createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
         day: '2-digit',
@@ -147,9 +145,9 @@ export async function createProduct(product: CreateProductProps) {
 
   formData.append('name', product.name);
   formData.append('price', product.price.toString());
+  formData.append('quantity', product.quantity.toString());
   formData.append('description', product.description);
-  formData.append('debitPoints', product.debitPoints.toString());
-  formData.append('creditPoints', product.creditPoints.toString());
+  formData.append('points', product.points.toString());
 
   product.photos.forEach(file => {
     formData.append('photos', file);

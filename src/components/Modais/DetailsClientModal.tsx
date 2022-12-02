@@ -18,8 +18,6 @@ import {
   Td,
   Tfoot,
   VStack,
-  Flex,
-  Box,
 } from '@chakra-ui/react';
 import {
   forwardRef,

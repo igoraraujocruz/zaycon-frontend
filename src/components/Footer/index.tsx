@@ -11,7 +11,7 @@ export function Footer() {
       <Box bg="black" h="2rem" w="100%" />
       <Flex h="11rem" bg="#FF6B00" flexDir="column" alignItems="center">
         <HStack mt="1rem" align="center" spacing={5}>
-          <Link href="/">
+          <Link href="https://www.instagram.com/zaycon.connect">
             <Flex cursor="pointer">
               <GrInstagram color="white" size={isNotLargerThan500 ? 28 : 35} />
             </Flex>

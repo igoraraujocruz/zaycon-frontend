@@ -18,19 +18,15 @@ export interface User {
   ];
 }
 
-interface CreateUserProps {
+interface CreateSellerProps {
   name: string;
   username: string;
   password: string;
-  mobilePhone: string;
+  numberPhone: string;
   email: string;
-  permissions: string[];
+  birthday: Date;
 }
 
-interface UserPermissions {
-  userId: string;
-  permissions: string[];
-}
 
 interface UsersAndQuantityOfUsers {
   users: User[];
@@ -77,8 +73,8 @@ export function useUsers(page: number, usersPerPage: number) {
   );
 }
 
-export async function createUser(user: CreateUserProps) {
-  await api.post('/users', user);
+export async function createSeller(seller: CreateSellerProps) {
+  await api.post('/sellers', seller);
 
   queryClient.invalidateQueries('users');
 }
@@ -89,18 +85,6 @@ export async function deleteUser(userId: string) {
   queryClient.invalidateQueries('users');
 }
 
-export async function updateUserPermissions({
-  userId,
-  permissions,
-}: UserPermissions) {
-  if (typeof permissions === 'string') {
-    await api.patch(`/users/${userId}`, { permissions: [] });
-  } else {
-    await api.patch(`/users/${userId}`, { permissions });
-
-    queryClient.invalidateQueries('users');
-  }
-}
 
 export async function resetPassword(
   token: string,

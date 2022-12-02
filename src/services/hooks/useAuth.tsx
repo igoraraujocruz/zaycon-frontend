@@ -11,13 +11,8 @@ import { api } from '../apiClient';
 
 type User = {
   name: string;
+  isAdmin: boolean;
   email: string;
-  permissions: [
-    {
-      id: string;
-      name: string;
-    },
-  ];
 };
 
 type SignInCredentials = {
@@ -50,7 +45,7 @@ export function signOut() {
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<User>({ permissions: [{}] } as User);
+  const [user, setUser] = useState<User>({} as User);
   const isAuthenticated = !!user;
 
   useEffect(() => {
@@ -71,11 +66,11 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     if (token) {
       api
-        .get('users/get/me')
+        .get('sellers/me')
         .then(response => {
-          const { email, permissions, name } = response.data;
+          const { email, name, isAdmin } = response.data;
 
-          setUser({ email, permissions, name });
+          setUser({ email, name, isAdmin });
         })
         .catch(() => {
           signOut();
@@ -103,13 +98,17 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     setUser({
       name: user.name,
-      permissions: user.permissions,
       email: user.email,
+      isAdmin: user.isAdmin,
     });
 
     api.defaults.headers['Authorization'] = `Bearer ${token}`;
 
-    Router.push('/panel');
+    if (user.isAdmin === true) {
+      Router.push('/painelAdm');
+    }
+
+    Router.push('/painelSeller');
   }
 
   return (

@@ -123,8 +123,7 @@ export default function GetProducts() {
                 <Th>Nome do Produto</Th>
                 <Th>Descrição</Th>
                 <Th>Preço</Th>
-                <Th>Pontos Débito</Th>
-                <Th>Pontos Crédito</Th>
+                <Th>Pontos</Th>
                 <Th>Slug</Th>
                 <Th>Cadastrado por:</Th>
                 <Th>Data do cadastro</Th>
@@ -156,16 +155,9 @@ export default function GetProducts() {
                       <Td
                         onClick={() => openUploadModal(product)}
                         cursor="pointer"
-                        color="#c30000"
-                      >
-                        - {product.debitPoints}
-                      </Td>
-                      <Td
-                        onClick={() => openUploadModal(product)}
-                        cursor="pointer"
                         color="#0064cf"
                       >
-                        + {product.creditPoints}
+                        {product.points}
                       </Td>
                       <Td
                         onClick={() => openUploadModal(product)}
@@ -233,16 +225,9 @@ export default function GetProducts() {
                       <Td
                         onClick={() => openUploadModal(product)}
                         cursor="pointer"
-                        color="#c30000"
-                      >
-                        - {product.debitPoints}
-                      </Td>
-                      <Td
-                        onClick={() => openUploadModal(product)}
-                        cursor="pointer"
                         color="#0064cf"
                       >
-                        + {product.creditPoints}
+                      {product.points}
                       </Td>
                       <Td
                         onClick={() => openUploadModal(product)}

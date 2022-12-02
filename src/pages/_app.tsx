@@ -5,16 +5,19 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { theme } from '../styles/theme';
 import { queryClient } from '../services/queryClient';
 import { AuthProvider } from '../services/hooks/useAuth';
+import { CartProvider } from '../services/hooks/useCart';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ChakraProvider theme={theme}>
-        <AuthProvider>
-          <Component {...pageProps} />
-        </AuthProvider>
-        <ReactQueryDevtools />
-      </ChakraProvider>
+      <CartProvider>
+        <ChakraProvider theme={theme}>
+          <AuthProvider>
+            <Component {...pageProps} />
+          </AuthProvider>
+          <ReactQueryDevtools />
+        </ChakraProvider>
+      </CartProvider>
     </QueryClientProvider>
   );
 }

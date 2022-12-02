@@ -5,11 +5,11 @@ import {
 } from 'next';
 import { destroyCookie, parseCookies } from 'nookies';
 import { AuthTokenError } from '../errors/AuthTokenError';
-import { validateUserPermissions } from './validateUserPermissions';
+import { validateUserIsAdmin } from './validateUserPermissions';
 import { setupAPIClient } from '../services/api';
 
 type withSSRAuthOptions = {
-  permissions?: string[];
+  isAdmin?: boolean;
 };
 
 export function withSSRAuth<P>(
@@ -34,20 +34,15 @@ export function withSSRAuth<P>(
 
     if (options) {
       const apiClient = setupAPIClient(ctx);
-      const response = await apiClient.get('/users/get/me');
+      const response = await apiClient.get('/sellers/me');
       const user = response.data;
 
-      const { permissions } = options;
+      const userIsAdmin = validateUserIsAdmin(user);
 
-      const userHasValidPermissions = validateUserPermissions({
-        user,
-        permissions,
-      });
-
-      if (!userHasValidPermissions) {
+      if (!userIsAdmin) {
         return {
           redirect: {
-            destination: '/panel',
+            destination: '/painelSeller',
             permanent: false,
           },
         };
