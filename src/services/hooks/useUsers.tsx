@@ -27,7 +27,6 @@ interface CreateSellerProps {
   birthday: Date;
 }
 
-
 interface UsersAndQuantityOfUsers {
   users: User[];
   quantityOfUsers: number;
@@ -84,7 +83,6 @@ export async function deleteUser(userId: string) {
 
   queryClient.invalidateQueries('users');
 }
-
 
 export async function resetPassword(
   token: string,

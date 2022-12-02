@@ -8,38 +8,24 @@ import {
   ModalOverlay,
   useDisclosure,
   Image,
-  useToast,
   Flex,
   ModalHeader,
-  Spinner,
   Text,
+  VStack,
   Stack,
   HStack,
+  useToast,
 } from '@chakra-ui/react';
 import {
   forwardRef,
   ForwardRefRenderFunction,
-  useEffect,
   useImperativeHandle,
-  useMemo,
-  useRef,
   useState,
 } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { AiFillCloseCircle } from 'react-icons/ai';
-import Zoom from 'react-medium-image-zoom';
-import {
-  createPhotos,
-  updateProduct,
-  useProductById,
-} from '../../services/hooks/useProducts';
-import { InputFile, InputFileHandle } from '../Form/InputFile';
-import DeleteModal, { ModalDeleteHandle } from './DeleteModal';
-import { Input } from '../Form/Input';
-import { Textarea } from '../Form/TextArea';
-import { api } from '../../services/apiClient';
+
+import { FiShoppingCart } from 'react-icons/fi';
+import { useCart } from '../../services/hooks/useCart';
+import { Product } from '../../services/hooks/useProducts';
 
 interface ProductProps {
   product: {
@@ -47,13 +33,13 @@ interface ProductProps {
     name: string;
     description: string;
     price: number;
+    amount: number;
     slug: string;
     points: number;
     createdAt: string;
     photos: [
       {
         id: string;
-        name: string;
         url: string;
       },
     ];
@@ -64,127 +50,45 @@ interface ProductProps {
   };
 }
 
-type CreateFormData = {
-  photos: File[];
-};
-
-type EditFormData = {
-  name: string;
-  description: string;
-  price: number;
-  points: number;
-};
-
 export interface DetailsProductModalHandle {
   onOpen: () => void;
   onClose: () => void;
 }
 
-const editFormSchema = yup.object().shape({
-  name: yup.string().required('Nome do produto é obrigatório'),
-  description: yup.string().required('Descrição do produto é obrigatória'),
-  price: yup.number().required('Preço do produto é obrigatório'),
-  points: yup
-    .number()
-    .required(
-      'Informar a quantidade de pontos que se ganha',
-    )
-});
-
 const DetailsProductModal: ForwardRefRenderFunction<
   DetailsProductModalHandle,
   ProductProps
 > = ({ product }: ProductProps, ref) => {
-  const inputFileRef = useRef<InputFileHandle>(null);
-  const deleteModalRef = useRef<ModalDeleteHandle>(null);
+  const toast = useToast();
+  const { addToCart } = useCart();
 
-  const {
-    data: newProduct,
-    isLoading,
-    error,
-    isFetching,
-  } = useProductById(product.id);
+  const saveOnCookie = (product: Product) => {
+    toast({
+      position: 'bottom-right',
+      title: 'Adicionado no carrinho de compras',
+      status: 'success',
+      duration: 2000,
+      isClosable: true,
+    });
+    addToCart(product);
+  };
 
-  const [photoId, setPhotoId] = useState('');
+  const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
+  const [showImage, setShowImage] = useState('');
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { register, handleSubmit, getValues, reset } = useForm({
-    defaultValues: useMemo(() => {
-      return product;
-    }, [product]),
-  });
-
-  useEffect(() => {
-    reset(product);
-  }, [product]);
+  const onClose = () => {
+    closeModal();
+    setShowImage('');
+  };
 
   useImperativeHandle(ref, () => ({
     onOpen,
     onClose,
   }));
 
-  const openDeleteModal = (photoId: string) => {
-    setPhotoId(photoId);
-    deleteModalRef.current.onOpen();
-  };
-
-  const toast = useToast();
-
-  const onUploadImageSubmit = async () => {
-    try {
-      await createPhotos({
-        productId: product.id,
-        photos: inputFileRef.current.images,
-      });
-      toast({
-        title: 'Upload feito com sucesso!',
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-      });
-      inputFileRef.current.setImages([]);
-    } catch (error) {
-      toast({
-        title: 'Não foi possível cadastrar o produto',
-        description: error.message,
-        status: 'error',
-        duration: 2000,
-        isClosable: true,
-      });
-    }
-  };
-
-  const editSubmit: SubmitHandler<EditFormData> = async () => {
-    try {
-      await updateProduct({
-        id: product.id,
-        name: getValues('name'),
-        description: getValues('description'),
-        price: getValues('price'),
-        points: getValues('points')
-      });
-      toast({
-        title: 'Produto atualizado com sucesso!',
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-      });
-    } catch (error) {
-      toast({
-        title: 'Não foi possível atualizar o produto',
-        description: error.response.data.message,
-        status: 'error',
-        duration: 2000,
-        isClosable: true,
-      });
-    }
-  };
-
   return (
     <Flex>
-      <DeleteModal ref={deleteModalRef} photoId={photoId} />
-      <Modal size="6xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size="5xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg="gray.900">
           <ModalCloseButton
@@ -194,152 +98,113 @@ const DetailsProductModal: ForwardRefRenderFunction<
           />
           <ModalHeader />
           <ModalBody>
-            <Flex flexDir={['column', 'column', 'row']} justify="space-between">
-              <Flex
-                minW="20rem"
-                pr="0.5rem"
-                maxW={800}
-                flexDir="column"
-                as="form"
-                onSubmit={handleSubmit(editSubmit)}
-              >
-                <Stack spacing="0.5">
-                  <Input
-                    bg="gray.800"
-                    name="name"
-                    label="Nome"
-                    {...register('name')}
-                    placeholder={product.name}
-                  />
-                  <Input
-                    bg="gray.800"
-                    name="price"
-                    label="Preço"
-                    {...register('price')}
-                  />
-                  <Textarea
-                    bg="gray.800"
-                    css={{
-                      '&::-webkit-scrollbar': {
-                        width: '4px',
-                      },
-                      '&::-webkit-scrollbar-track': {
-                        width: '6px',
-                      },
-                      '&::-webkit-scrollbar-thumb': {
-                        background: '#FF6B00',
-                        borderRadius: '24px',
-                      },
-                    }}
-                    name="description"
-                    label="Descrição"
-                    {...register('description')}
-                  />
-                  <Input
-                    bg="gray.800"
-                    name="debitPoints"
-                    label="Débito de Pontos"
-                    {...register('points')}
-                  />
-                </Stack>
-                <Button
-                  bg="#FF6B00"
-                  _hover={{ bg: 'orangeHover' }}
-                  type="submit"
-                  mt="6"
-                  colorScheme="orange"
-                  size="lg"
-                >
-                  Salvar
-                </Button>
-              </Flex>
-              <Flex
-                minW="20rem"
-                maxW="48rem"
-                flexDir="column"
-                mt={['2rem', '2rem', 0, 0]}
-                bg="gray.800"
-                borderRadius={8}
-              >
-                <Flex justify="center" w="100%" align="center" h="2rem">
-                  {!isLoading && isFetching && <Spinner size="md" />}
-                </Flex>
-
-                <Flex flexDir="column" justify="space-between">
-                  <Flex
-                    wrap="wrap"
-                    minW={['20rem', '20rem', '48rem']}
-                    h="24.4rem"
-                    css={{
-                      '&::-webkit-scrollbar': {
-                        width: '4px',
-                      },
-                      '&::-webkit-scrollbar-track': {
-                        width: '6px',
-                      },
-                      '&::-webkit-scrollbar-thumb': {
-                        background: '#FF6B00',
-                        borderRadius: '24px',
-                      },
-                    }}
-                    overflowY="auto"
+            <Flex flexDir={['column', 'column', 'row']}>
+              {product.id && (
+                <VStack justify="space-between" align="center">
+                  <Stack
+                    w="100%"
+                    flexDir={['column', 'column', 'row']}
+                    align={['center', 'center', 'flex-start']}
                   >
-                    {isLoading ? (
-                      <Flex justify="center">
-                        <Spinner />
-                      </Flex>
-                    ) : error ? (
-                      <Flex justify="center">
-                        <Text>Falha ao obter dados dos produtos.</Text>
-                      </Flex>
-                    ) : (
-                      newProduct?.photos?.map(photo => (
-                        <Flex
-                          p="0.2rem"
-                          key={photo.id}
-                          flexDir="column"
-                          align="end"
+                    {!product.photos[0] ? (
+                      <VStack spacing={0} mb="2rem">
+                        <Text
+                          flexWrap="wrap"
+                          fontSize={['1.5rem', '2xl', '3xl']}
                         >
-                          <Flex
-                            _hover={{ color: '#ff0118' }}
-                            transition="color 200ms"
-                            mb="0.5rem"
+                          R${product.price}
+                        </Text>
+                      </VStack>
+                    ) : (
+                      <VStack>
+                        <Text fontSize="2xl">{product.name}</Text>
+                        <HStack>
+                          <Text
+                            flexWrap="wrap"
+                            fontSize={['1.5rem', '2xl', '3xl']}
                           >
-                            <AiFillCloseCircle
-                              size={30}
-                              cursor="pointer"
-                              onClick={() => openDeleteModal(photo.id)}
-                            />
-                          </Flex>
-                          <Zoom overlayBgColorEnd="gray.900">
-                            <Image maxW="10rem" src={photo.url} />
-                          </Zoom>
-                        </Flex>
-                      ))
-                    )}
-                  </Flex>
+                            R${product.price}
+                          </Text>
+                          <FiShoppingCart cursor="pointer" size={30} />
+                        </HStack>
 
-                  <Flex
-                    justify={['center', 'center', 'start', 'end']}
-                    p="1rem"
-                    as="form"
-                    onSubmit={handleSubmit(onUploadImageSubmit)}
-                  >
-                    <HStack spacing={2}>
-                      <InputFile ref={inputFileRef} />
-                      <Button
-                        type="submit"
-                        disabled={!inputFileRef.current?.images.length && true}
-                        bg="orange"
-                        _hover={{ bg: 'orangeHover' }}
-                        size="lg"
-                      >
-                        Upload
-                      </Button>
-                    </HStack>
-                  </Flex>
+                        <VStack spacing={0}>
+                          <Image
+                            border="0.5rem solid #FF6B00"
+                            h={['60vh', '60vh', '65vh']}
+                            minW="20rem"
+                            w={['70vw', '70vw', '28vw']}
+                            src={
+                              showImage === ''
+                                ? product.photos[0].url
+                                : showImage
+                            }
+                          />
+                        </VStack>
+                        <Flex
+                          flexWrap="wrap"
+                          justify="center"
+                          flexDir="row"
+                          gap={2}
+                          p={2}
+                        >
+                          {product.photos.map(photo => (
+                            <Image
+                              _hover={{ opacity: 1 }}
+                              transition="opacity 200ms"
+                              key={photo.id}
+                              opacity={0.9}
+                              cursor="pointer"
+                              onClick={() => setShowImage(photo.url)}
+                              borderRadius="1rem 1rem 0"
+                              h="5rem"
+                              w={['4rem', '6rem']}
+                              src={photo.url}
+                            />
+                          ))}
+                        </Flex>
+                      </VStack>
+                    )}
+                  </Stack>
+                </VStack>
+              )}
+              <VStack flexDir="column">
+                <Text
+                  fontFamily="Anek Devanagari"
+                  fontWeight={400}
+                  w="28rem"
+                  ml="2rem"
+                  pt="6rem"
+                  maxH="15rem"
+                >
+                  {product.description}
+                </Text>
+                <Flex
+                  p="0.5rem"
+                  borderRadius="0.2rem"
+                  onClick={() =>
+                    saveOnCookie({
+                      id: product.id,
+                      name: product.name,
+                      amount: product.amount,
+                      description: product.description,
+                      price: product.price,
+                      slug: product.slug,
+                      user: product.user,
+                      points: product.points,
+                      photos: product.photos,
+                      createdAt: product.createdAt,
+                    })
+                  }
+                  cursor="pointer"
+                  align="center"
+                  fontFamily="Anek Devanagari"
+                  bg="gray.800"
+                >
+                  <Text>Comprar</Text>
+                  <FiShoppingCart cursor="pointer" size={30} />
                 </Flex>
-              </Flex>
+              </VStack>
             </Flex>
           </ModalBody>
 
@@ -351,7 +216,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
               mr={3}
               onClick={onClose}
             >
-              Close
+              Fechar
             </Button>
           </ModalFooter>
         </ModalContent>

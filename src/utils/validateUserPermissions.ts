@@ -3,8 +3,8 @@ type User = {
 };
 
 export function validateUserIsAdmin(user: User) {
-  if(user.isAdmin === true) {
+  if (user.isAdmin === true) {
     return true;
   }
-  return false
+  return false;
 }

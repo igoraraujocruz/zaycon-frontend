@@ -85,7 +85,6 @@ export const getProducts = async (
 
   const { data } = await api.get('/products');
 
-
   const products = data.map((product: Product) => {
     return {
       id: product.id,

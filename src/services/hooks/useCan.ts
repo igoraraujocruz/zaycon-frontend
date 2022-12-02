@@ -8,9 +8,7 @@ export function useCan() {
     return false;
   }
 
-  const hasPermission = validateUserIsAdmin(
-    user
-  );
+  const hasPermission = validateUserIsAdmin(user);
 
   return hasPermission;
 }
