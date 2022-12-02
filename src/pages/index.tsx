@@ -99,6 +99,7 @@ export default function Home() {
 
         <HStack
           mt={['2rem', '2rem', '0rem']}
+          pr="1rem"
           as="form"
           onSubmit={handleSubmit(onSubmit)}
           justify="end"
