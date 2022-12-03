@@ -155,9 +155,13 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                       return (
                         <Flex key={key} w="100%" h="100%" mb="1rem">
                           <Image
-                            w={['8rem']}
+                            w={['9rem']}
                             h={['10rem']}
-                            src={cart[key].product.photos[0].url}
+                            src={
+                              cart[key].product?.photos[0]
+                                ? cart[key].product.photos[0].url
+                                : 'placeholder.png'
+                            }
                           />
                           <Flex
                             ml="1rem"
