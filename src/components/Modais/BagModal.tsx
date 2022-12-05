@@ -99,7 +99,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
     });
 
     setTimeout(async () => {
-      const charge = await api.post('/shop/charge', {
+      const charge = await api.post('/shop/gerencianet', {
         shopId: shop.data.id,
       });
       setQrCode(charge.data);
