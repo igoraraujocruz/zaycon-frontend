@@ -44,7 +44,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         onFocus={() => changeFocus()}
         align="center"
         bg="gray.900"
-        border={focus ? '0.15rem solid #FF6B00' : '0.15rem solid transparent'}
+        border={focus ? '0.15rem solid #FF6B00' : '0.15rem solid #2d3748'}
         borderRadius="0.3rem"
       >
         {Icon && <Icon size={20} />}

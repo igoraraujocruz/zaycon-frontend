@@ -12,7 +12,6 @@ import {
   Text,
   VStack,
   HStack,
-  Input,
   FormControl,
   FormLabel,
   Radio,
@@ -26,20 +25,47 @@ import {
   ForwardRefRenderFunction,
   useEffect,
   useImperativeHandle,
-  useRef,
   useState,
 } from 'react';
 import { BsFillTrashFill } from 'react-icons/bs';
 import { AiOutlinePlus, AiOutlineMinus } from 'react-icons/ai';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { FiShoppingCart } from 'react-icons/fi';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { api } from '../../services/apiClient';
 import { useCart } from '../../services/hooks/useCart';
+import { Input } from '../Form/Input';
+import { MaskedInput } from '../Form/MaskedInput';
 
 export interface IBagModal {
   onOpen: () => void;
   onClose: () => void;
 }
+
+type CreateFormData = {
+  typeOfPayment: string;
+  name: string;
+  cep: string;
+  address: string;
+  email: string;
+  numberPhone: string;
+};
+
+const createFormSchema = yup.object().shape({
+  typeOfPayment: yup.string().required('O tipo de pagamento é necessário'),
+  name: yup.string().required('O nome é necessário'),
+  cep: yup.string().required('O CEP é obrigatório'),
+  address: yup.string().required('O endereço é necessário'),
+  email: yup.string().required('Email é obrigatório').email(),
+  numberPhone: yup
+    .string()
+    .required('Nº de Celular é obrigatório')
+    .matches(
+      /^\([1-9]{2}\) (?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/,
+      'Número de telefone inválido',
+    ),
+});
 
 const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const [finishShop, setFinishShop] = useState(false);
@@ -61,13 +87,21 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateFormData>({
+    resolver: yupResolver(createFormSchema),
+  });
 
   const itemsCount = Object.keys(cart).reduce((prev, curr) => {
     return prev + cart[curr].quantity;
   }, 0);
 
-  const onSubmit = async (values: any) => {
+  const onSubmit: SubmitHandler<CreateFormData> = async (
+    values: CreateFormData,
+  ) => {
     const order = { ...values };
 
     const client = await api.post('/clients', {
@@ -246,36 +280,62 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                   <Text>
                     Total: {String(total.toFixed(2)).replace('.', ',')}
                   </Text>
-                  <VStack as="form" onSubmit={handleSubmit(onSubmit)}>
+                  <VStack
+                    as="form"
+                    onSubmit={handleSubmit(onSubmit)}
+                    borderColor="red"
+                  >
                     <RadioGroup defaultValue="2">
+                      <FormLabel>Forma de Pagamento</FormLabel>
                       <HStack>
                         <Radio value="pix" {...register('typeOfPayment')}>
                           Pix
                         </Radio>
-                        <Radio value="picpay" {...register('typeOfPayment')}>
+                        {/*                         <Radio value="picpay" {...register('typeOfPayment')}>
                           PicPay
-                        </Radio>
+                        </Radio> */}
                       </HStack>
                     </RadioGroup>
                     <FormControl>
                       <FormLabel>Nome</FormLabel>
-                      <Input {...register('name')} />
+                      <Input {...register('name')} error={errors.name} />
                     </FormControl>
                     <FormControl>
                       <FormLabel>Cep</FormLabel>
-                      <Input {...register('cep')} />
+                      <Input {...register('cep')} error={errors.cep} />
                     </FormControl>
                     <FormControl>
                       <FormLabel>Endereço</FormLabel>
-                      <Input {...register('address')} />
+                      <Input {...register('address')} error={errors.address} />
                     </FormControl>
                     <FormControl>
                       <FormLabel>Email</FormLabel>
-                      <Input {...register('email')} />
+                      <Input {...register('email')} error={errors.email} />
                     </FormControl>
                     <FormControl>
                       <FormLabel>Nº de Celular</FormLabel>
-                      <Input {...register('numberPhone')} />
+                      <MaskedInput
+                        mask={[
+                          '(',
+                          /\d/,
+                          /\d/,
+                          ')',
+                          ' ',
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          '-',
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                          /\d/,
+                        ]}
+                        error={errors.numberPhone}
+                        name="numberPhone"
+                        {...register('numberPhone')}
+                      />
                     </FormControl>
 
                     <Button

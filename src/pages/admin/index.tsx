@@ -5,6 +5,7 @@ import {
   Image,
   Heading,
   useToast,
+  Text,
 } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
@@ -65,17 +66,7 @@ function Login() {
         justify="center"
       >
         <Flex alignItems="center">
-          <Image
-            mt="2rem"
-            mb="2rem"
-            maxW={[180, 180, 225, 300]}
-            src="../logo.svg"
-            sizes="10rem"
-            alt="Snap Logo"
-          />
-          <Heading ml={[-2, -2, -4]} color="white">
-            oints
-          </Heading>
+          <Heading>Zaycon</Heading>
         </Flex>
         <Flex
           onSubmit={handleSubmit(handleSignIn)}

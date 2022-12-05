@@ -36,7 +36,7 @@ export function setupAPIClient(ctx = undefined) {
           if (!isRefreshing) {
             isRefreshing = true;
             api
-              .post('/sessions/refresh-token', { refreshToken })
+              .post('/sessions/refresh', { refreshToken })
               .then(response => {
                 const { token } = response.data;
 

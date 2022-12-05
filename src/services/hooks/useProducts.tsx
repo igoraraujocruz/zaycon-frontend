@@ -28,7 +28,7 @@ interface CreateProductProps {
   description: string;
   price: number;
   points: number;
-  quantity: number;
+  amount: number;
   photos: File[];
 }
 
@@ -144,7 +144,7 @@ export async function createProduct(product: CreateProductProps) {
 
   formData.append('name', product.name);
   formData.append('price', product.price.toString());
-  formData.append('quantity', product.quantity.toString());
+  formData.append('amount', product.amount.toString());
   formData.append('description', product.description);
   formData.append('points', product.points.toString());
 

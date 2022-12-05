@@ -5,6 +5,7 @@ import axios from 'axios';
 import { signOut } from '../../services/hooks/useAuth';
 import { Can } from '../../components/Can';
 import CreateProducts from '../admin/products/create';
+import { useShop } from '../../services/hooks/useShop';
 
 interface Client {
   name: string;
@@ -37,6 +38,8 @@ interface Seller {
 }
 
 const PainelAdm = ({ seller }: Seller) => {
+  const { data } = useShop();
+
   return (
     <Can>
       <Head>
@@ -69,6 +72,37 @@ const PainelAdm = ({ seller }: Seller) => {
             w="100%"
             m={0}
           >
+            <Flex
+              bg="gray.800"
+              h="38.5rem"
+              flexDir="column"
+              w="25rem"
+              borderRadius="2rem"
+              p="2rem"
+            >
+              <Heading size="md">Todas as vendas</Heading>
+              <VStack>
+                {data
+                  ?.sort(function compare(a, b) {
+                    if (a.createdAt > b.createdAt) {
+                      return -1;
+                    }
+                    return 1;
+                  })
+                  .map(shop =>
+                    shop.paid ? (
+                      <Flex w="100%" id={shop.id}>
+                        <Text>
+                          {shop.client.name} - Uma nova compra foi feita -{' '}
+                          {shop.createdAt}
+                        </Text>
+                      </Flex>
+                    ) : (
+                      <Text>No momento não existe nenhuma compra</Text>
+                    ),
+                  )}
+              </VStack>
+            </Flex>
             <VStack p="2rem">
               <Flex
                 bg="gray.800"

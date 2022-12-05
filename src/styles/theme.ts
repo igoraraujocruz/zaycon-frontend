@@ -10,10 +10,9 @@ export const theme = extendTheme({
     orangeHover: '#FF4500',
   },
   fonts: {
-    heading: 'Righteous',
-    body: 'Righteous',
+    heading: 'Anek Devanagari',
+    body: 'Anek Devanagari',
   },
-
   styles: {
     global: {
       body: {

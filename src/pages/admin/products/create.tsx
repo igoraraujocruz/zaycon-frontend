@@ -15,7 +15,7 @@ import { convertRealToNumber } from '../../../utils/convertRealToNumber';
 type CreateFormData = {
   name: string;
   description: string;
-  quantity: number;
+  amount: number;
   price: string;
   points: number;
   photos: File[];
@@ -23,7 +23,7 @@ type CreateFormData = {
 
 const createFormSchema = yup.object().shape({
   name: yup.string().required('Nome do produto é obrigatório'),
-  quantity: yup.number().required('A quantidade é necessária'),
+  amount: yup.number().required('A quantidade é necessária'),
   description: yup.string().required('Descrição do produto é obrigatória'),
   price: yup
     .string()
@@ -57,7 +57,7 @@ export default function CreateProducts() {
       await createProduct({
         name: values.name,
         description: values.description,
-        quantity: values.quantity,
+        amount: values.amount,
         price: convertRealToNumber(values.price),
         points: values.points,
         photos: inputFileRef.current.images,
@@ -115,10 +115,10 @@ export default function CreateProducts() {
           {...register('description')}
         />
         <Input
-          error={errors.name}
-          name="quantity"
+          error={errors.amount}
+          name="amount"
           label="Quantidade"
-          {...register('quantity')}
+          {...register('amount')}
         />
         <Input
           type="number"
