@@ -19,6 +19,7 @@ import {
   Spinner,
   Image,
   Box,
+  Heading,
 } from '@chakra-ui/react';
 import {
   forwardRef,
@@ -33,10 +34,13 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { FiShoppingCart } from 'react-icons/fi';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { io } from 'socket.io-client';
+import Link from 'next/link';
 import { api } from '../../services/apiClient';
 import { useCart } from '../../services/hooks/useCart';
 import { Input } from '../Form/Input';
 import { MaskedInput } from '../Form/MaskedInput';
+import { WhatsApp } from '../Whatsapp';
 
 export interface IBagModal {
   onOpen: () => void;
@@ -67,11 +71,25 @@ const createFormSchema = yup.object().shape({
     ),
 });
 
+const baseUrl =
+  process.env.NODE_ENV === 'development'
+    ? 'http://localhost:3333'
+    : 'https://api.zaycon.shop';
+
+const socket = io(baseUrl);
+
 const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const [finishShop, setFinishShop] = useState(false);
   const [haveItems, setHaveItems] = useState(false);
   const [imagemIsLoading, setImagemIsLoading] = useState(false);
   const [qrCode, setQrCode] = useState({} as any);
+  const [paid, setIsPaid] = useState(false);
+  const [dataPaiment, setdataPaiment] = useState({} as any);
+
+  socket.on('receivePaiment', data => {
+    setdataPaiment(data);
+    setIsPaid(true);
+  });
 
   const { cart, addToCart, removeFromCart, decreaseAmount } = useCart();
 
@@ -358,7 +376,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                     <Text>Só um instante, estamos gerando a cobrança</Text>
                     <Spinner />
                   </VStack>
-                ) : (
+                ) : !paid ? (
                   <VStack>
                     <Image src={qrCode.imagemQrcode} alt="qrcode" />
                     <Text>Pronto!</Text>
@@ -366,6 +384,29 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                       Agora é só efetuar o pagamento que assim que for
                       finalizado você receberá uma mensagem
                     </Text>
+                  </VStack>
+                ) : (
+                  <VStack>
+                    <Heading>
+                      {dataPaiment.name}, recebemos o seu pagamento!
+                    </Heading>
+                    <Text>
+                      Encaminhamos um email com o comprovante de pagamento.
+                      Agora toda nova atualização dos status de suas compras
+                      você receberá um email.
+                    </Text>
+                    <HStack align="center" spacing="1rem">
+                      <Text>Qualquer dúvida, estamos à disposição.</Text>
+                      <Link href="https://api.whatsapp.com/send?phone=5527999147896&text=Olá, gostaria de saber mais sobre os produtos">
+                        <Image
+                          cursor="pointer"
+                          w="2rem"
+                          src="whatsapp.png"
+                          alt="whatsapp"
+                        />
+                      </Link>
+                    </HStack>
+                    <Text>Muito Obrigado por confiar na gente...</Text>
                   </VStack>
                 )}
               </VStack>

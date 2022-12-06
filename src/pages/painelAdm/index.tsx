@@ -153,7 +153,12 @@ export default PainelAdm;
 export const getServerSideProps = async ctx => {
   const cookies = nookies.get(ctx);
 
-  const response = await axios.get('https://api.zaycon.shop/sellers/me', {
+  const baseUrl =
+    process.env.NODE_ENV === 'development'
+      ? 'http://localhost:3333'
+      : 'https://api.zaycon.shop';
+
+  const response = await axios.get(`${baseUrl}/sellers/me`, {
     headers: {
       Authorization: `Bearer ${cookies['snap.token']}`,
     },

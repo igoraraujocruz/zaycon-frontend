@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export const WhatsApp = ({ ...props }) => {
   return (
-    <Link href="https://api.whatsapp.com/send?phone=5527997998675&text=Olá, gostaria de saber mais sobre os produtos">
+    <Link href="https://api.whatsapp.com/send?phone=5527999147896&text=Olá, gostaria de saber mais sobre os produtos">
       <Box cursor="pointer">
         <Box
           fill="white"
