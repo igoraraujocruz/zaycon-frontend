@@ -85,10 +85,15 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const [qrCode, setQrCode] = useState({} as any);
   const [paid, setIsPaid] = useState(false);
   const [dataPaiment, setdataPaiment] = useState({} as any);
+  const [mySocketId, setMySocketId] = useState('');
 
   socket.on('receivePaiment', data => {
     setdataPaiment(data);
     setIsPaid(true);
+  });
+
+  socket.on('mySocketId', data => {
+    setMySocketId(data);
   });
 
   const { cart, addToCart, removeFromCart, decreaseAmount } = useCart();
@@ -133,6 +138,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
     const shop = await api.post('/shop', {
       clientId: client.data.id,
       typeOfPayment: order.typeOfPayment,
+      socketId: mySocketId,
     });
 
     Object.keys(cart).map(async curr => {
@@ -378,18 +384,28 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                   </VStack>
                 ) : !paid ? (
                   <VStack>
-                    <Image src={qrCode.imagemQrcode} alt="qrcode" />
-                    <Text>Pronto!</Text>
-                    <Text>
+                    <Heading size="1xl">Pronto!</Heading>
+                    <Text align="center">
                       Agora é só efetuar o pagamento que assim que for
-                      finalizado você receberá uma mensagem
+                      finalizado você receberá uma mensagem.
                     </Text>
+                    <Text>QR Code</Text>
+                    <Image src={qrCode.imagemQrcode} alt="qrcode" />
+                    <Heading p="1rem" size="1xl">
+                      ou
+                    </Heading>
+                    <Text>Pix Copia e Cola</Text>
+                    <VStack align="center" bg="gray.800" borderRadius="2rem">
+                      <Text align="center" w="25rem">
+                        {qrCode.qrcode}
+                      </Text>
+                    </VStack>
                   </VStack>
                 ) : (
                   <VStack>
-                    <Heading>
+                    <Text fontSize="2xl" fontWeight="bold">
                       {dataPaiment.name}, recebemos o seu pagamento!
-                    </Heading>
+                    </Text>
                     <Text>
                       Encaminhamos um email com o comprovante de pagamento.
                       Agora toda nova atualização dos status de suas compras
@@ -406,7 +422,6 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                         />
                       </Link>
                     </HStack>
-                    <Text>Muito Obrigado por confiar na gente...</Text>
                   </VStack>
                 )}
               </VStack>
