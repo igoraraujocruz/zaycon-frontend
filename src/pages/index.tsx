@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form';
 import { FiShoppingCart } from 'react-icons/fi';
 import { GrInstagram } from 'react-icons/gr';
 import io from 'socket.io-client';
+import nookies from 'nookies';
 import { SearchInput } from '../components/Form/SearchInput';
 import { api } from '../services/apiClient';
 import { Product, useProducts } from '../services/hooks/useProducts';
@@ -55,7 +56,7 @@ export default function Home() {
         .get(`/products?option=${search}`)
         .then(response => setItemFilters(response.data));
     } catch (err) {
-      console.log(err);
+      // fine
     }
   };
 

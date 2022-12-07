@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import nookies from 'nookies';
+import Link from 'next/link';
 import { signOut } from '../../services/hooks/useAuth';
 import CreateProducts from '../admin/products/create';
 import { useShop } from '../../services/hooks/useShop';
@@ -60,6 +61,16 @@ const PainelAdm = () => {
         <VStack align="end" w="100vw" mr="5rem">
           <HStack w="100vw" mt="2rem" justify="end">
             <Heading size="lg">Zaycon</Heading>
+            <Link href="/">
+              <Button
+                fontSize="0.8rem"
+                bg="gray.800"
+                size={['xs', 'md']}
+                _hover={{ bg: 'orangeHover' }}
+              >
+                Ir para a Loja
+              </Button>
+            </Link>
             <Button
               fontSize="0.8rem"
               onClick={() => signOut()}

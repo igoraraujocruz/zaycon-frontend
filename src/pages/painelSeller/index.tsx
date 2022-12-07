@@ -133,7 +133,7 @@ export const getServerSideProps = withSSRAuth(async ctx => {
       };
     }
   } catch (err) {
-    console.log(err);
+    // no error
   }
 
   return {
