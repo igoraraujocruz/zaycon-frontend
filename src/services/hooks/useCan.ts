@@ -1,14 +1,13 @@
-import { validateUserIsAdmin } from '../../utils/validateUserPermissions';
 import { useAuth } from './useAuth';
 
-export function useCan() {
+export function useSellerIsAdmin() {
   const { user, isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
     return false;
   }
 
-  const hasPermission = validateUserIsAdmin(user);
+  const sellerIsAdmin = user.isAdmin;
 
-  return hasPermission;
+  return sellerIsAdmin;
 }

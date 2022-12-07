@@ -10,6 +10,7 @@ import {
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+import nookies from 'nookies';
 import { withSSRAuth } from '../../utils/WithSSRAuth';
 import { signOut } from '../../services/hooks/useAuth';
 import { api } from '../../services/apiClient';
@@ -112,6 +113,29 @@ const PainelSeller = () => {
 export default PainelSeller;
 
 export const getServerSideProps = withSSRAuth(async ctx => {
+  const cookies = nookies.get(ctx);
+
+  try {
+    const response = await api.get('/sellers/me', {
+      headers: {
+        Authorization: `Bearer ${cookies['snap.token']}`,
+      },
+    });
+
+    const seller = response.data;
+
+    if (seller.isAdmin === true) {
+      return {
+        redirect: {
+          destination: '/painelAdm',
+          permanent: false,
+        },
+      };
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
   return {
     props: {},
   };

@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
-import { useCan } from '../services/hooks/useCan';
+import { useSellerIsAdmin } from '../services/hooks/useCan';
 
 interface CanProps {
   children: ReactNode;
 }
 
-export function Can({ children }: CanProps) {
-  const userCanSeeComponent = useCan();
+export function Admin({ children }: CanProps) {
+  const userCanSeeComponent = useSellerIsAdmin();
 
   if (!userCanSeeComponent) {
     return null;

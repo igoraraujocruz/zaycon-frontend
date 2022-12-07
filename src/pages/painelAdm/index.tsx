@@ -1,11 +1,14 @@
 import { Button, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import Head from 'next/head';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 import nookies from 'nookies';
-import axios from 'axios';
 import { signOut } from '../../services/hooks/useAuth';
-import { Can } from '../../components/Can';
 import CreateProducts from '../admin/products/create';
 import { useShop } from '../../services/hooks/useShop';
+import { api } from '../../services/apiClient';
+import { withSSRAuth } from '../../utils/WithSSRAuth';
+import { Admin } from '../../components/Can';
 
 interface Client {
   name: string;
@@ -24,24 +27,32 @@ interface Shop {
 }
 
 interface Seller {
-  seller: {
-    id: string;
-    name: string;
-    username: string;
-    email: string;
-    isAdmin: boolean;
-    numberPhone: string;
-    points: number;
-    birthday: string;
-    shop: Shop[];
-  };
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  isAdmin: boolean;
+  numberPhone: string;
+  points: number;
+  birthday: string;
+  shop: Shop[];
 }
 
-const PainelAdm = ({ seller }: Seller) => {
+const PainelAdm = () => {
+  const router = useRouter();
   const { data } = useShop();
+  const [myInfo, setMyInfo] = useState({} as Seller);
+
+  useEffect(() => {
+    api.get('/sellers/me').then(response => setMyInfo(response.data));
+
+    if (myInfo.isAdmin === false) {
+      router.push('/painelSeller');
+    }
+  }, [myInfo, router]);
 
   return (
-    <Can>
+    <Admin>
       <Head>
         <title>Painel Adm| Zaycon</title>
       </Head>
@@ -60,7 +71,7 @@ const PainelAdm = ({ seller }: Seller) => {
             </Button>
           </HStack>
           <VStack>
-            <Text>Olá, {seller.name}</Text>
+            <Text>Olá, {myInfo.name}</Text>
           </VStack>
         </VStack>
 
@@ -91,14 +102,16 @@ const PainelAdm = ({ seller }: Seller) => {
                   })
                   .map(shop =>
                     shop.paid ? (
-                      <Flex w="100%" id={shop.id}>
+                      <Flex key={shop.id} w="100%">
                         <Text>
                           {shop.client.name} - Uma nova compra foi feita -{' '}
                           {shop.createdAt}
                         </Text>
                       </Flex>
                     ) : (
-                      <Text>No momento não existe nenhuma compra</Text>
+                      <Text key={shop.id}>
+                        No momento não existe nenhuma compra
+                      </Text>
                     ),
                   )}
               </VStack>
@@ -112,7 +125,7 @@ const PainelAdm = ({ seller }: Seller) => {
                 p="2rem"
               >
                 <Heading size="md">Meus pontos</Heading>
-                <Text>{seller.points}</Text>
+                <Text>{myInfo.points}</Text>
               </Flex>
               <Flex
                 bg="gray.800"
@@ -124,7 +137,7 @@ const PainelAdm = ({ seller }: Seller) => {
               >
                 <Heading size="md">Minhas Vendas</Heading>
                 <VStack>
-                  {seller.shop?.map(shop => (
+                  {myInfo.shop?.map(shop => (
                     <Flex id={shop.id}>
                       <Text>
                         {new Date(shop.createdAt).toLocaleDateString('pt-BR', {
@@ -144,38 +157,37 @@ const PainelAdm = ({ seller }: Seller) => {
           </Flex>
         </Flex>
       </Flex>
-    </Can>
+    </Admin>
   );
 };
 
 export default PainelAdm;
 
-export const getServerSideProps = async ctx => {
+export const getServerSideProps = withSSRAuth(async ctx => {
   const cookies = nookies.get(ctx);
 
-  const baseUrl =
-    process.env.NODE_ENV === 'development'
-      ? 'http://localhost:3333'
-      : 'https://api.zaycon.shop';
-
-  const response = await axios.get(`${baseUrl}/sellers/me`, {
-    headers: {
-      Authorization: `Bearer ${cookies['snap.token']}`,
-    },
-  });
-
-  const seller = response.data;
-
-  if (seller.isAdmin === false) {
-    return {
-      redirect: {
-        destination: '/painelSeller',
-        permanent: false,
+  try {
+    const response = await api.get('/sellers/me', {
+      headers: {
+        Authorization: `Bearer ${cookies['snap.token']}`,
       },
-    };
+    });
+
+    const seller = response.data;
+
+    if (seller.isAdmin === false) {
+      return {
+        redirect: {
+          destination: '/painelSeller',
+          permanent: false,
+        },
+      };
+    }
+  } catch (err) {
+    // continue regardless of error
   }
 
   return {
-    props: { seller },
+    props: {},
   };
-};
+});

@@ -5,17 +5,8 @@ import {
 } from 'next';
 import { destroyCookie, parseCookies } from 'nookies';
 import { AuthTokenError } from '../errors/AuthTokenError';
-import { validateUserIsAdmin } from './validateUserPermissions';
-import { setupAPIClient } from '../services/api';
 
-type withSSRAuthOptions = {
-  isAdmin?: boolean;
-};
-
-export function withSSRAuth<P>(
-  fn: GetServerSideProps<P>,
-  options?: withSSRAuthOptions,
-): GetServerSideProps {
+export function withSSRAuth<P>(fn: GetServerSideProps<P>): GetServerSideProps {
   return async (
     ctx: GetServerSidePropsContext,
   ): Promise<GetServerSidePropsResult<P>> => {
@@ -30,23 +21,6 @@ export function withSSRAuth<P>(
           permanent: false,
         },
       };
-    }
-
-    if (options) {
-      const apiClient = setupAPIClient(ctx);
-      const response = await apiClient.get('/sellers/me');
-      const user = response.data;
-
-      const userIsAdmin = validateUserIsAdmin(user);
-
-      if (!userIsAdmin) {
-        return {
-          redirect: {
-            destination: '/painelSeller',
-            permanent: false,
-          },
-        };
-      }
     }
 
     try {
