@@ -12,7 +12,6 @@ import {
   ModalHeader,
   Text,
   VStack,
-  Stack,
   HStack,
   useToast,
 } from '@chakra-ui/react';
@@ -104,7 +103,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
                   {!product.photos[0] ? (
                     <VStack spacing={0}>
                       <Text flexWrap="wrap" fontSize={['1.5rem', '2xl', '3xl']}>
-                        R${product.price}
+                        R${Number(product.price).toFixed(2).replace('.', ',')}
                       </Text>
                     </VStack>
                   ) : (
@@ -113,7 +112,9 @@ const DetailsProductModal: ForwardRefRenderFunction<
                         {product.name}
                       </Text>
                       <HStack>
-                        <Text fontSize="1.5rem">R${product.price}</Text>
+                        <Text fontSize="1.5rem">
+                          R${Number(product.price).toFixed(2).replace('.', ',')}
+                        </Text>
                         <Flex
                           p="0.5rem"
                           borderRadius="0.2rem"

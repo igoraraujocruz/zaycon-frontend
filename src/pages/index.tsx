@@ -236,7 +236,7 @@ export default function Home() {
                   </Flex>
                   <HStack mb="1rem" mt="0.5rem" spacing="0.5rem" align="center">
                     <Text align="center" fontSize="1.5rem">
-                      R${String(product.price).replace('.', ',')}
+                      R${Number(product.price).toFixed(2).replace('.', ',')}
                     </Text>
                     <Flex
                       p="0.5rem"
