@@ -88,7 +88,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
 
   return (
     <Flex>
-      <Modal size="5xl" isOpen={isOpen} onClose={onClose}>
+      <Modal size={['md', 'md', '2xl']} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg="gray.900">
           <ModalCloseButton
@@ -98,113 +98,88 @@ const DetailsProductModal: ForwardRefRenderFunction<
           />
           <ModalHeader />
           <ModalBody>
-            <Flex flexDir={['column', 'column', 'row']}>
+            <Flex justify="center" flexDir={['column', 'column', 'row']}>
               {product.id && (
-                <VStack justify="space-between" align="center">
-                  <Stack
-                    w="100%"
-                    flexDir={['column', 'column', 'row']}
-                    align={['center', 'center', 'flex-start']}
-                  >
-                    {!product.photos[0] ? (
-                      <VStack spacing={0} mb="2rem">
-                        <Text
-                          flexWrap="wrap"
-                          fontSize={['1.5rem', '2xl', '3xl']}
-                        >
-                          R${product.price}
-                        </Text>
-                      </VStack>
-                    ) : (
-                      <VStack>
-                        <Text fontSize="2xl">{product.name}</Text>
-                        <HStack>
-                          <Text
-                            flexWrap="wrap"
-                            fontSize={['1.5rem', '2xl', '3xl']}
-                          >
-                            R${product.price}
-                          </Text>
-                          <FiShoppingCart cursor="pointer" size={30} />
-                        </HStack>
-
-                        <VStack spacing={0}>
-                          <Image
-                            border="0.5rem solid #FF6B00"
-                            h={['60vh', '60vh', '65vh']}
-                            minW="20rem"
-                            w={['70vw', '70vw', '28vw']}
-                            src={
-                              showImage === ''
-                                ? product.photos[0].url
-                                : showImage
-                            }
-                          />
-                        </VStack>
+                <VStack align="center">
+                  {!product.photos[0] ? (
+                    <VStack spacing={0}>
+                      <Text flexWrap="wrap" fontSize={['1.5rem', '2xl', '3xl']}>
+                        R${product.price}
+                      </Text>
+                    </VStack>
+                  ) : (
+                    <VStack>
+                      <Text fontSize={['1.2rem', '1.2rem', '2xl']}>
+                        {product.name}
+                      </Text>
+                      <HStack>
+                        <Text fontSize="1.5rem">R${product.price}</Text>
                         <Flex
-                          flexWrap="wrap"
-                          justify="center"
-                          flexDir="row"
-                          gap={2}
-                          p={2}
+                          p="0.5rem"
+                          borderRadius="0.2rem"
+                          onClick={() =>
+                            saveOnCookie({
+                              id: product.id,
+                              name: product.name,
+                              amount: product.amount,
+                              description: product.description,
+                              price: product.price,
+                              slug: product.slug,
+                              user: product.user,
+                              points: product.points,
+                              photos: product.photos,
+                              createdAt: product.createdAt,
+                            })
+                          }
+                          cursor="pointer"
+                          align="center"
+                          fontFamily="Anek Devanagari"
+                          bg="gray.800"
                         >
-                          {product.photos.map(photo => (
-                            <Image
-                              _hover={{ opacity: 1 }}
-                              transition="opacity 200ms"
-                              key={photo.id}
-                              opacity={0.9}
-                              cursor="pointer"
-                              onClick={() => setShowImage(photo.url)}
-                              borderRadius="1rem 1rem 0"
-                              h="5rem"
-                              w={['4rem', '6rem']}
-                              src={photo.url}
-                            />
-                          ))}
+                          <Text>Comprar</Text>
+                          <FiShoppingCart cursor="pointer" size={30} />
                         </Flex>
+                      </HStack>
+
+                      <VStack spacing={2}>
+                        <Text w="20rem" fontWeight={400}>
+                          {product.description}
+                        </Text>
+
+                        <Image
+                          border="0.5rem solid #d2d2d2"
+                          maxW={['45vh', '45vh', '60vh']}
+                          src={
+                            showImage === '' ? product.photos[0].url : showImage
+                          }
+                        />
                       </VStack>
-                    )}
-                  </Stack>
+                      <Flex
+                        flexWrap="wrap"
+                        justify="center"
+                        flexDir="row"
+                        gap={2}
+                        p={2}
+                      >
+                        {product.photos.map(photo => (
+                          <Image
+                            _hover={{ opacity: 1 }}
+                            transition="opacity 200ms"
+                            key={photo.id}
+                            opacity={0.9}
+                            cursor="pointer"
+                            onClick={() => setShowImage(photo.url)}
+                            borderRadius="1rem 1rem 0"
+                            h="5rem"
+                            w={['4rem', '6rem']}
+                            src={photo.url}
+                          />
+                        ))}
+                      </Flex>
+                    </VStack>
+                  )}
                 </VStack>
               )}
-              <VStack flexDir="column">
-                <Text
-                  fontFamily="Anek Devanagari"
-                  fontWeight={400}
-                  w="28rem"
-                  ml="2rem"
-                  pt="6rem"
-                  maxH="15rem"
-                >
-                  {product.description}
-                </Text>
-                <Flex
-                  p="0.5rem"
-                  borderRadius="0.2rem"
-                  onClick={() =>
-                    saveOnCookie({
-                      id: product.id,
-                      name: product.name,
-                      amount: product.amount,
-                      description: product.description,
-                      price: product.price,
-                      slug: product.slug,
-                      user: product.user,
-                      points: product.points,
-                      photos: product.photos,
-                      createdAt: product.createdAt,
-                    })
-                  }
-                  cursor="pointer"
-                  align="center"
-                  fontFamily="Anek Devanagari"
-                  bg="gray.800"
-                >
-                  <Text>Comprar</Text>
-                  <FiShoppingCart cursor="pointer" size={30} />
-                </Flex>
-              </VStack>
             </Flex>
           </ModalBody>
 

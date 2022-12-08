@@ -122,7 +122,7 @@ export default function Home() {
             Procurar
           </Button>
         </HStack>
-        <Flex justify="center" minH="70vh">
+        <Flex justify="center" minH="50vh" mt="1rem">
           {(!isLoading && isFetching) || isLoading ? (
             <Flex justify="center" align="center">
               <Spinner color="orange" />
@@ -197,12 +197,13 @@ export default function Home() {
             >
               {data.products.map(product => (
                 <Flex
+                  border="0.1rem solid #2D3748"
                   key={product.id}
                   p="2rem"
                   flexDir="column"
                   alignItems="center"
                 >
-                  <Text fontSize="2xl" cursor="pointer">
+                  <Text w="15rem" fontWeight="600" cursor="pointer">
                     {product.name}
                   </Text>
 
@@ -238,7 +239,6 @@ export default function Home() {
                       onClick={() => saveOnCookie(product)}
                       cursor="pointer"
                       align="center"
-                      fontFamily="Anek Devanagari"
                       bg="gray.800"
                     >
                       <Text>Comprar</Text>

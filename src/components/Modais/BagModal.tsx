@@ -176,7 +176,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
 
   return (
     <Flex>
-      <Box cursor="pointer" onClick={onOpen}>
+      <Box cursor="pointer" onClick={onOpen} zIndex={2}>
         <Flex
           flexDir="column"
           justify="center"
@@ -184,7 +184,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
           fill="white"
           bg="gray.800"
           borderRadius={50}
-          boxShadow="5px 2px 6px rgba(0,0,0,0.4)"
+          boxShadow="15px 2px 6px rgba(0,0,0,0.4)"
           position="fixed"
           w={['4rem', '4rem', '4rem', '4rem']}
           h={['4rem', '4rem', '4rem']}

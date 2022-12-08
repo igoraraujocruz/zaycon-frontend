@@ -4,12 +4,12 @@ import Link from 'next/link';
 export const WhatsApp = ({ ...props }) => {
   return (
     <Link href="https://api.whatsapp.com/send?phone=5527999147896&text=Olá, gostaria de saber mais sobre os produtos">
-      <Box cursor="pointer">
+      <Box cursor="pointer" zIndex={2}>
         <Box
           fill="white"
           bg="#4dc247"
           borderRadius={50}
-          boxShadow="2px 2px 6px rgba(0,0,0,0.4)"
+          boxShadow="15px 2px 6px rgba(0,0,0,0.4)"
           position="fixed"
           w={['4rem', '4rem', '4rem', '4rem']}
           h={['4rem', '4rem', '4rem']}

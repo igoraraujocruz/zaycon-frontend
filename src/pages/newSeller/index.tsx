@@ -128,7 +128,7 @@ function Login() {
               </Button>
 
               <Link href="/admin">
-                <Text mt="2rem" textAlign="center">
+                <Text cursor="pointer" mt="2rem" textAlign="center">
                   Já possuo uma conta
                 </Text>
               </Link>
