@@ -10,19 +10,17 @@ import {
   Button,
   useToast,
   useMediaQuery,
+  Link,
 } from '@chakra-ui/react';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useCallback, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FiShoppingCart } from 'react-icons/fi';
 import { GrInstagram } from 'react-icons/gr';
-import io from 'socket.io-client';
-import nookies from 'nookies';
 import { SearchInput } from '../components/Form/SearchInput';
 import { api } from '../services/apiClient';
 import { Product, useProducts } from '../services/hooks/useProducts';
-import TesteDetailsProductModal, {
+import DetailsProductModal, {
   DetailsProductModalHandle,
 } from '../components/Modais/DetailsProductModal';
 import BagModal, { IBagModal } from '../components/Modais/BagModal';
@@ -79,10 +77,10 @@ export default function Home() {
       <Flex flexDir="column" w="100%">
         <BagModal ref={bagModal} />
         <WhatsApp />
-        <TesteDetailsProductModal product={product} ref={modalDetails} />
+        <DetailsProductModal product={product} ref={modalDetails} />
         <HStack h="4rem" spacing="1rem" w="100%" pr="2rem" justify="end">
           <Text>Zaycon</Text>
-          <Link href="https://www.instagram.com/zaycon.connect">
+          <Link href="https://www.instagram.com/zaycon.connect" isExternal>
             <Flex cursor="pointer">
               <GrInstagram color="white" size={isNotLargerThan500 ? 28 : 35} />
             </Flex>
@@ -198,38 +196,45 @@ export default function Home() {
               {data.products.map(product => (
                 <Flex
                   border="0.1rem solid #2D3748"
-                  key={product.id}
-                  p="2rem"
                   flexDir="column"
                   alignItems="center"
                 >
-                  <Text w="15rem" fontWeight="600" cursor="pointer">
-                    {product.name}
-                  </Text>
-
-                  <Image
-                    onClick={() => openUploadModal(product)}
+                  <Flex
                     cursor="pointer"
-                    w={['250px', '250px', '300px']}
-                    zIndex={1}
-                    h="324.29px"
-                    src={
-                      !product.photos[0]
-                        ? 'placeholder.png'
-                        : product.photos[0].url
-                    }
-                  />
-                  <Text
-                    overflow="hidden"
-                    textOverflow="ellipsis"
-                    whiteSpace="nowrap"
-                    mt="0.5rem"
-                    w={['15.7rem', '15.7rem', '18.8rem']}
-                    maxH="5rem"
+                    onClick={() => openUploadModal(product)}
+                    key={product.id}
+                    pt="2rem"
+                    pl="2rem"
+                    pr="2rem"
+                    flexDir="column"
+                    alignItems="center"
                   >
-                    {product.description}
-                  </Text>
-                  <HStack mt="1rem" spacing="0.5rem" align="center">
+                    <Text w="15rem" fontWeight="600" cursor="pointer">
+                      {product.name}
+                    </Text>
+
+                    <Image
+                      w={['250px', '250px', '300px']}
+                      zIndex={1}
+                      h="324.29px"
+                      src={
+                        !product.photos[0]
+                          ? 'placeholder.png'
+                          : product.photos[0].url
+                      }
+                    />
+                    <Text
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap"
+                      mt="0.5rem"
+                      w={['15.7rem', '15.7rem', '18.8rem']}
+                      maxH="5rem"
+                    >
+                      {product.description}
+                    </Text>
+                  </Flex>
+                  <HStack mb="1rem" mt="0.5rem" spacing="0.5rem" align="center">
                     <Text align="center" fontSize="1.5rem">
                       R${String(product.price).replace('.', ',')}
                     </Text>
@@ -240,6 +245,10 @@ export default function Home() {
                       cursor="pointer"
                       align="center"
                       bg="gray.800"
+                      _hover={{
+                        background: '#FF6B00',
+                      }}
+                      transition={['background 200ms']}
                     >
                       <Text>Comprar</Text>
                       <FiShoppingCart cursor="pointer" size={30} />

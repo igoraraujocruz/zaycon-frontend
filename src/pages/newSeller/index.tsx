@@ -1,10 +1,17 @@
-import { Flex, Button, Stack, Heading, useToast, Text } from '@chakra-ui/react';
+import {
+  Flex,
+  Button,
+  Stack,
+  Heading,
+  useToast,
+  Text,
+  Link,
+} from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Head from 'next/head';
 import { useState } from 'react';
-import Link from 'next/link';
 import { Input } from '../../components/Form/Input';
 import { createSeller } from '../../services/hooks/useUsers';
 
@@ -139,10 +146,17 @@ function Login() {
             <Heading size="md" color="green">
               Sucesso!
             </Heading>
-            <Text>
-              Agora só precisamos que confirme o seu email para que o seu
-              cadastro seja liberado!
-            </Text>
+            <Text>Agora você pode acessar a plataforma do vendedor</Text>
+            <Link href="/admin">
+              <Button
+                fontSize="0.8rem"
+                bg="gray.800"
+                size={['xs', 'md']}
+                _hover={{ bg: 'orangeHover' }}
+              >
+                Clique aqui para acessar a plataforma do vendedor
+              </Button>
+            </Link>
           </Flex>
         )}
       </Flex>

@@ -133,8 +133,11 @@ const DetailsProductModal: ForwardRefRenderFunction<
                           }
                           cursor="pointer"
                           align="center"
-                          fontFamily="Anek Devanagari"
                           bg="gray.800"
+                          _hover={{
+                            background: '#FF6B00',
+                          }}
+                          transition={['background 200ms']}
                         >
                           <Text>Comprar</Text>
                           <FiShoppingCart cursor="pointer" size={30} />

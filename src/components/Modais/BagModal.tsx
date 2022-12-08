@@ -104,7 +104,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
     }
   }, [Object.keys(cart)]);
 
-  const total = Object.keys(cart).reduce((prev, current) => {
+  const subTotal = Object.keys(cart).reduce((prev, current) => {
     return prev + cart[current].quantity * cart[current].product.price;
   }, 0);
 
@@ -233,7 +233,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                             </Text>
                             <Text>
                               Subtotal: R${' '}
-                              {cart[key].quantity * cart[key].product.price}
+                              {subTotal.toFixed(2).replace('.', ',')}
                             </Text>
                             <Text>Descrição:</Text>
                             <Text
@@ -267,6 +267,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                                 <BsFillTrashFill color="#fff" />
                               </Button>
                               <Flex
+                                mt="1rem"
                                 mb="1rem"
                                 align="center"
                                 ml="2.2rem"
@@ -302,22 +303,31 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                     })}
                   </Flex>
                   <Text>
-                    Total: {String(total.toFixed(2)).replace('.', ',')}
+                    Valor total dos Produtos: R${' '}
+                    {subTotal.toFixed(2).replace('.', ',')}
+                  </Text>
+                  <Text>
+                    Taxa para Geradora do Pix: R${' '}
+                    {((subTotal * 1.19) / 100).toFixed(2).replace('.', ',')}
+                  </Text>
+                  <Text fontWeight="600">
+                    Total a pagar: R${' '}
+                    {(subTotal + (subTotal * 1.19) / 100)
+                      .toFixed(2)
+                      .replace('.', ',')}
                   </Text>
                   <VStack
+                    mt="1rem"
                     as="form"
                     onSubmit={handleSubmit(onSubmit)}
                     borderColor="red"
                   >
-                    <RadioGroup defaultValue="2">
+                    <RadioGroup defaultValue="pix">
                       <FormLabel>Forma de Pagamento</FormLabel>
                       <HStack>
                         <Radio value="pix" {...register('typeOfPayment')}>
                           Pix
                         </Radio>
-                        {/*                         <Radio value="picpay" {...register('typeOfPayment')}>
-                          PicPay
-                        </Radio> */}
                       </HStack>
                     </RadioGroup>
                     <FormControl>
