@@ -101,8 +101,10 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   useEffect(() => {
     if (Object.keys(cart).length > 0) {
       setHaveItems(true);
+    } else {
+      setHaveItems(false);
     }
-  }, [Object.keys(cart)]);
+  }, [cart]);
 
   const subTotal = Object.keys(cart).reduce((prev, current) => {
     return prev + cart[current].quantity * cart[current].product.price;
@@ -206,7 +208,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
           <ModalHeader />
           {!finishShop ? (
             <ModalBody>
-              {haveItems && (
+              {haveItems ? (
                 <>
                   <Flex flexDir="column">
                     {Object.keys(cart).map(key => {
@@ -382,6 +384,10 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                     </Button>
                   </VStack>
                 </>
+              ) : (
+                <Text align="center">
+                  Nenhum item no carrinho até o momento
+                </Text>
               )}
             </ModalBody>
           ) : (
