@@ -1,18 +1,9 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  HStack,
-  List,
-  ListItem,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
 import nookies from 'nookies';
 import { withSSRAuth } from '../../utils/WithSSRAuth';
-import { signOut } from '../../services/hooks/useAuth';
+import { HeaderPainel } from '../../components/HeaderPainel';
+import { SellerShop } from '../../components/SellerShop';
 import { api } from '../../services/apiClient';
 
 interface Client {
@@ -29,50 +20,31 @@ interface Shop {
   createdAt: string;
   client: Client;
   product: Product;
+  paid: boolean;
 }
 
 interface Seller {
-  id: string;
-  name: string;
-  username: string;
-  email: string;
-  isAdmin: boolean;
-  numberPhone: string;
-  points: number;
-  birthday: string;
-  shop: Shop[];
+  seller: {
+    id: string;
+    name: string;
+    username: string;
+    email: string;
+    isAdmin: boolean;
+    numberPhone: string;
+    points: number;
+    birthday: string;
+    shop: Shop[];
+  };
 }
 
-const PainelSeller = () => {
-  const [myInfo, setMyInfo] = useState({} as Seller);
-  useEffect(() => {
-    api.get('/sellers/me').then(response => setMyInfo(response.data));
-  }, []);
-
+const PainelSeller = ({ seller }: Seller) => {
   return (
     <>
       <Head>
         <title>Painel | Zaycon</title>
       </Head>
       <Flex h="100vh" flexDir="column" justify="flex-start" align="center">
-        <VStack align="end" w="100vw" mr="5rem">
-          <HStack w="100vw" mt="2rem" justify="end">
-            <Heading size="lg">Zaycon</Heading>
-            <Button
-              fontSize="0.8rem"
-              onClick={() => signOut()}
-              bg="gray.800"
-              size={['xs', 'md']}
-              _hover={{ bg: 'orangeHover' }}
-            >
-              Sair
-            </Button>
-          </HStack>
-          <VStack>
-            <Text>Olá, {myInfo.name}</Text>
-          </VStack>
-        </VStack>
-
+        <HeaderPainel seller={seller} />
         <Flex flexDir="column" mt="2rem" align="center">
           <Flex
             flexDir={['column', 'column', 'row']}
@@ -81,28 +53,7 @@ const PainelSeller = () => {
             w="100%"
             m={0}
           >
-            <Flex p="2rem" flexDir="column" justify="center">
-              <Heading size="md">Meus pontos</Heading>
-              <Text>{myInfo.points}</Text>
-            </Flex>
-            <Flex p="2rem" flexDir="column" align="center" justify="center">
-              <Heading size="md">Minhas Vendas</Heading>
-              <VStack>
-                {myInfo.shop?.map(shop => (
-                  <List key={shop.id} spacing={3}>
-                    <ListItem>
-                      {new Date(shop.createdAt).toLocaleDateString('pt-BR', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: '2-digit',
-                      })}{' '}
-                      {shop.client.name} comprou {shop.quantity}x{' '}
-                      {shop.product.name}
-                    </ListItem>
-                  </List>
-                ))}
-              </VStack>
-            </Flex>
+            <SellerShop seller={seller} />
           </Flex>
         </Flex>
       </Flex>
@@ -132,11 +83,12 @@ export const getServerSideProps = withSSRAuth(async ctx => {
         },
       };
     }
+    return {
+      props: {
+        seller,
+      },
+    };
   } catch (err) {
-    // no error
+    // continue regardless of error
   }
-
-  return {
-    props: {},
-  };
 });

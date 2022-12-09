@@ -1,15 +1,13 @@
-import { Button, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
 import nookies from 'nookies';
-import Link from 'next/link';
-import { signOut } from '../../services/hooks/useAuth';
 import CreateProducts from '../admin/products/create';
-import { useShop } from '../../services/hooks/useShop';
 import { api } from '../../services/apiClient';
 import { withSSRAuth } from '../../utils/WithSSRAuth';
 import { Admin } from '../../components/Can';
+import { HeaderPainel } from '../../components/HeaderPainel';
+import { SellerShop } from '../../components/SellerShop';
+import { AllShop } from '../../components/AllShop';
 
 interface Client {
   name: string;
@@ -25,145 +23,40 @@ interface Shop {
   createdAt: string;
   client: Client;
   product: Product;
+  paid: boolean;
 }
 
 interface Seller {
-  id: string;
-  name: string;
-  username: string;
-  email: string;
-  isAdmin: boolean;
-  numberPhone: string;
-  points: number;
-  birthday: string;
-  shop: Shop[];
+  seller: {
+    id: string;
+    name: string;
+    username: string;
+    email: string;
+    isAdmin: boolean;
+    numberPhone: string;
+    points: number;
+    birthday: string;
+    shop: Shop[];
+  };
 }
 
-const PainelAdm = () => {
-  const router = useRouter();
-  const { data } = useShop();
-  const [myInfo, setMyInfo] = useState({} as Seller);
-
-  useEffect(() => {
-    api.get('/sellers/me').then(response => setMyInfo(response.data));
-
-    if (myInfo.isAdmin === false) {
-      router.push('/painelSeller');
-    }
-  }, [myInfo, router]);
-
+const PainelAdm = ({ seller }: Seller) => {
   return (
     <Admin>
       <Head>
         <title>Painel Adm| Zaycon</title>
       </Head>
       <Flex h="100vh" flexDir="column" justify="flex-start" align="center">
-        <VStack align="end" w="100vw" mr="5rem">
-          <HStack w="100vw" mt="2rem" justify="end">
-            <Heading size="lg">Zaycon</Heading>
-            <Link href="/">
-              <Button
-                fontSize="0.8rem"
-                bg="gray.800"
-                size={['xs', 'md']}
-                _hover={{ bg: 'orangeHover' }}
-              >
-                Ir para a Loja
-              </Button>
-            </Link>
-            <Button
-              fontSize="0.8rem"
-              onClick={() => signOut()}
-              bg="gray.800"
-              size={['xs', 'md']}
-              _hover={{ bg: 'orangeHover' }}
-            >
-              Sair
-            </Button>
-          </HStack>
-          <VStack>
-            <Text>Olá, {myInfo.name}</Text>
-          </VStack>
-        </VStack>
-
+        <HeaderPainel seller={seller} />
         <Flex flexDir="column" mt="2rem" align="center">
           <Flex
             flexDir={['column', 'column', 'row']}
             align="center"
-            justify="center"
-            w="100%"
-            m={0}
+            w="100vw"
+            justify="space-around"
           >
-            <Flex
-              bg="gray.800"
-              h="38.5rem"
-              flexDir="column"
-              w="25rem"
-              borderRadius="2rem"
-              p="2rem"
-            >
-              <Heading size="md">Todas as vendas</Heading>
-              <VStack>
-                {data
-                  ?.sort(function compare(a, b) {
-                    if (a.createdAt > b.createdAt) {
-                      return -1;
-                    }
-                    return 1;
-                  })
-                  .map(shop =>
-                    shop.paid ? (
-                      <Flex key={shop.id} w="100%">
-                        <Text>
-                          {shop.client.name} - Uma nova compra foi feita -{' '}
-                          {shop.createdAt}
-                        </Text>
-                      </Flex>
-                    ) : (
-                      <Text key={shop.id}>
-                        No momento não existe nenhuma compra
-                      </Text>
-                    ),
-                  )}
-              </VStack>
-            </Flex>
-            <VStack p="2rem">
-              <Flex
-                bg="gray.800"
-                flexDir="column"
-                w="20rem"
-                borderRadius="2rem"
-                p="2rem"
-              >
-                <Heading size="md">Meus pontos</Heading>
-                <Text>{myInfo.points}</Text>
-              </Flex>
-              <Flex
-                bg="gray.800"
-                h="38.5rem"
-                flexDir="column"
-                w="20rem"
-                borderRadius="2rem"
-                p="2rem"
-              >
-                <Heading size="md">Minhas Vendas</Heading>
-                <VStack>
-                  {myInfo.shop?.map(shop => (
-                    <Flex id={shop.id}>
-                      <Text>
-                        {new Date(shop.createdAt).toLocaleDateString('pt-BR', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: '2-digit',
-                        })}{' '}
-                        {shop.client.name} comprou {shop.quantity}x{' '}
-                        {shop.product.name}
-                      </Text>
-                    </Flex>
-                  ))}
-                </VStack>
-              </Flex>
-            </VStack>
+            <AllShop seller={seller} />
+            <SellerShop seller={seller} />
             <CreateProducts />
           </Flex>
         </Flex>
@@ -194,11 +87,12 @@ export const getServerSideProps = withSSRAuth(async ctx => {
         },
       };
     }
+    return {
+      props: {
+        seller,
+      },
+    };
   } catch (err) {
     // continue regardless of error
   }
-
-  return {
-    props: {},
-  };
 });
