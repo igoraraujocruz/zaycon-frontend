@@ -36,11 +36,11 @@ import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { io } from 'socket.io-client';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { api } from '../../services/apiClient';
 import { useCart } from '../../services/hooks/useCart';
 import { Input } from '../Form/Input';
 import { MaskedInput } from '../Form/MaskedInput';
-import { WhatsApp } from '../Whatsapp';
 
 export interface IBagModal {
   onOpen: () => void;
@@ -54,11 +54,13 @@ type CreateFormData = {
   address: string;
   email: string;
   numberPhone: string;
+  seller: string;
 };
 
 const createFormSchema = yup.object().shape({
   typeOfPayment: yup.string().required('O tipo de pagamento é necessário'),
   name: yup.string().required('O nome é necessário'),
+  seller: yup.string(),
   cep: yup.string().required('O CEP é obrigatório'),
   address: yup.string().required('O endereço é necessário'),
   email: yup.string().required('Email é obrigatório').email(),
@@ -86,6 +88,24 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const [paid, setIsPaid] = useState(false);
   const [dataPaiment, setdataPaiment] = useState({} as any);
   const [mySocketId, setMySocketId] = useState('');
+  const [seller, setSeller] = useState({} as any);
+
+  const router = useRouter();
+
+  const sellerUserName = router.query.seller;
+
+  useEffect(() => {
+    if (sellerUserName) {
+      const getSeller = async () => {
+        const response = await api.get(
+          `/sellers?sellerUsername=${sellerUserName}`,
+        );
+
+        setSeller(response.data);
+      };
+      getSeller();
+    }
+  }, [sellerUserName]);
 
   socket.on('receivePaiment', data => {
     setdataPaiment(data);
@@ -141,6 +161,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
       clientId: client.data.id,
       typeOfPayment: order.typeOfPayment,
       socketId: mySocketId,
+      sellerId: seller.id,
     });
 
     Object.keys(cart).map(async curr => {
@@ -325,7 +346,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                     borderColor="red"
                   >
                     <RadioGroup defaultValue="pix">
-                      <FormLabel>Forma de Pagamento</FormLabel>
+                      <FormLabel mt="1rem">Forma de Pagamento</FormLabel>
                       <HStack>
                         <Radio value="pix" {...register('typeOfPayment')}>
                           Pix

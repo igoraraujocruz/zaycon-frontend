@@ -24,6 +24,7 @@
       "prettier"
   ],
   "rules": {
+    "react/no-array-index-key": "off",
     "no-plusplus": "off",
     "no-useless-escape": "off",
     "react/jsx-no-useless-fragment": "off",
