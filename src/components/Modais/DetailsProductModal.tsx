@@ -42,10 +42,6 @@ interface ProductProps {
         url: string;
       },
     ];
-    user: {
-      id: string;
-      name: string;
-    };
   };
 }
 
@@ -126,7 +122,6 @@ const DetailsProductModal: ForwardRefRenderFunction<
                               description: product.description,
                               price: product.price,
                               slug: product.slug,
-                              user: product.user,
                               points: product.points,
                               photos: product.photos,
                               createdAt: product.createdAt,

@@ -18,6 +18,7 @@
     "axios": "0.26.0",
     "date-fns": "^2.29.1",
     "framer-motion": "^7.3.6",
+    "howler": "^2.2.3",
     "jwt-decode": "^3.1.2",
     "next": "12.1.6",
     "nookies": "^2.5.2",

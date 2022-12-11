@@ -7,13 +7,11 @@ import {
   ModalFooter,
   ModalOverlay,
   useDisclosure,
-  Image,
   Flex,
   ModalHeader,
   Text,
   VStack,
   HStack,
-  useToast,
   Heading,
   Select,
 } from '@chakra-ui/react';
@@ -21,10 +19,9 @@ import {
   forwardRef,
   ForwardRefRenderFunction,
   useImperativeHandle,
-  useState,
 } from 'react';
 import { useForm } from 'react-hook-form';
-import { api } from '../../services/apiClient';
+import { updateStatus } from '../../services/hooks/useShop';
 
 interface Client {
   name: string;
@@ -76,11 +73,7 @@ const DetailsAllShop: ForwardRefRenderFunction<
   }));
 
   const onSubmit = async ({ status }: any) => {
-    const response = await api.patch('/shop', {
-      shopId: shop.id,
-      status,
-    });
-    console.log(response.data);
+    await updateStatus(shop.id, status);
   };
 
   return (

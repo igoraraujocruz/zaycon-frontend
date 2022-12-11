@@ -45,19 +45,16 @@ export const SellerShop = ({ seller }: Seller) => {
   };
 
   return (
-    <Flex flexDir="column">
+    <Flex flexDir="column" align="center">
       <DetailsShopModal shop={shop} ref={modalDetailsShop} />
       <Heading size="md">Minhas Vendas</Heading>
-      <HStack>
-        <Text color="#00FF00">Vendidos</Text>
-        <Text color="#A9A9A9">Aguardando Pagamento</Text>
-      </HStack>
       <Flex
         bg="gray.800"
         h="38.5rem"
         flexDir="column"
-        w={['20rem', '20rem', '30rem']}
+        w={['25rem', '25rem', '30rem']}
         borderRadius="2rem"
+        m="1rem"
         p="2rem"
         overflowY="auto"
         css={{

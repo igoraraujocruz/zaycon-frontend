@@ -1,6 +1,8 @@
-import { Flex } from '@chakra-ui/react';
+import { Box, Button, Flex, Grid, Stack } from '@chakra-ui/react';
 import Head from 'next/head';
 import nookies from 'nookies';
+import { Howl, Howler } from 'howler';
+import { useContext, useEffect, useRef } from 'react';
 import CreateProducts from '../admin/products/create';
 import { api } from '../../services/apiClient';
 import { withSSRAuth } from '../../utils/WithSSRAuth';
@@ -8,6 +10,10 @@ import { Admin } from '../../components/Can';
 import { HeaderPainel } from '../../components/HeaderPainel';
 import { SellerShop } from '../../components/SellerShop';
 import { AllShop } from '../../components/AllShop';
+import { SocketContext } from '../../services/hooks/useSocket';
+import { queryClient } from '../../services/queryClient';
+import { PossibleShop } from '../../components/PossibleShop';
+import { Products } from '../../components/Products';
 
 interface Client {
   name: string;
@@ -41,6 +47,16 @@ interface Seller {
 }
 
 const PainelAdm = ({ seller }: Seller) => {
+  const socket = useContext(SocketContext);
+
+  socket.on('createShop', async () => {
+    await queryClient.invalidateQueries('shop');
+  });
+
+  socket.on('receivePaimentAdmin', async () => {
+    await queryClient.invalidateQueries('shop');
+  });
+
   return (
     <Admin>
       <Head>
@@ -48,18 +64,17 @@ const PainelAdm = ({ seller }: Seller) => {
       </Head>
       <Flex h="100vh" flexDir="column" justify="flex-start" align="center">
         <HeaderPainel seller={seller} />
-        <Flex flexDir="column" mt="2rem" align="center">
-          <Flex
-            flexDir={['column', 'column', 'row']}
-            align="center"
-            w="100vw"
-            justify="space-around"
-          >
-            <AllShop seller={seller} />
-            <SellerShop seller={seller} />
-            <CreateProducts />
-          </Flex>
-        </Flex>
+        <Grid
+          mt="2rem"
+          templateColumns={['1fr', '1fr', '1fr 1fr', '1fr 1fr', '1fr 1fr 1fr']}
+        >
+          <PossibleShop />
+          <AllShop />
+
+          <SellerShop seller={seller} />
+          <Products />
+          <CreateProducts />
+        </Grid>
       </Flex>
     </Admin>
   );

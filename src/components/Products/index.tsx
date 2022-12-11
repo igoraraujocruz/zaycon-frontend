@@ -1,4 +1,16 @@
-import { Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import {
+  Flex,
+  Heading,
+  HStack,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  VStack,
+} from '@chakra-ui/react';
 import { useCallback, useRef, useState } from 'react';
 import { BsBoxSeam } from 'react-icons/bs';
 import { TbTruckDelivery } from 'react-icons/tb';
@@ -8,6 +20,7 @@ import DetailsAllShop, {
   DetailsAllShopModalHandle,
 } from '../Modais/DetailsAllShop';
 import { useShop } from '../../services/hooks/useShop';
+import { useProducts } from '../../services/hooks/useProducts';
 
 interface Client {
   name: string;
@@ -27,11 +40,11 @@ interface Shop {
   status: string;
 }
 
-export const AllShop = () => {
+export const Products = () => {
   const modalDetailsAllShop = useRef<DetailsAllShopModalHandle>(null);
   const [shop, setShop] = useState({} as Shop);
 
-  const { data } = useShop();
+  const { data } = useProducts();
 
   const handleModal = useCallback(shop => {
     setShop(shop);
@@ -41,15 +54,15 @@ export const AllShop = () => {
   return (
     <Flex flexDir="column" align="center">
       <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
-      <Heading size="md">Todas as vendas</Heading>
+      <Heading size="md">Produtos</Heading>
       <Flex
         bg="gray.800"
         h="38.5rem"
         flexDir="column"
         w={['25rem', '25rem', '30rem']}
         borderRadius="2rem"
-        m="1rem"
         p="2rem"
+        m="1rem"
         overflowY="auto"
         css={{
           '&::-webkit-scrollbar': {
@@ -64,30 +77,40 @@ export const AllShop = () => {
           },
         }}
       >
-        <VStack align="flex-start">
-          {data?.map(
-            shop =>
-              shop.paid && (
-                <Flex key={shop.id}>
-                  <HStack
-                    color={shop.paid ? '#00FF00' : '#A9A9A9'}
-                    cursor="pointer"
-                    onClick={() => handleModal(shop)}
-                  >
-                    <Text color={shop.status === 'Entregue' && '#A9A9A9'}>
-                      {shop.createdAt}
-                    </Text>
-                    <Text color={shop.status === 'Entregue' && '#A9A9A9'}>
-                      {shop.client.name}
-                    </Text>
-                    {shop.status === 'Preparando' && <BsBoxSeam size={28} />}
-                    {shop.status === 'Enviado' && <TbTruckDelivery size={28} />}
-                    {shop.status === 'Entregue' && <FiCheck size={28} />}
-                  </HStack>
-                </Flex>
-              ),
-          )}
-        </VStack>
+        <Table colorScheme="whiteAlpha">
+          <Thead>
+            <Tr>
+              <Th>Nome do Produto</Th>
+              <Th>Preço</Th>
+              <Th>Estoque</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {data?.map(product => (
+              <Tr key={product.id}>
+                <Td>{product.name}</Td>
+                <Td>R$ {product.price}</Td>
+                <Td>{product.amount}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+
+        {/* <VStack align="flex-start">
+          {data?.map(product => (
+            <Flex key={product.id}>
+              <HStack
+                color="#A9A9A9"
+                cursor="pointer"
+                onClick={() => handleModal(product)}
+              >
+                <Text>{product.name}</Text>
+                <Text>R$ {product.price}</Text>
+                <Text>{product.amount}</Text>
+              </HStack>
+            </Flex>
+          ))}
+        </VStack> */}
       </Flex>
     </Flex>
   );

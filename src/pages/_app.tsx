@@ -6,19 +6,22 @@ import { theme } from '../styles/theme';
 import { queryClient } from '../services/queryClient';
 import { AuthProvider } from '../services/hooks/useAuth';
 import { CartProvider } from '../services/hooks/useCart';
+import { SocketProvider } from '../services/hooks/useSocket';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <QueryClientProvider client={queryClient}>
-      <CartProvider>
-        <ChakraProvider theme={theme}>
-          <AuthProvider>
-            <Component {...pageProps} />
-          </AuthProvider>
-          <ReactQueryDevtools />
-        </ChakraProvider>
-      </CartProvider>
-    </QueryClientProvider>
+    <SocketProvider>
+      <QueryClientProvider client={queryClient}>
+        <CartProvider>
+          <ChakraProvider theme={theme}>
+            <AuthProvider>
+              <Component {...pageProps} />
+            </AuthProvider>
+            <ReactQueryDevtools />
+          </ChakraProvider>
+        </CartProvider>
+      </QueryClientProvider>
+    </SocketProvider>
   );
 }
 

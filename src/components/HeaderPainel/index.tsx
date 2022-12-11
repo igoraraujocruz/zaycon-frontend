@@ -1,4 +1,12 @@
-import { Button, Flex, Heading, HStack, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Heading,
+  HStack,
+  Stack,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import Link from 'next/link';
 import { signOut } from '../../services/hooks/useAuth';
 
@@ -50,47 +58,68 @@ export const HeaderPainel = ({ seller }: Seller) => {
   };
 
   return (
-    <Flex flexDir="column">
-      <HStack mt="2rem">
+    <Flex
+      mt="1rem"
+      flexDir={['column', 'column', 'column', 'row']}
+      justify="space-between"
+      w="100%"
+    >
+      <Flex align="center" justify="center" flexDir="row" ml="2rem">
         <Heading size="lg">Zaycon</Heading>
-        <Link href="/">
+        <HStack ml="1rem">
+          <Link href="/">
+            <Button
+              fontSize="0.8rem"
+              bg="gray.800"
+              size={['xs', 'md']}
+              _hover={{ bg: 'orangeHover' }}
+            >
+              Ir para a Loja
+            </Button>
+          </Link>
           <Button
             fontSize="0.8rem"
+            onClick={() => signOut()}
             bg="gray.800"
             size={['xs', 'md']}
             _hover={{ bg: 'orangeHover' }}
           >
-            Ir para a Loja
-          </Button>
-        </Link>
-        <Button
-          fontSize="0.8rem"
-          onClick={() => signOut()}
-          bg="gray.800"
-          size={['xs', 'md']}
-          _hover={{ bg: 'orangeHover' }}
-        >
-          Sair
-        </Button>
-      </HStack>
-      <Text>{seller.name}</Text>
-      <Text>Meus pontos: {seller.points}</Text>
-      <HStack mt="1rem">
-        <Text>Meu Link:</Text>
-        <HStack color="#000" bg="orange" p="0.5rem" borderRadius="1rem">
-          <Text>{myLink}</Text>
-          <Button
-            _hover={{
-              bg: '#1a202c',
-            }}
-            bg="#181b23"
-            color="#fff"
-            onClick={handleCopyClick}
-          >
-            Copiar
+            Sair
           </Button>
         </HStack>
-      </HStack>
+      </Flex>
+
+      <Flex align="center" justify="center" mt={['1rem', '1rem', '1rem', 0]}>
+        <VStack>
+          <Text>Olá, {seller.name}</Text>
+          <Text>Meus pontos: {seller.points}</Text>
+        </VStack>
+      </Flex>
+
+      <Flex align="center" mt="1rem">
+        <Flex
+          flexDir={['column', 'column', 'column', 'row']}
+          justify="center"
+          align="center"
+          w="100%"
+          mr={[0, 0, 0, '2rem']}
+        >
+          <Text mr={[0, 0, 0, '0.5rem']}>Meu Link:</Text>
+          <HStack color="#000" bg="orange" p="0.5rem" borderRadius="1rem">
+            <Text>{myLink}</Text>
+            <Button
+              _hover={{
+                bg: '#1a202c',
+              }}
+              bg="#181b23"
+              color="#fff"
+              onClick={handleCopyClick}
+            >
+              Copiar
+            </Button>
+          </HStack>
+        </Flex>
+      </Flex>
     </Flex>
   );
 };

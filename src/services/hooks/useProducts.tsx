@@ -17,10 +17,6 @@ export interface Product {
       url: string;
     },
   ];
-  user: {
-    id: string;
-    name: string;
-  };
 }
 
 interface CreateProductProps {
@@ -49,50 +45,17 @@ export interface ProductSlug {
   productSlug: string;
 }
 
-interface ProductsAndQuantityOfProducts {
-  quantityOfProduct: number;
-  products: Product[];
-}
-
-export const getProducts = async (
-  page: number,
-  perPage: number,
-): Promise<ProductsAndQuantityOfProducts> => {
-  if (page) {
-    const { data } = await api.get(`/products?page=${page}&perPage=${perPage}`);
-    const { data: total } = await api.get(`/products`);
-
-    const products = data.map((product: Product) => {
-      return {
-        id: product.id,
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        slug: product.slug,
-        points: product.points,
-        photos: product.photos,
-        createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        }),
-        user: product.user,
-      };
-    });
-
-    return { products, quantityOfProduct: total.length };
-  }
-
-  const { data } = await api.get('/products');
+export const getProducts = async (): Promise<Product[]> => {
+  const { data } = await api.get(`/products`);
 
   const products = data.map((product: Product) => {
     return {
       id: product.id,
       name: product.name,
       description: product.description,
-      amount: product.amount,
       price: product.price,
       slug: product.slug,
+      amount: product.amount,
       points: product.points,
       photos: product.photos,
       createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
@@ -100,17 +63,14 @@ export const getProducts = async (
         month: '2-digit',
         year: 'numeric',
       }),
-      user: product.user,
     };
   });
 
-  return { products, quantityOfProduct: data.length };
+  return products;
 };
 
-export function useProducts(page?: number, perPage?: number) {
-  return useQuery(['products', page, perPage], () =>
-    getProducts(page, perPage),
-  );
+export function useProducts() {
+  return useQuery(['products'], () => getProducts());
 }
 
 export const getProduct = async ({

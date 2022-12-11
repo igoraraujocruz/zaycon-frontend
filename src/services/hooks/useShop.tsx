@@ -2,13 +2,6 @@ import { useQuery } from 'react-query';
 import { api } from '../apiClient';
 import { queryClient } from '../queryClient';
 
-interface CreateNewShop {
-  quantity: number;
-  productId: string;
-  clientId: string;
-  typeOfPayment: string;
-}
-
 interface Product {
   id: string;
   name: string;
@@ -35,6 +28,7 @@ interface Shop {
   referenceId: string;
   createdAt: string;
   paid: boolean;
+  status: string;
 }
 
 export const getShop = async (): Promise<Shop[]> => {
@@ -47,6 +41,7 @@ export const getShop = async (): Promise<Shop[]> => {
       order: shop.order,
       typeOfPayment: shop.typeOfPayment,
       paid: shop.paid,
+      status: shop.status,
       createdAt: new Date(shop.createdAt).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: '2-digit',
@@ -64,18 +59,11 @@ export function useShop() {
   return useQuery(['shop'], () => getShop());
 }
 
-export async function createShop({
-  clientId,
-  productId,
-  quantity,
-  typeOfPayment,
-}: CreateNewShop) {
-  await api.post('/shop', {
-    clientId,
-    productId,
-    quantity,
-    typeOfPayment,
+export async function updateStatus(shopId: string, status: string) {
+  await api.patch('/shop', {
+    shopId,
+    status,
   });
 
-  queryClient.invalidateQueries('client');
+  queryClient.invalidateQueries('shop');
 }

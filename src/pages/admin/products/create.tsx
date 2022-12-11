@@ -86,7 +86,7 @@ export default function CreateProducts() {
     <Flex
       onSubmit={handleSubmit(onSubmit)}
       as="form"
-      w={[300, 350, 400, 500, 350, 400]}
+      w={[300, 350, 400]}
       bg="gray.800"
       p={['6', '6', '8']}
       h="46rem"

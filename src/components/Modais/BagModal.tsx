@@ -20,10 +20,12 @@ import {
   Image,
   Box,
   Heading,
+  useToast,
 } from '@chakra-ui/react';
 import {
   forwardRef,
   ForwardRefRenderFunction,
+  useContext,
   useEffect,
   useImperativeHandle,
   useState,
@@ -34,13 +36,14 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { FiShoppingCart } from 'react-icons/fi';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { io } from 'socket.io-client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { Howl, Howler } from 'howler';
 import { api } from '../../services/apiClient';
 import { useCart } from '../../services/hooks/useCart';
 import { Input } from '../Form/Input';
 import { MaskedInput } from '../Form/MaskedInput';
+import { SocketContext } from '../../services/hooks/useSocket';
 
 export interface IBagModal {
   onOpen: () => void;
@@ -73,13 +76,6 @@ const createFormSchema = yup.object().shape({
     ),
 });
 
-const baseUrl =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3333'
-    : 'https://api.zaycon.shop';
-
-const socket = io(baseUrl);
-
 const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const [finishShop, setFinishShop] = useState(false);
   const [haveItems, setHaveItems] = useState(false);
@@ -90,6 +86,13 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const [mySocketId, setMySocketId] = useState('');
   const [seller, setSeller] = useState({} as any);
 
+  const socket = useContext(SocketContext);
+
+  const sound = new Howl({
+    src: ['notification.mp3'],
+  });
+
+  Howler.volume(0.002);
   const router = useRouter();
 
   const sellerUserName = router.query.seller;
@@ -110,6 +113,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   socket.on('receivePaiment', data => {
     setdataPaiment(data);
     setIsPaid(true);
+    sound.play();
   });
 
   socket.on('mySocketId', data => {
@@ -131,6 +135,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   }, 0);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   const {
     register,
@@ -170,13 +175,23 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
         productId: cart[curr].product.id,
       };
 
-      const response = await api.post('/orders', {
-        productId: item.productId,
-        shopId: shop.data.id,
-        quantity: item.quantity,
-      });
-
-      return response.data;
+      try {
+        const response = await api.post('/orders', {
+          productId: item.productId,
+          shopId: shop.data.id,
+          quantity: item.quantity,
+        });
+        return response.data;
+      } catch (err) {
+        toast({
+          position: 'top',
+          title: 'Não foi possível realizar a compra',
+          description: err.response.data.message,
+          status: 'error',
+          duration: 4000,
+          isClosable: true,
+        });
+      }
     });
 
     setTimeout(async () => {

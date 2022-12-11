@@ -193,7 +193,7 @@ export default function Home() {
                 '1fr 1fr 1fr 1fr',
               ]}
             >
-              {data.products.map(product => (
+              {data.map(product => (
                 <Flex
                   border="0.1rem solid #2D3748"
                   flexDir="column"
