@@ -14,11 +14,13 @@ import {
   HStack,
   Heading,
   Select,
+  Spinner,
 } from '@chakra-ui/react';
 import {
   forwardRef,
   ForwardRefRenderFunction,
   useImperativeHandle,
+  useState,
 } from 'react';
 import { useForm } from 'react-hook-form';
 import { updateStatus } from '../../services/hooks/useShop';
@@ -63,6 +65,7 @@ const DetailsAllShop: ForwardRefRenderFunction<
   DetailsAllShopModalHandle,
   any
 > = ({ shop }: Shop, ref) => {
+  const [isSubmited, setIsSubmited] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { handleSubmit, register } = useForm();
@@ -73,7 +76,10 @@ const DetailsAllShop: ForwardRefRenderFunction<
   }));
 
   const onSubmit = async ({ status }: any) => {
+    setIsSubmited(true);
     await updateStatus(shop.id, status);
+    setIsSubmited(false);
+    onClose();
   };
 
   return (
@@ -111,53 +117,55 @@ const DetailsAllShop: ForwardRefRenderFunction<
                 <Text alignSelf="flex-start">Aguardando pagamento...</Text>
               )}
               {shop.paid && (
-                <VStack
-                  as="form"
-                  w="100%"
-                  justify="flex-start"
-                  onSubmit={handleSubmit(onSubmit)}
-                >
-                  <Select {...register('status')}>
-                    <option
-                      style={{ background: '#0d0e12' }}
-                      value="Preparando"
+                <Flex h="2rem">
+                  {!isSubmited ? (
+                    <VStack
+                      as="form"
+                      w="100%"
+                      justify="flex-start"
+                      onSubmit={handleSubmit(onSubmit)}
                     >
-                      Preparando
-                    </option>
-                    <option style={{ background: '#0d0e12' }} value="Enviado">
-                      Enviado
-                    </option>
-                    <option style={{ background: '#0d0e12' }} value="Entregue">
-                      Entregue
-                    </option>
-                  </Select>
-                  <Flex justify="start" w="100%">
-                    <Button
-                      type="submit"
-                      bg="#0d0e12"
-                      _hover={{
-                        bg: '#181b23',
-                      }}
-                    >
-                      Alterar Status
-                    </Button>
-                  </Flex>
-                </VStack>
+                      <Select {...register('status')}>
+                        <option
+                          style={{ background: '#0d0e12' }}
+                          value="Preparando"
+                        >
+                          Preparando
+                        </option>
+                        <option
+                          style={{ background: '#0d0e12' }}
+                          value="Enviado"
+                        >
+                          Enviado
+                        </option>
+                        <option
+                          style={{ background: '#0d0e12' }}
+                          value="Entregue"
+                        >
+                          Entregue
+                        </option>
+                      </Select>
+                      <Flex justify="start" w="100%">
+                        <Button
+                          type="submit"
+                          bg="#0d0e12"
+                          _hover={{
+                            bg: '#181b23',
+                          }}
+                        >
+                          Alterar Status
+                        </Button>
+                      </Flex>
+                    </VStack>
+                  ) : (
+                    <Spinner size="md" />
+                  )}
+                </Flex>
               )}
             </VStack>
           </ModalBody>
 
-          <ModalFooter>
-            <Button
-              color="#fff"
-              bg="orange"
-              _hover={{ bg: 'orangeHover' }}
-              mr={3}
-              onClick={onClose}
-            >
-              Fechar
-            </Button>
-          </ModalFooter>
+          <ModalFooter h="5rem" />
         </ModalContent>
       </Modal>
     </Flex>
