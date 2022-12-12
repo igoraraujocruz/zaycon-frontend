@@ -8,40 +8,16 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import Link from 'next/link';
+import { useContext } from 'react';
 import { signOut } from '../../services/hooks/useAuth';
+import { SocketContext } from '../../services/hooks/useSocket';
+import { useSeller } from '../../services/hooks/useUsers';
+import { queryClient } from '../../services/queryClient';
 
-interface Client {
-  name: string;
-}
+export const HeaderPainel = () => {
+  const { data } = useSeller();
 
-interface Product {
-  name: string;
-}
-
-interface Shop {
-  id: string;
-  quantity: number;
-  createdAt: string;
-  client: Client;
-  product: Product;
-}
-
-interface Seller {
-  seller: {
-    id: string;
-    name: string;
-    username: string;
-    email: string;
-    isAdmin: boolean;
-    numberPhone: string;
-    points: number;
-    birthday: string;
-    shop: Shop[];
-  };
-}
-
-export const HeaderPainel = ({ seller }: Seller) => {
-  const myLink = `https://zaycon.shop/?seller=${seller?.username.replace(
+  const myLink = `https://zaycon.shop/?seller=${data?.username.replace(
     / /g,
     '%20',
   )}`;
@@ -56,6 +32,12 @@ export const HeaderPainel = ({ seller }: Seller) => {
   const handleCopyClick = () => {
     copyTextToClipboard(myLink);
   };
+
+  const socket = useContext(SocketContext);
+
+  socket.on('receivePaimentAdmin', async () => {
+    await queryClient.invalidateQueries('seller');
+  });
 
   return (
     <Flex
@@ -91,8 +73,8 @@ export const HeaderPainel = ({ seller }: Seller) => {
 
       <Flex align="center" justify="center" mt={['1rem', '1rem', '1rem', 0]}>
         <VStack>
-          <Text>Olá, {seller.name}</Text>
-          <Text>Meus pontos: {seller.points}</Text>
+          <Text>Olá, {data?.name}</Text>
+          <Text>Meus pontos: {data?.points}</Text>
         </VStack>
       </Flex>
 

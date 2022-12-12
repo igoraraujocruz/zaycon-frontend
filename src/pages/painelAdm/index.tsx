@@ -1,8 +1,7 @@
-import { Box, Button, Flex, Grid, Stack } from '@chakra-ui/react';
+import { Flex, Grid } from '@chakra-ui/react';
 import Head from 'next/head';
 import nookies from 'nookies';
-import { Howl, Howler } from 'howler';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext } from 'react';
 import CreateProducts from '../admin/products/create';
 import { api } from '../../services/apiClient';
 import { withSSRAuth } from '../../utils/WithSSRAuth';
@@ -15,38 +14,7 @@ import { queryClient } from '../../services/queryClient';
 import { PossibleShop } from '../../components/PossibleShop';
 import { Products } from '../../components/Products';
 
-interface Client {
-  name: string;
-}
-
-interface Product {
-  name: string;
-}
-
-interface Shop {
-  id: string;
-  quantity: number;
-  createdAt: string;
-  client: Client;
-  product: Product;
-  paid: boolean;
-}
-
-interface Seller {
-  seller: {
-    id: string;
-    name: string;
-    username: string;
-    email: string;
-    isAdmin: boolean;
-    numberPhone: string;
-    points: number;
-    birthday: string;
-    shop: Shop[];
-  };
-}
-
-const PainelAdm = ({ seller }: Seller) => {
+const PainelAdm = () => {
   const socket = useContext(SocketContext);
 
   socket.on('createShop', async () => {
@@ -63,7 +31,7 @@ const PainelAdm = ({ seller }: Seller) => {
         <title>Painel Adm| Zaycon</title>
       </Head>
       <Flex h="100vh" flexDir="column" justify="flex-start" align="center">
-        <HeaderPainel seller={seller} />
+        <HeaderPainel />
         <Grid
           mt="2rem"
           templateColumns={['1fr', '1fr', '1fr 1fr', '1fr 1fr', '1fr 1fr 1fr']}
@@ -71,7 +39,7 @@ const PainelAdm = ({ seller }: Seller) => {
           <PossibleShop />
           <AllShop />
 
-          <SellerShop seller={seller} />
+          <SellerShop />
           <Products />
           <CreateProducts />
         </Grid>

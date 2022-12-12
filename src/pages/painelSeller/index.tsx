@@ -6,45 +6,14 @@ import { HeaderPainel } from '../../components/HeaderPainel';
 import { SellerShop } from '../../components/SellerShop';
 import { api } from '../../services/apiClient';
 
-interface Client {
-  name: string;
-}
-
-interface Product {
-  name: string;
-}
-
-interface Shop {
-  id: string;
-  quantity: number;
-  createdAt: string;
-  client: Client;
-  product: Product;
-  paid: boolean;
-}
-
-interface Seller {
-  seller: {
-    id: string;
-    name: string;
-    username: string;
-    email: string;
-    isAdmin: boolean;
-    numberPhone: string;
-    points: number;
-    birthday: string;
-    shop: Shop[];
-  };
-}
-
-const PainelSeller = ({ seller }: Seller) => {
+const PainelSeller = () => {
   return (
     <>
       <Head>
         <title>Painel | Zaycon</title>
       </Head>
       <Flex h="100vh" flexDir="column" justify="flex-start" align="center">
-        <HeaderPainel seller={seller} />
+        <HeaderPainel />
         <Flex flexDir="column" mt="2rem" align="center">
           <Flex
             flexDir={['column', 'column', 'row']}
@@ -53,7 +22,7 @@ const PainelSeller = ({ seller }: Seller) => {
             w="100%"
             m={0}
           >
-            <SellerShop seller={seller} />
+            <SellerShop />
           </Flex>
         </Flex>
       </Flex>

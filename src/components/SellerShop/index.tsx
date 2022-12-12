@@ -1,5 +1,8 @@
 import { Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
+import { SocketContext } from '../../services/hooks/useSocket';
+import { useSeller } from '../../services/hooks/useUsers';
+import { queryClient } from '../../services/queryClient';
 import DetailsShopModal, {
   DetailsShopModalHandle,
 } from '../Modais/DetailsShop';
@@ -21,21 +24,7 @@ interface Shop {
   paid: boolean;
 }
 
-interface Seller {
-  seller: {
-    id: string;
-    name: string;
-    username: string;
-    email: string;
-    isAdmin: boolean;
-    numberPhone: string;
-    points: number;
-    birthday: string;
-    shop: Shop[];
-  };
-}
-
-export const SellerShop = ({ seller }: Seller) => {
+export const SellerShop = () => {
   const modalDetailsShop = useRef<DetailsShopModalHandle>(null);
   const [shop, setShop] = useState({} as Shop);
 
@@ -43,6 +32,18 @@ export const SellerShop = ({ seller }: Seller) => {
     setShop(shop);
     modalDetailsShop.current.onOpen();
   };
+
+  const { data } = useSeller();
+
+  const socket = useContext(SocketContext);
+
+  socket.on('createShop', async () => {
+    await queryClient.invalidateQueries('seller');
+  });
+
+  socket.on('receivePaimentAdmin', async () => {
+    await queryClient.invalidateQueries('seller');
+  });
 
   return (
     <Flex flexDir="column" align="center">
@@ -71,7 +72,7 @@ export const SellerShop = ({ seller }: Seller) => {
         }}
       >
         <VStack align="flex-start">
-          {seller.shop?.map(shop => (
+          {data?.shop.map(shop => (
             <Flex key={shop.id}>
               <HStack
                 color={shop.paid ? '#00FF00' : '#A9A9A9'}

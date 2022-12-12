@@ -1,59 +1,55 @@
 import {
   Flex,
   Heading,
-  HStack,
   Table,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
-  VStack,
 } from '@chakra-ui/react';
 import { useCallback, useRef, useState } from 'react';
-import { BsBoxSeam } from 'react-icons/bs';
-import { TbTruckDelivery } from 'react-icons/tb';
-import { FiCheck } from 'react-icons/fi';
+
 import { withSSRAuth } from '../../utils/WithSSRAuth';
-import DetailsAllShop, {
-  DetailsAllShopModalHandle,
-} from '../Modais/DetailsAllShop';
-import { useShop } from '../../services/hooks/useShop';
+
+import EditProductModal, {
+  ContractEditProductModal,
+} from '../Modais/EditProductModal';
 import { useProducts } from '../../services/hooks/useProducts';
 
-interface Client {
-  name: string;
-}
-
-interface Product {
-  name: string;
-}
-
-interface Shop {
+interface ProductProps {
   id: string;
-  quantity: number;
+  name: string;
+  description: string;
+  price: number;
+  slug: string;
+  amount: number;
+  points: number;
   createdAt: string;
-  client: Client;
-  product: Product;
-  paid: boolean;
-  status: string;
+  photos: [
+    {
+      id: string;
+      name: string;
+      url: string;
+    },
+  ];
 }
 
 export const Products = () => {
-  const modalDetailsAllShop = useRef<DetailsAllShopModalHandle>(null);
-  const [shop, setShop] = useState({} as Shop);
+  const modaEditProduct = useRef<ContractEditProductModal>(null);
+
+  const [product, setProduct] = useState({} as ProductProps);
 
   const { data } = useProducts();
 
   const handleModal = useCallback(shop => {
-    setShop(shop);
-    modalDetailsAllShop.current.onOpen();
+    setProduct(shop);
+    modaEditProduct.current.onOpen();
   }, []);
 
   return (
     <Flex flexDir="column" align="center">
-      <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
+      <EditProductModal product={product} ref={modaEditProduct} />
       <Heading size="md">Produtos</Heading>
       <Flex
         bg="gray.800"
@@ -83,34 +79,25 @@ export const Products = () => {
               <Th>Nome do Produto</Th>
               <Th>Preço</Th>
               <Th>Estoque</Th>
+              <Th>Pontos</Th>
             </Tr>
           </Thead>
           <Tbody>
             {data?.map(product => (
-              <Tr key={product.id}>
+              <Tr
+                color={product.amount < 3 && 'red'}
+                key={product.id}
+                cursor="pointer"
+                onClick={() => handleModal(product)}
+              >
                 <Td>{product.name}</Td>
                 <Td>R$ {product.price}</Td>
                 <Td>{product.amount}</Td>
+                <Td>{product.points}</Td>
               </Tr>
             ))}
           </Tbody>
         </Table>
-
-        {/* <VStack align="flex-start">
-          {data?.map(product => (
-            <Flex key={product.id}>
-              <HStack
-                color="#A9A9A9"
-                cursor="pointer"
-                onClick={() => handleModal(product)}
-              >
-                <Text>{product.name}</Text>
-                <Text>R$ {product.price}</Text>
-                <Text>{product.amount}</Text>
-              </HStack>
-            </Flex>
-          ))}
-        </VStack> */}
       </Flex>
     </Flex>
   );

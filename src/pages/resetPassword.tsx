@@ -1,4 +1,4 @@
-import { Button, Flex, Image, useToast, VStack } from '@chakra-ui/react';
+import { Button, Flex, Heading, useToast, VStack } from '@chakra-ui/react';
 import { GetServerSideProps } from 'next';
 import { useForm } from 'react-hook-form';
 import { RiLockPasswordLine } from 'react-icons/ri';
@@ -6,8 +6,8 @@ import Router from 'next/router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import Head from 'next/head';
-import { resetPassword } from '../services/hooks/useUsers';
 import { Input } from '../components/Form/Input';
+import { api } from '../services/apiClient';
 
 type ValuesProps = {
   newPassword: string;
@@ -21,11 +21,11 @@ type TokenProps = {
 const schema = yup.object().shape({
   newPassword: yup
     .string()
-    .min(5, 'Mínimo de 5 dígitos')
+    .min(6, 'Mínimo de 6 dígitos')
     .required('A nova senha é obrigatória'),
   newPasswordConfirm: yup
     .string()
-    .min(5, 'Mínimo de 5 dígitos')
+    .min(6, 'Mínimo de 6 dígitos')
     .required('A Confirmação da nova senha é obrigatória'),
 });
 
@@ -41,7 +41,11 @@ export default function ResetPassword({ token }: TokenProps) {
 
   const onSubmit = async (values: ValuesProps) => {
     try {
-      await resetPassword(token, values.newPassword, values.newPasswordConfirm);
+      await api.post(`/sellers/reset/${token}`, {
+        password: values.newPassword,
+        password_confirmation: values.newPasswordConfirm,
+      });
+
       toast({
         title: 'Senha alterada com sucesso',
         status: 'success',
@@ -72,7 +76,7 @@ export default function ResetPassword({ token }: TokenProps) {
         justify="center"
         align="center"
       >
-        <Image w="10rem" src="../logo.svg" />
+        <Heading>Zaycon</Heading>
         <VStack
           mt="2rem"
           as="form"

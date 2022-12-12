@@ -72,6 +72,16 @@ export function useUsers(page: number, usersPerPage: number) {
   );
 }
 
+export const getSeller = async (): Promise<any> => {
+  const { data } = await api.get('/sellers/me');
+
+  return data;
+};
+
+export function useSeller() {
+  return useQuery(['seller'], () => getSeller());
+}
+
 export async function createSeller(seller: CreateSellerProps) {
   await api.post('/sellers', seller);
 

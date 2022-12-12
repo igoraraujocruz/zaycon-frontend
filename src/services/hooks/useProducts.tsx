@@ -34,6 +34,7 @@ interface UpdateProductProps {
   description?: string;
   price?: number;
   points?: number;
+  amount?: number;
 }
 
 interface PhotosProps {

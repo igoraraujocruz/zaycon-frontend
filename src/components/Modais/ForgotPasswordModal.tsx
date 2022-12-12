@@ -42,7 +42,7 @@ export function ForgotPasswordModal() {
   const handleSignIn: SubmitHandler<SignInFormData> = async values => {
     setIsSendingEmail(true);
     try {
-      await api.post('/password/forgot', {
+      await api.post('/sellers/forgotPassword', {
         email: values.email,
       });
 
@@ -74,10 +74,6 @@ export function ForgotPasswordModal() {
       <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg="gray.900" alignItems="center" textAlign="center">
-          <Flex h="3rem" justify="center" align="center">
-            {isSendingEmail && <Spinner size="lg" color="#fff" />}
-          </Flex>
-
           <ModalHeader fontSize="1.2rem" fontWeight="normal" color="#ffffff">
             Recuperação de senha
           </ModalHeader>
@@ -97,16 +93,22 @@ export function ForgotPasswordModal() {
               <Stack spacing="4">
                 <Input name="email" {...register('email')} />
               </Stack>
-              <Button
-                type="submit"
-                mt="6"
-                bg="orange"
-                _hover={{ bg: 'orangeHover' }}
-                color="white"
-                size="lg"
-              >
-                Enviar
-              </Button>
+              <Flex h="3rem" mt="1rem" justify="center" align="center">
+                {!isSendingEmail ? (
+                  <Button
+                    type="submit"
+                    mt="6"
+                    bg="orange"
+                    _hover={{ bg: 'orangeHover' }}
+                    color="white"
+                    size="lg"
+                  >
+                    Enviar
+                  </Button>
+                ) : (
+                  <Spinner size="lg" color="#fff" />
+                )}
+              </Flex>
             </Flex>
           </ModalBody>
 

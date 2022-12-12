@@ -146,7 +146,6 @@ const DetailsProductModal: ForwardRefRenderFunction<
                         </Text>
 
                         <Image
-                          border="0.5rem solid #d2d2d2"
                           maxW={['45vh', '45vh', '60vh']}
                           src={
                             showImage === '' ? product.photos[0].url : showImage

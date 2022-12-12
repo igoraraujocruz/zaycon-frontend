@@ -385,7 +385,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                       <Input {...register('email')} error={errors.email} />
                     </FormControl>
                     <FormControl>
-                      <FormLabel>Nº de Celular</FormLabel>
+                      <FormLabel>Celular</FormLabel>
                       <MaskedInput
                         mask={[
                           '(',

@@ -6,6 +6,7 @@ import {
   useToast,
   Text,
   Link,
+  Spinner,
 } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
@@ -14,6 +15,7 @@ import Head from 'next/head';
 import { useState } from 'react';
 import { Input } from '../../components/Form/Input';
 import { createSeller } from '../../services/hooks/useUsers';
+import { MaskedInput } from '../../components/Form/MaskedInput';
 
 type SignInFormData = {
   name: string;
@@ -27,21 +29,37 @@ type SignInFormData = {
 const signInFormSchema = yup.object().shape({
   name: yup.string().required('O nome necessário'),
   username: yup.string().required('O nome de usuário é necessário'),
-  password: yup.string().required('A senha é necessária'),
+  password: yup
+    .string()
+    .required('A senha é necessária')
+    .min(6, 'Mínimo de 6 dígitos'),
   email: yup.string().email().required('O email é necessário'),
-  numberPhone: yup.string().required('O numero de celular é necessário'),
+  numberPhone: yup
+    .string()
+    .required('Nº de Celular é obrigatório')
+    .matches(
+      /^\([1-9]{2}\) (?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/,
+      'Número de telefone inválido',
+    ),
   birthday: yup.date().required('A data de nascimento é necessária'),
 });
 
-function Login() {
+function NewSeller() {
   const [formSended, setFormSended] = useState(false);
-  const { register, handleSubmit } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormData>({
     resolver: yupResolver(signInFormSchema),
   });
 
   const toast = useToast();
 
-  const handleSignIn: SubmitHandler<SignInFormData> = async values => {
+  const handleSignIn: SubmitHandler<SignInFormData> = async (
+    values: SignInFormData,
+  ) => {
+    setFormSended(!formSended);
     try {
       await createSeller({
         name: values.name,
@@ -50,14 +68,6 @@ function Login() {
         email: values.email,
         numberPhone: values.numberPhone,
         birthday: values.birthday,
-      });
-      setFormSended(!formSended);
-      toast({
-        position: 'top',
-        title: 'Sucesso!',
-        status: 'success',
-        duration: 4000,
-        isClosable: true,
       });
     } catch (err) {
       toast({
@@ -98,41 +108,77 @@ function Login() {
               flexDir="column"
             >
               <Stack spacing="4">
-                <Input name="name" label="Nome" {...register('name')} />
+                <Input
+                  name="name"
+                  label="Nome"
+                  error={errors.name}
+                  {...register('name')}
+                />
                 <Input
                   name="username"
                   label="Nome de usuário"
+                  error={errors.username}
                   {...register('username')}
                 />
                 <Input
                   name="password"
                   type="password"
                   label="Senha"
+                  error={errors.password}
                   {...register('password')}
                 />
-                <Input name="email" label="Email" {...register('email')} />
                 <Input
-                  name="numberPhone"
+                  name="email"
+                  label="Email"
+                  error={errors.email}
+                  {...register('email')}
+                />
+                <MaskedInput
                   label="Celular"
+                  mask={[
+                    '(',
+                    /\d/,
+                    /\d/,
+                    ')',
+                    ' ',
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    '-',
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                    /\d/,
+                  ]}
+                  error={errors.numberPhone}
+                  name="numberPhone"
                   {...register('numberPhone')}
                 />
                 <Input
                   name="birthday"
                   label="Data de nascimento"
                   type="date"
+                  error={errors.birthday}
                   {...register('birthday')}
                 />
               </Stack>
-              <Button
-                type="submit"
-                mt={['4', '4', '6']}
-                bg="orange"
-                _hover={{ bg: '#953e00' }}
-                color="white"
-                size="lg"
-              >
-                Cadastrar
-              </Button>
+              <Flex justify="center" mt={['4', '4', '6']} h="2rem">
+                {!formSended ? (
+                  <Button
+                    type="submit"
+                    bg="orange"
+                    _hover={{ bg: '#953e00' }}
+                    color="white"
+                    size="lg"
+                  >
+                    Cadastrar
+                  </Button>
+                ) : (
+                  <Spinner size="lg" />
+                )}
+              </Flex>
 
               <Link href="/admin">
                 <Text cursor="pointer" mt="2rem" textAlign="center">
@@ -144,19 +190,12 @@ function Login() {
         ) : (
           <Flex w="30rem" mt="5rem" justify="center" flexDir="column">
             <Heading size="md" color="green">
-              Sucesso!
+              Conta criada com sucesso!
             </Heading>
-            <Text>Agora você pode acessar a plataforma do vendedor</Text>
-            <Link href="/admin">
-              <Button
-                fontSize="0.8rem"
-                bg="gray.800"
-                size={['xs', 'md']}
-                _hover={{ bg: 'orangeHover' }}
-              >
-                Clique aqui para acessar a plataforma do vendedor
-              </Button>
-            </Link>
+            <Text>
+              Agora precisamos que você confirme seu email. Clique no link que
+              te encaminhamos por email.
+            </Text>
           </Flex>
         )}
       </Flex>
@@ -164,4 +203,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default NewSeller;
