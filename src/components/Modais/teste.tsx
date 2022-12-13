@@ -39,7 +39,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Howl, Howler } from 'howler';
-import { check } from 'prettier';
 import { api } from '../../services/apiClient';
 import { useCart } from '../../services/hooks/useCart';
 import { Input } from '../Form/Input';
@@ -86,7 +85,6 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const [dataPaiment, setdataPaiment] = useState({} as any);
   const [mySocketId, setMySocketId] = useState('');
   const [seller, setSeller] = useState({} as any);
-  const [product, setProduct] = useState({} as any);
 
   const socket = useContext(SocketContext);
 
@@ -156,87 +154,81 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   ) => {
     const order = { ...values };
 
-    const allOrdersIsOk = Object.keys(cart).map(curr => {
+    const array = [];
+
+    Object.keys(cart).map(async curr => {
       const item = {
         quantity: cart[curr].quantity,
         productId: cart[curr].product.id,
       };
 
-      async function verifyAmountProduct() {
-        const response = await api.get(`/products?productId=${item.productId}`);
+      const response = await api.get(`/products?productId=${item.productId}`);
 
-        const quantityConfirmation = item.quantity <= response.data.amount;
+      const { amount } = response.data;
 
-        if (!quantityConfirmation) {
-          toast({
-            position: 'top',
-            title: `Não temos essa quantia de ${response.data.name} em nosso estoque`,
-            description: `Possuímos apenas a quantidade: ${response.data.amount}`,
-            status: 'error',
-            duration: 4000,
-            isClosable: true,
-          });
-        }
+      const quantityConfirmation = item.quantity <= amount;
+
+      if (!quantityConfirmation) {
+        toast({
+          position: 'top',
+          title: `Não temos essa quantia de ${response.data.name} em nosso estoque`,
+          description: `Possuímos apenas a quantidade: ${amount}`,
+          status: 'error',
+          duration: 4000,
+          isClosable: true,
+        });
       }
 
-      verifyAmountProduct();
+      array.push(quantityConfirmation);
 
-      api
-        .get(`/products?productId=${item.productId}`)
-        .then(response => setProduct(response.data));
+      const checker = array.every(element => element === true);
 
-      const quantityConfirmation = item.quantity <= product.amount;
-
-      return quantityConfirmation;
-    });
-
-    const check = allOrdersIsOk.every(element => element === true);
-
-    if (check) {
-      const client = await api.post('/clients', {
-        name: order.name,
-        cep: order.cep,
-        address: order.address,
-        email: order.email,
-        numberPhone: order.numberPhone,
-      });
-
-      const shop = await api.post('/shop', {
-        clientId: client.data.id,
-        typeOfPayment: order.typeOfPayment,
-        socketId: mySocketId,
-        sellerId: seller.id,
-      });
-
-      Object.keys(cart).map(async curr => {
-        const item = {
-          quantity: cart[curr].quantity,
-          productId: cart[curr].product.id,
-        };
-
-        try {
-          const response = await api.post('/orders', {
-            productId: item.productId,
-            shopId: shop.data.id,
-            quantity: item.quantity,
-          });
-          return response.data;
-        } catch (err) {
-          // no-error
-        }
-      });
-
-      setTimeout(async () => {
-        const charge = await api.post('/shop/gerencianet', {
-          shopId: shop.data.id,
+      if (checker) {
+        const client = await api.post('/clients', {
+          name: order.name,
+          cep: order.cep,
+          address: order.address,
+          email: order.email,
+          numberPhone: order.numberPhone,
         });
-        setQrCode(charge.data);
-        setImagemIsLoading(!imagemIsLoading);
-      }, 2000);
 
-      setFinishShop(!finishShop);
-      window.localStorage.setItem('cart', JSON.stringify({}));
-    }
+        const shop = await api.post('/shop', {
+          clientId: client.data.id,
+          typeOfPayment: order.typeOfPayment,
+          socketId: mySocketId,
+          sellerId: seller.id,
+        });
+
+        Object.keys(cart).map(async curr => {
+          const item = {
+            quantity: cart[curr].quantity,
+            productId: cart[curr].product.id,
+          };
+
+          try {
+            const response = await api.post('/orders', {
+              productId: item.productId,
+              shopId: shop.data.id,
+              quantity: item.quantity,
+            });
+            return response.data;
+          } catch (err) {
+            // no-error
+          }
+        });
+
+        setTimeout(async () => {
+          const charge = await api.post('/shop/gerencianet', {
+            shopId: shop.data.id,
+          });
+          setQrCode(charge.data);
+          setImagemIsLoading(!imagemIsLoading);
+        }, 2000);
+
+        setFinishShop(!finishShop);
+        window.localStorage.setItem('cart', JSON.stringify({}));
+      }
+    });
   };
 
   useImperativeHandle(ref, () => ({
