@@ -83,7 +83,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
 
   return (
     <Flex>
-      <Modal size={['md', 'md', '2xl']} isOpen={isOpen} onClose={onClose}>
+      <Modal size={['md', 'md', 'md']} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg="gray.900">
           <ModalCloseButton
@@ -141,7 +141,24 @@ const DetailsProductModal: ForwardRefRenderFunction<
                       </HStack>
 
                       <VStack spacing={2}>
-                        <Text w="20rem" fontWeight={400}>
+                        <Text
+                          w={['15rem', '15rem', '26rem']}
+                          maxH="5rem"
+                          fontWeight={400}
+                          overflowY="auto"
+                          css={{
+                            '&::-webkit-scrollbar': {
+                              width: '4px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                              width: '6px',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                              background: '#FF6B00',
+                              borderRadius: '24px',
+                            },
+                          }}
+                        >
                           {product.description}
                         </Text>
 
@@ -169,7 +186,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
                             onClick={() => setShowImage(photo.url)}
                             borderRadius="1rem 1rem 0"
                             h="5rem"
-                            w={['4rem', '6rem']}
+                            w={['4rem', '4rem']}
                             src={photo.url}
                           />
                         ))}

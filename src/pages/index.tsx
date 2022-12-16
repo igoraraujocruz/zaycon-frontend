@@ -33,7 +33,6 @@ interface SearchProps {
 
 export default function Home() {
   const { addToCart } = useCart();
-  const [isNotLargerThan500] = useMediaQuery('(max-width: 500px)');
   const toast = useToast();
   const { data, isLoading, error, isFetching } = useProducts();
   const { register, handleSubmit } = useForm();
@@ -78,11 +77,11 @@ export default function Home() {
         <BagModal ref={bagModal} />
         <WhatsApp />
         <DetailsProductModal product={product} ref={modalDetails} />
-        <HStack h="4rem" spacing="1rem" w="100%" pr="2rem" justify="end">
+        <HStack h="4rem" w="100%" spacing="0.8rem" justify="center">
           <Text>Zaycon</Text>
           <Link href="https://www.instagram.com/zaycon.connect" isExternal>
             <Flex cursor="pointer">
-              <GrInstagram color="white" size={isNotLargerThan500 ? 28 : 35} />
+              <GrInstagram color="white" size={25} />
             </Flex>
           </Link>
           <Link href="/newSeller">

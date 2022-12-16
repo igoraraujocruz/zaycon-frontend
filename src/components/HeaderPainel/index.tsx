@@ -1,12 +1,4 @@
-import {
-  Button,
-  Flex,
-  Heading,
-  HStack,
-  Stack,
-  Text,
-  VStack,
-} from '@chakra-ui/react';
+import { Button, Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useContext } from 'react';
 import { signOut } from '../../services/hooks/useAuth';
@@ -87,7 +79,13 @@ export const HeaderPainel = () => {
           mr={[0, 0, 0, '2rem']}
         >
           <Text mr={[0, 0, 0, '0.5rem']}>Meu Link:</Text>
-          <HStack color="#000" bg="orange" p="0.5rem" borderRadius="1rem">
+          <HStack
+            color="#000"
+            bg="orange"
+            p="0.5rem"
+            w={['90%']}
+            borderRadius="1rem"
+          >
             <Text>{myLink}</Text>
             <Button
               _hover={{
