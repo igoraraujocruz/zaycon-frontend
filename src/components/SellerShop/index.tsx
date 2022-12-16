@@ -46,17 +46,13 @@ export const SellerShop = () => {
   });
 
   return (
-    <Flex flexDir="column" align="center">
+    <Flex flexDir="column" align="center" mt={['1rem']}>
       <DetailsShopModal shop={shop} ref={modalDetailsShop} />
       <Heading size="md">Minhas Vendas</Heading>
       <Flex
-        bg="gray.800"
-        h="38.5rem"
+        h={['15rem', '15rem', '20rem']}
         flexDir="column"
-        w={['25rem', '25rem', '30rem']}
-        borderRadius="2rem"
-        m="1rem"
-        p="2rem"
+        w={['18rem', '18rem', '25rem']}
         overflowY="auto"
         css={{
           '&::-webkit-scrollbar': {
@@ -71,7 +67,7 @@ export const SellerShop = () => {
           },
         }}
       >
-        <VStack align="flex-start">
+        <VStack align="center">
           {data?.shop.map(shop => (
             <Flex key={shop.id}>
               <HStack

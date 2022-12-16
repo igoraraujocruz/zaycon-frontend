@@ -1,4 +1,4 @@
-import { Flex, Grid } from '@chakra-ui/react';
+import { Flex, Grid, HStack, Stack } from '@chakra-ui/react';
 import Head from 'next/head';
 import nookies from 'nookies';
 import { useContext } from 'react';
@@ -32,17 +32,16 @@ const PainelAdm = () => {
       </Head>
       <Flex h="100vh" flexDir="column" justify="flex-start" align="center">
         <HeaderPainel />
-        <Grid
-          mt="2rem"
-          templateColumns={['1fr', '1fr', '1fr 1fr', '1fr 1fr', '1fr 1fr 1fr']}
-        >
+
+        <Stack spacing="1rem" flexDir={['column', 'column', 'row']}>
           <PossibleShop />
           <AllShop />
-
           <SellerShop />
+        </Stack>
+
+        <Stack spacing="1rem" flexDir={['column', 'column', 'row']}>
           <Products />
-          <CreateProducts />
-        </Grid>
+        </Stack>
       </Flex>
     </Admin>
   );

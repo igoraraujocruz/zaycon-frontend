@@ -4,17 +4,24 @@ import {
   Table,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
 } from '@chakra-ui/react';
 import { useCallback, useRef, useState } from 'react';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 import { withSSRAuth } from '../../utils/WithSSRAuth';
 
 import EditProductModal, {
   ContractEditProductModal,
 } from '../Modais/EditProductModal';
+
+import CreateProductModal, {
+  ContractCreateProductModal,
+} from '../Modais/CreateProductModal';
+
 import { useProducts } from '../../services/hooks/useProducts';
 
 interface ProductProps {
@@ -36,7 +43,9 @@ interface ProductProps {
 }
 
 export const Products = () => {
-  const modaEditProduct = useRef<ContractEditProductModal>(null);
+  const modalEditProduct = useRef<ContractEditProductModal>(null);
+
+  const modalCreateProduct = useRef<ContractCreateProductModal>(null);
 
   const [product, setProduct] = useState({} as ProductProps);
 
@@ -44,21 +53,19 @@ export const Products = () => {
 
   const handleModal = useCallback(shop => {
     setProduct(shop);
-    modaEditProduct.current.onOpen();
+    modalEditProduct.current.onOpen();
   }, []);
 
   return (
-    <Flex flexDir="column" align="center">
-      <EditProductModal product={product} ref={modaEditProduct} />
+    <Flex flexDir="column" align="center" mt={['1rem']} ml="2rem" mr="2rem">
+      <EditProductModal product={product} ref={modalEditProduct} />
+      <CreateProductModal ref={modalCreateProduct} />
       <Heading size="md">Produtos</Heading>
       <Flex
-        bg="gray.800"
-        h="38.5rem"
+        align="flex-end"
+        h={['15rem', '15rem', '20rem']}
         flexDir="column"
-        w={['25rem', '25rem', '30rem']}
-        borderRadius="2rem"
-        p="2rem"
-        m="1rem"
+        w={['18rem', '18rem', '25rem']}
         overflowY="auto"
         css={{
           '&::-webkit-scrollbar': {
@@ -73,6 +80,11 @@ export const Products = () => {
           },
         }}
       >
+        <AiOutlinePlus
+          size={32}
+          cursor="pointer"
+          onClick={() => modalCreateProduct.current.onOpen()}
+        />
         <Table colorScheme="whiteAlpha">
           <Thead>
             <Tr>

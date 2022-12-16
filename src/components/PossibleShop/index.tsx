@@ -36,18 +36,15 @@ export const PossibleShop = () => {
   }, []);
 
   return (
-    <Flex flexDir="column" align="center">
+    <Flex flexDir="column" align="center" mt={['1rem']}>
       <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
 
       <Heading size="md">Possíveis Vendas</Heading>
       <Flex
-        bg="gray.800"
-        h="38.5rem"
+        h={['15rem', '15rem', '20rem']}
         flexDir="column"
-        w={['25rem', '25rem', '30rem']}
-        borderRadius="2rem"
-        p="2rem"
-        m="1rem"
+        w={['18rem', '18rem', '25rem']}
+        mr={[0, 0, '1rem']}
         overflowY="auto"
         css={{
           '&::-webkit-scrollbar': {
@@ -62,11 +59,11 @@ export const PossibleShop = () => {
           },
         }}
       >
-        <VStack align="flex-start">
+        <VStack align="center">
           {data?.map(
             shop =>
               !shop.paid && (
-                <Flex key={shop.id}>
+                <Flex key={shop.id} mt="1rem">
                   <HStack
                     color={shop.paid ? '#00FF00' : '#A9A9A9'}
                     cursor="pointer"

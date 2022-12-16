@@ -86,14 +86,12 @@ export default function CreateProducts() {
     <Flex
       onSubmit={handleSubmit(onSubmit)}
       as="form"
-      w={[300, 350, 400]}
       bg="gray.800"
       p={['6', '6', '8']}
-      h="46rem"
-      borderRadius={8}
+      w={['18rem', '18rem', '20rem']}
       flexDir="column"
+      mt="1.5rem"
     >
-      <Text fontSize="2xl">Novo Produto</Text>
       <Stack spacing="0.5">
         <Input
           error={errors.name}

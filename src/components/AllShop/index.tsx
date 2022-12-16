@@ -39,17 +39,14 @@ export const AllShop = () => {
   }, []);
 
   return (
-    <Flex flexDir="column" align="center">
+    <Flex flexDir="column" mt={['1rem']} align="center">
       <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
       <Heading size="md">Todas as vendas</Heading>
       <Flex
-        bg="gray.800"
-        h="38.5rem"
         flexDir="column"
-        w={['25rem', '25rem', '30rem']}
-        borderRadius="2rem"
-        m="1rem"
-        p="2rem"
+        h={['15rem', '15rem', '20rem']}
+        mr={[0, 0, '1rem']}
+        w={['18rem', '18rem', '25rem']}
         overflowY="auto"
         css={{
           '&::-webkit-scrollbar': {
@@ -64,7 +61,7 @@ export const AllShop = () => {
           },
         }}
       >
-        <VStack align="flex-start">
+        <VStack align="center">
           {data?.map(
             shop =>
               shop.paid && (
