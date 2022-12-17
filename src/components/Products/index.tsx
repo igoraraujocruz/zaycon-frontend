@@ -1,6 +1,7 @@
 import {
   Flex,
   Heading,
+  HStack,
   Table,
   Tbody,
   Td,
@@ -60,7 +61,14 @@ export const Products = () => {
     <Flex flexDir="column" align="center" mt={['1rem']} ml="2rem" mr="2rem">
       <EditProductModal product={product} ref={modalEditProduct} />
       <CreateProductModal ref={modalCreateProduct} />
-      <Heading size="md">Produtos</Heading>
+      <Flex align="center">
+        <AiOutlinePlus
+          size={32}
+          cursor="pointer"
+          onClick={() => modalCreateProduct.current.onOpen()}
+        />
+        <Heading size="md">Produtos</Heading>
+      </Flex>
       <Flex
         align="flex-end"
         maxH={['15rem', '15rem', '20rem']}
@@ -80,11 +88,6 @@ export const Products = () => {
           },
         }}
       >
-        <AiOutlinePlus
-          size={32}
-          cursor="pointer"
-          onClick={() => modalCreateProduct.current.onOpen()}
-        />
         <Table colorScheme="whiteAlpha">
           <Thead>
             <Tr>
