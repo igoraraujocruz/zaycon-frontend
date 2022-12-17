@@ -78,7 +78,6 @@ export default function Home() {
         <WhatsApp />
         <DetailsProductModal product={product} ref={modalDetails} />
         <HStack h="4rem" w="100%" spacing="0.8rem" justify="center">
-          <Text>Zaycon</Text>
           <Link href="https://www.instagram.com/zaycon.connect" isExternal>
             <Flex cursor="pointer">
               <GrInstagram color="white" size={25} />
@@ -119,6 +118,11 @@ export default function Home() {
             Procurar
           </Button>
         </HStack>
+
+        <Flex justify="center" mt={['2rem', '2rem', 0]}>
+          <Heading>Zaycon</Heading>
+        </Flex>
+
         <Flex justify="center" minH="50vh" mt="1rem">
           {(!isLoading && isFetching) || isLoading ? (
             <Flex justify="center" align="center">
@@ -193,11 +197,7 @@ export default function Home() {
               ]}
             >
               {data.map(product => (
-                <Flex
-                  border="0.1rem solid #2D3748"
-                  flexDir="column"
-                  alignItems="center"
-                >
+                <Flex flexDir="column" alignItems="center">
                   <Flex
                     cursor="pointer"
                     onClick={() => openUploadModal(product)}

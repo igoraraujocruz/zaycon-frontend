@@ -50,7 +50,7 @@ export const SellerShop = () => {
       <DetailsShopModal shop={shop} ref={modalDetailsShop} />
       <Heading size="md">Minhas Vendas</Heading>
       <Flex
-        h={['15rem', '15rem', '20rem']}
+        maxH={['15rem', '15rem', '20rem']}
         flexDir="column"
         w={['18rem', '18rem', '25rem']}
         overflowY="auto"

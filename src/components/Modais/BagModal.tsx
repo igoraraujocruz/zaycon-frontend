@@ -258,7 +258,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
           position="fixed"
           w={['4rem', '4rem', '4rem', '4rem']}
           h={['4rem', '4rem', '4rem']}
-          top={['70vh']}
+          top={['63vh', '63vh', '69vh']}
           left={['80vw', '80vw', '85vw', '90vw']}
         >
           {itemsCount > 0 && <span>{itemsCount}</span>}
@@ -297,11 +297,13 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                             fontFamily="Anek Devanagari"
                             align="start"
                           >
-                            <Text>Nome: {cart[key].product.name}</Text>
-                            <Text>
+                            <Text w={['10rem', '10rem', '15rem']}>
+                              Nome: {cart[key].product.name}
+                            </Text>
+                            <Text w={['10rem', '10rem', '15rem']}>
                               Preço Unitário: R$ {cart[key].product.price}
                             </Text>
-                            <Text>
+                            <Text w={['10rem', '10rem', '15rem']}>
                               Subtotal: R${' '}
                               {subTotal.toFixed(2).replace('.', ',')}
                             </Text>
@@ -340,14 +342,17 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                                 mt="1rem"
                                 mb="1rem"
                                 align="center"
-                                ml="2.2rem"
+                                ml={['1rem', '1rem', '2.2rem']}
                                 flexDir="column"
                               >
                                 <Text>Quantidade</Text>
                                 <Text>{cart[key].quantity}</Text>
                               </Flex>
                             </Flex>
-                            <HStack justify="center" width="100%">
+                            <HStack
+                              justify={['normal', 'normal', 'center']}
+                              width="100%"
+                            >
                               <Button
                                 bg="gray.700"
                                 _hover={{ background: 'gray.900' }}

@@ -44,7 +44,7 @@ export const AllShop = () => {
       <Heading size="md">Todas as vendas</Heading>
       <Flex
         flexDir="column"
-        h={['15rem', '15rem', '20rem']}
+        maxH={['15rem', '15rem', '20rem']}
         mr={[0, 0, '1rem']}
         w={['18rem', '18rem', '25rem']}
         overflowY="auto"

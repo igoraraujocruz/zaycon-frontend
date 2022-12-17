@@ -41,7 +41,7 @@ export const PossibleShop = () => {
 
       <Heading size="md">Possíveis Vendas</Heading>
       <Flex
-        h={['15rem', '15rem', '20rem']}
+        maxH={['15rem', '15rem', '20rem']}
         flexDir="column"
         w={['18rem', '18rem', '25rem']}
         mr={[0, 0, '1rem']}

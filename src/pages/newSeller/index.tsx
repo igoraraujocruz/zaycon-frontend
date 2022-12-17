@@ -84,16 +84,15 @@ function NewSeller() {
       <Head>
         <title>Novo Vendedor | Snap</title>
       </Head>
-      <Flex flexDir="column" w="100vw" h="100vh" align="center">
+      <Flex flexDir="column" align="center">
         {!formSended ? (
-          <Flex
-            flexDir="column"
-            w="100vw"
-            h="100vh"
-            align="center"
-            justify="center"
-          >
-            <Flex alignItems="center" justify="center" flexDir="column">
+          <Flex flexDir="column" align="center" justify="center">
+            <Flex
+              alignItems="center"
+              mt="1rem"
+              justify="center"
+              flexDir="column"
+            >
               <Heading color="white">Zaycon</Heading>
               <Text>Seja um vendedor</Text>
             </Flex>

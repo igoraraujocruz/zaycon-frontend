@@ -39,7 +39,12 @@ const PainelAdm = () => {
           <SellerShop />
         </Stack>
 
-        <Stack spacing="1rem" flexDir={['column', 'column', 'row']}>
+        <Stack
+          mt={['1rem', '1rem', '3rem']}
+          flexDir={['column', 'column', 'row']}
+          justify="flex-start"
+          w="95%"
+        >
           <Products />
         </Stack>
       </Flex>

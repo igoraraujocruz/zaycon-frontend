@@ -63,7 +63,7 @@ export const Products = () => {
       <Heading size="md">Produtos</Heading>
       <Flex
         align="flex-end"
-        h={['15rem', '15rem', '20rem']}
+        maxH={['15rem', '15rem', '20rem']}
         flexDir="column"
         w={['18rem', '18rem', '25rem']}
         overflowY="auto"
