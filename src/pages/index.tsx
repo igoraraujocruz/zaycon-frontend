@@ -11,6 +11,8 @@ import {
   useToast,
   useMediaQuery,
   Link,
+  VStack,
+  Stack,
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useCallback, useRef, useState } from 'react';
@@ -26,6 +28,7 @@ import DetailsProductModal, {
 import BagModal, { IBagModal } from '../components/Modais/BagModal';
 import { useCart } from '../services/hooks/useCart';
 import { WhatsApp } from '../components/Whatsapp';
+import { NavBar } from '../components/NavBar/Navbar';
 
 interface SearchProps {
   search: string;
@@ -77,30 +80,23 @@ export default function Home() {
         <BagModal ref={bagModal} />
         <WhatsApp />
         <DetailsProductModal product={product} ref={modalDetails} />
-        <HStack h="4rem" w="100%" spacing="0.8rem" justify="center">
+
+        <Flex justify="center" align="center" mt={['2rem', '2rem', '3rem']}>
+          <Heading>Zaycon</Heading>
           <Link href="https://www.instagram.com/zaycon.connect" isExternal>
-            <Flex cursor="pointer">
+            <Flex mt="-0.5rem" ml="1rem" cursor="pointer">
               <GrInstagram color="white" size={25} />
             </Flex>
           </Link>
-          <Link href="/newSeller">
-            <Text cursor="pointer" fontFamily="Anek Devanagari">
-              Quero ser um vendedor
-            </Text>
-          </Link>
-          <Link href="/admin">
-            <Text cursor="pointer" fontFamily="Anek Devanagari">
-              Login
-            </Text>
-          </Link>
-        </HStack>
+          <NavBar />
+        </Flex>
 
         <HStack
-          mt={['2rem', '2rem', '0rem']}
-          pr="1rem"
+          mt={[0, 0, '1rem']}
+          pr={[0, 0, '1rem']}
           as="form"
           onSubmit={handleSubmit(onSubmit)}
-          justify="end"
+          justify={['center', 'center', 'end']}
           align="center"
         >
           <SearchInput
@@ -114,16 +110,12 @@ export default function Home() {
               },
             })}
           />
-          <Button bg="#000" _hover={{ bg: 'orangeHover' }} type="submit">
-            Procurar
+          <Button bg="gray.800" _hover={{ bg: 'orangeHover' }} type="submit">
+            Pesquisar
           </Button>
         </HStack>
 
-        <Flex justify="center" mt={['2rem', '2rem', 0]}>
-          <Heading>Zaycon</Heading>
-        </Flex>
-
-        <Flex justify="center" minH="50vh" mt="1rem">
+        <Flex justify="center" minH="50vh">
           {(!isLoading && isFetching) || isLoading ? (
             <Flex justify="center" align="center">
               <Spinner color="orange" />
@@ -132,69 +124,18 @@ export default function Home() {
             <Flex justify="center" align="center">
               <Text>Falha ao obter dados</Text>
             </Flex>
-          ) : itemFilters.length ? (
-            <Grid
-              templateColumns={[
-                '1fr',
-                '1fr',
-                '1fr 1fr',
-                '1fr 1fr',
-                '1fr 1fr 1fr',
-                '1fr 1fr 1fr 1fr',
-                '1fr 1fr 1fr 1fr',
-              ]}
-            >
-              {itemFilters.map(product => (
-                <Flex
-                  key={product.id}
-                  p="2rem"
-                  flexDir="column"
-                  alignItems="center"
-                >
-                  <Heading cursor="pointer">{product.name}</Heading>
-
-                  <Image
-                    onClick={() => openUploadModal(product)}
-                    cursor="pointer"
-                    w="300px"
-                    zIndex={1}
-                    h="324.29px"
-                    src={
-                      !product.photos[0]
-                        ? 'placeholder.png'
-                        : product.photos[0].url
-                    }
-                  />
-                  <Box
-                    cursor="pointer"
-                    mt="-1rem"
-                    zIndex={0}
-                    bg="black"
-                    p="1rem"
-                  >
-                    <Text align="center" fontSize="1.5rem">
-                      R${product.price}
-                    </Text>
-                    <HStack justify="center">
-                      <Text color="orange" align="center" fontSize="1.5rem">
-                        Recebe
-                      </Text>
-                    </HStack>
-                  </Box>
-                </Flex>
-              ))}
-            </Grid>
           ) : (
             <Grid
+              mt="2rem"
               templateColumns={[
                 '1fr',
                 '1fr',
                 '1fr 1fr',
                 '1fr 1fr',
                 '1fr 1fr 1fr',
-                '1fr 1fr 1fr 1fr',
-                '1fr 1fr 1fr 1fr',
+                '1fr 1fr 1fr 1fr 1fr',
               ]}
+              gap="2rem"
             >
               {data.map(product => (
                 <Flex flexDir="column" alignItems="center">
@@ -202,9 +143,6 @@ export default function Home() {
                     cursor="pointer"
                     onClick={() => openUploadModal(product)}
                     key={product.id}
-                    pt="2rem"
-                    pl="2rem"
-                    pr="2rem"
                     flexDir="column"
                     alignItems="center"
                   >
@@ -233,6 +171,7 @@ export default function Home() {
                       {product.description}
                     </Text>
                   </Flex>
+
                   <HStack mb="1rem" mt="0.5rem" spacing="0.5rem" align="center">
                     <Text align="center" fontSize="1.5rem">
                       R${Number(product.price).toFixed(2).replace('.', ',')}

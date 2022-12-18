@@ -53,17 +53,10 @@ export const SellerShop = () => {
         maxH={['15rem', '15rem', '20rem']}
         flexDir="column"
         w={['18rem', '18rem', '25rem']}
-        overflowY="auto"
-        css={{
-          '&::-webkit-scrollbar': {
-            width: '4px',
-          },
-          '&::-webkit-scrollbar-track': {
-            width: '6px',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            background: '#FF6B00',
-            borderRadius: '24px',
+        overflow="scroll"
+        sx={{
+          '::-webkit-scrollbar': {
+            display: 'none',
           },
         }}
       >

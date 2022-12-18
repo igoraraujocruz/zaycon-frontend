@@ -13,7 +13,7 @@ export const WhatsApp = ({ ...props }) => {
           position="fixed"
           w={['4rem', '4rem', '4rem', '4rem']}
           h={['4rem', '4rem', '4rem']}
-          top={['80vh']}
+          top="80vh"
           left={['80vw', '80vw', '85vw', '90vw']}
         >
           <svg viewBox="0 0 32 32" {...props}>

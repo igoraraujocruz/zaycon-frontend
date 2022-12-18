@@ -62,29 +62,35 @@ export const Products = () => {
       <EditProductModal product={product} ref={modalEditProduct} />
       <CreateProductModal ref={modalCreateProduct} />
       <Flex align="center">
-        <AiOutlinePlus
-          size={32}
-          cursor="pointer"
-          onClick={() => modalCreateProduct.current.onOpen()}
-        />
-        <Heading size="md">Produtos</Heading>
+        <Flex
+          bg="gray.800"
+          borderRadius={50}
+          mr="0.5rem"
+          transition="background 200ms"
+          _hover={{
+            bg: 'orangeHover',
+          }}
+        >
+          <AiOutlinePlus
+            size={32}
+            cursor="pointer"
+            onClick={() => modalCreateProduct.current.onOpen()}
+          />
+        </Flex>
+
+        <Heading size="md" mt="0.4rem">
+          Produtos
+        </Heading>
       </Flex>
       <Flex
         align="flex-end"
         maxH={['15rem', '15rem', '20rem']}
         flexDir="column"
         w={['18rem', '18rem', '25rem']}
-        overflowY="auto"
-        css={{
-          '&::-webkit-scrollbar': {
-            width: '4px',
-          },
-          '&::-webkit-scrollbar-track': {
-            width: '6px',
-          },
-          '&::-webkit-scrollbar-thumb': {
-            background: '#FF6B00',
-            borderRadius: '24px',
+        overflow="scroll"
+        sx={{
+          '::-webkit-scrollbar': {
+            display: 'none',
           },
         }}
       >
