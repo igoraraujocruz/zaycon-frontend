@@ -13,9 +13,10 @@ import {
   Link,
   VStack,
   Stack,
+  Select,
 } from '@chakra-ui/react';
 import Head from 'next/head';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FiShoppingCart } from 'react-icons/fi';
 import { GrInstagram } from 'react-icons/gr';
@@ -41,6 +42,11 @@ export default function Home() {
   const { register, handleSubmit } = useForm();
   const [itemFilters, setItemFilters] = useState<Product[]>([]);
   const [product, setProduct] = useState({} as Product);
+  const [category, setCategory] = useState<Product[]>([]);
+
+  useEffect(() => {
+    api.get('products').then(products => setCategory(products.data));
+  }, []);
 
   const modalDetails = useRef<DetailsProductModalHandle>(null);
   const bagModal = useRef<IBagModal>(null);
@@ -71,6 +77,17 @@ export default function Home() {
     addToCart(product);
   };
 
+  const getProductByCategory = async (value: string) => {
+    if (value === 'all') {
+      const products = await api.get('products');
+      setCategory(products.data);
+    } else {
+      const products = await api.get(`products?category=${value}`);
+
+      setCategory(products.data);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -81,14 +98,72 @@ export default function Home() {
         <WhatsApp />
         <DetailsProductModal product={product} ref={modalDetails} />
 
-        <Flex justify="center" align="center" mt={['2rem', '2rem', '3rem']}>
-          <Heading>Zaycon</Heading>
-          <Link href="https://www.instagram.com/zaycon.connect" isExternal>
-            <Flex mt="-0.5rem" ml="1rem" cursor="pointer">
-              <GrInstagram color="white" size={25} />
-            </Flex>
-          </Link>
-          <NavBar />
+        <Flex
+          justify="center"
+          flexDir={['column', 'column', 'row']}
+          align="center"
+          mt={['2rem', '2rem', '3rem']}
+          mb={['1rem', '1rem', 0]}
+        >
+          <Stack flexDir="row">
+            <Heading>Zaycon</Heading>
+            <Link href="https://www.instagram.com/zaycon.connect" isExternal>
+              <Flex mt="-0.5rem" ml="1rem" cursor="pointer">
+                <GrInstagram color="white" size={25} />
+              </Flex>
+            </Link>
+          </Stack>
+
+          <HStack justify="flex-end" w="70%">
+            <Link href="/admin">
+              <Button
+                cursor="pointer"
+                fontWeight={600}
+                bg="gray.800"
+                _hover={{
+                  bg: 'orangeHover',
+                }}
+              >
+                Acessar
+              </Button>
+            </Link>
+            <Link href="/newSeller">
+              <Button
+                cursor="pointer"
+                fontWeight={600}
+                bg="gray.800"
+                _hover={{
+                  bg: 'orangeHover',
+                }}
+              >
+                Seja um vendedor
+              </Button>
+            </Link>
+          </HStack>
+        </Flex>
+        <Flex justify="center">
+          <Select
+            mb={['1rem', '1rem', 0]}
+            w="12rem"
+            focusBorderColor="none"
+            onChange={e => getProductByCategory(e.target.value)}
+          >
+            <option style={{ background: '#181B23' }} value="all">
+              Todos os Produtos
+            </option>
+            <option style={{ background: '#181B23' }} value="televisoes">
+              Televisões
+            </option>
+            <option style={{ background: '#181B23' }} value="informatica">
+              Informática
+            </option>
+            <option style={{ background: '#181B23' }} value="som">
+              Audio
+            </option>
+            <option style={{ background: '#181B23' }} value="utilitarios">
+              Utilitários
+            </option>
+          </Select>
         </Flex>
 
         <HStack
@@ -137,8 +212,8 @@ export default function Home() {
               ]}
               gap="2rem"
             >
-              {data.map(product => (
-                <Flex flexDir="column" alignItems="center">
+              {category.map(product => (
+                <Flex key={product.id} flexDir="column" alignItems="center">
                   <Flex
                     cursor="pointer"
                     onClick={() => openUploadModal(product)}
