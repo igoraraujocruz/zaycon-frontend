@@ -16,6 +16,8 @@ interface ProductProps {
   slug: string;
   points: number;
   createdAt: string;
+  destaque: boolean;
+  category: string;
   photos: [
     {
       id: string;

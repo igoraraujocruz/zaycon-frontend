@@ -38,6 +38,8 @@ interface ProductProps {
     slug: string;
     points: number;
     createdAt: string;
+    category: string;
+    destaque: boolean;
     photos: [
       {
         id: string;
@@ -142,6 +144,8 @@ const DetailsProductModal: ForwardRefRenderFunction<
                               slug: product.slug,
                               points: product.points,
                               photos: product.photos,
+                              category: product.category,
+                              destaque: product.destaque,
                               createdAt: product.createdAt,
                             })
                           }
