@@ -484,7 +484,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                       ou
                     </Heading>
                     <Text>Pix Copia e Cola</Text>
-                    <VStack align="center" bg="gray.800" borderRadius="2rem">
+                    <VStack align="center" bg="gray.700" borderRadius="0.5rem">
                       <Text align="center" w="25rem">
                         {qrCode.qrcode}
                       </Text>

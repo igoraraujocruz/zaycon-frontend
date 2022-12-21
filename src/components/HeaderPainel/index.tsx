@@ -14,7 +14,7 @@ export const HeaderPainel = () => {
     '%20',
   )}`;
 
-  async function copyTextToClipboard(text) {
+  async function copyTextToClipboard(text: string) {
     if ('clipboard' in navigator) {
       return navigator.clipboard.writeText(text);
     }

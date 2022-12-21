@@ -60,7 +60,7 @@ export const MyCarousel = () => {
                 <Img src={product.photos[0]?.url} objectFit="cover" />
               </AspectRatio>
 
-              <Heading>{product.name}</Heading>
+              <Heading mt="1rem">{product.name}</Heading>
               <Text
                 overflow="hidden"
                 textOverflow="ellipsis"
