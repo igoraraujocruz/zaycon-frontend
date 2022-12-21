@@ -16,6 +16,8 @@ import {
   Stack,
   HStack,
   Checkbox,
+  FormControl,
+  Select,
 } from '@chakra-ui/react';
 import {
   forwardRef,
@@ -53,6 +55,7 @@ interface ProductProps {
     points: number;
     createdAt: string;
     destaque: boolean;
+    category: string;
     photos: [
       {
         id: string;
@@ -74,6 +77,7 @@ type EditFormData = {
   amount: number;
   points: number;
   destaque: boolean;
+  category: string;
 };
 
 export interface ContractEditProductModal {
@@ -155,6 +159,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
         points: getValues('points'),
         amount: getValues('amount'),
         destaque: getValues('destaque'),
+        category: getValues('category'),
       });
       toast({
         title: 'Produto atualizado com sucesso!',
@@ -199,6 +204,42 @@ const DetailsProductModal: ForwardRefRenderFunction<
                   <Checkbox {...register('destaque')} colorScheme="green">
                     Destacar
                   </Checkbox>
+
+                  <FormControl h="5rem">
+                    <Text mt="0.5rem">Categoria</Text>
+                    <Select
+                      _hover={{
+                        borderColor: 'none',
+                      }}
+                      focusBorderColor="#FF6B00"
+                      border="0.13rem solid"
+                      borderColor="gray.600"
+                      w="12rem"
+                      {...register('category')}
+                    >
+                      <option
+                        style={{ background: '#181B23' }}
+                        value="televisoes"
+                      >
+                        Televisões
+                      </option>
+                      <option
+                        style={{ background: '#181B23' }}
+                        value="informatica"
+                      >
+                        Informática
+                      </option>
+                      <option style={{ background: '#181B23' }} value="som">
+                        Audio
+                      </option>
+                      <option
+                        style={{ background: '#181B23' }}
+                        value="utilitarios"
+                      >
+                        Utilitários
+                      </option>
+                    </Select>
+                  </FormControl>
                   <Input
                     bg="gray.800"
                     name="name"

@@ -58,8 +58,6 @@ export default function Home() {
     modalDetails.current.onOpen();
   }, []);
 
-  console.log(itemFilters);
-
   const onSubmit = async ({ search }: SearchProps) => {
     try {
       await api

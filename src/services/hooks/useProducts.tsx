@@ -11,6 +11,8 @@ export interface Product {
   slug: string;
   points: number;
   createdAt: string;
+  category: string;
+  destaque: boolean;
   photos: [
     {
       id: string;
@@ -38,6 +40,7 @@ interface UpdateProductProps {
   points?: number;
   amount?: number;
   destaque?: boolean;
+  category?: string;
 }
 
 interface PhotosProps {
@@ -62,6 +65,8 @@ export const getProducts = async (): Promise<Product[]> => {
       amount: product.amount,
       points: product.points,
       photos: product.photos,
+      destaque: product.destaque,
+      category: product.category,
       createdAt: new Date(product.createdAt).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: '2-digit',

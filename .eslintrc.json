@@ -24,6 +24,7 @@
       "prettier"
   ],
   "rules": {
+    "array-callback-return": "off",
     "react/no-array-index-key": "off",
     "no-plusplus": "off",
     "no-useless-escape": "off",
