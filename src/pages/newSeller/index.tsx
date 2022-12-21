@@ -28,7 +28,10 @@ type SignInFormData = {
 
 const signInFormSchema = yup.object().shape({
   name: yup.string().required('O nome necessário'),
-  username: yup.string().required('O nome de usuário é necessário'),
+  username: yup
+    .string()
+    .required('O nome de usuário é necessário')
+    .matches(/^[a-zA-Z0-9]+$/, 'não é permitido espaço e caracteres especiais'),
   password: yup
     .string()
     .required('A senha é necessária')
