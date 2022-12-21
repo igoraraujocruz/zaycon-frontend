@@ -115,32 +115,33 @@ export const Products = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {data
-              .filter(element => {
-                if (filterProductName === '') {
-                  return element;
-                }
-                if (
-                  element.name
-                    .toLowerCase()
-                    .includes(filterProductName.toLowerCase())
-                ) {
-                  return element;
-                }
-              })
-              .map(product => (
-                <Tr
-                  color={product.amount < 3 && 'red'}
-                  key={product.id}
-                  cursor="pointer"
-                  onClick={() => handleModal(product)}
-                >
-                  <Td>{product.name}</Td>
-                  <Td>R$ {product.price}</Td>
-                  <Td>{product.amount}</Td>
-                  <Td>{product.points}</Td>
-                </Tr>
-              ))}
+            {data &&
+              data
+                .filter(element => {
+                  if (filterProductName === '') {
+                    return element;
+                  }
+                  if (
+                    element.name
+                      .toLowerCase()
+                      .includes(filterProductName.toLowerCase())
+                  ) {
+                    return element;
+                  }
+                })
+                .map(product => (
+                  <Tr
+                    color={product.amount < 3 && 'red'}
+                    key={product.id}
+                    cursor="pointer"
+                    onClick={() => handleModal(product)}
+                  >
+                    <Td>{product.name}</Td>
+                    <Td>R$ {product.price}</Td>
+                    <Td>{product.amount}</Td>
+                    <Td>{product.points}</Td>
+                  </Tr>
+                ))}
           </Tbody>
         </Table>
       </Flex>
