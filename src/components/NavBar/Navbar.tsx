@@ -17,7 +17,6 @@ import {
 } from '@chakra-ui/react';
 import * as React from 'react';
 import { FiMenu } from 'react-icons/fi';
-import { GrInstagram } from 'react-icons/gr';
 
 export const NavBar = () => {
   const isDesktop = useBreakpointValue({ base: false, lg: true });
@@ -42,29 +41,11 @@ export const NavBar = () => {
                   Utilitários
                 </Text>
                 <HStack>
-                  <Link href="/admin">
-                    <Button
-                      cursor="pointer"
-                      fontWeight={600}
-                      bg="gray.800"
-                      _hover={{
-                        bg: 'orangeHover',
-                      }}
-                    >
-                      Acessar
-                    </Button>
-                  </Link>
                   <Link href="/newSeller">
-                    <Button
-                      cursor="pointer"
-                      fontWeight={600}
-                      bg="gray.800"
-                      _hover={{
-                        bg: 'orangeHover',
-                      }}
-                    >
-                      Seja um vendedor
-                    </Button>
+                    <Text cursor="pointer">Quero ser um vendedor</Text>
+                  </Link>
+                  <Link href="/admin">
+                    <Text cursor="pointer">Acessar</Text>
                   </Link>
                 </HStack>
               </HStack>
@@ -111,15 +92,11 @@ export const NavBar = () => {
               <Text cursor="pointer" fontWeight={600}>
                 Utilitários
               </Text>
-              <Link href="/admin">
-                <Text cursor="pointer" fontWeight={600}>
-                  Acessar
-                </Text>
-              </Link>
               <Link href="/newSeller">
-                <Text cursor="pointer" fontWeight={600}>
-                  Seja um vendedor
-                </Text>
+                <Text cursor="pointer">Quero ser um vendedor</Text>
+              </Link>
+              <Link href="/admin">
+                <Text cursor="pointer">Acessar</Text>
               </Link>
             </VStack>
           </Collapse>

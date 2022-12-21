@@ -34,6 +34,7 @@ interface ProductProps {
   amount: number;
   points: number;
   createdAt: string;
+  destaque: boolean;
   photos: [
     {
       id: string;

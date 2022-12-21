@@ -15,6 +15,7 @@ import {
   Text,
   Stack,
   HStack,
+  Checkbox,
 } from '@chakra-ui/react';
 import {
   forwardRef,
@@ -51,6 +52,7 @@ interface ProductProps {
     amount: number;
     points: number;
     createdAt: string;
+    destaque: boolean;
     photos: [
       {
         id: string;
@@ -71,6 +73,7 @@ type EditFormData = {
   price: number;
   amount: number;
   points: number;
+  destaque: boolean;
 };
 
 export interface ContractEditProductModal {
@@ -151,6 +154,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
         price: getValues('price'),
         points: getValues('points'),
         amount: getValues('amount'),
+        destaque: getValues('destaque'),
       });
       toast({
         title: 'Produto atualizado com sucesso!',
@@ -192,6 +196,9 @@ const DetailsProductModal: ForwardRefRenderFunction<
                 onSubmit={handleSubmit(editSubmit)}
               >
                 <Stack spacing="0.5">
+                  <Checkbox {...register('destaque')} colorScheme="green">
+                    Destacar
+                  </Checkbox>
                   <Input
                     bg="gray.800"
                     name="name"

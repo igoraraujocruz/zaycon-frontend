@@ -14,6 +14,8 @@ import {
   VStack,
   HStack,
   useToast,
+  AspectRatio,
+  Img,
 } from '@chakra-ui/react';
 import {
   forwardRef,
@@ -83,7 +85,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
 
   return (
     <Flex>
-      <Modal size={['md', 'md', 'md']} isOpen={isOpen} onClose={onClose}>
+      <Modal size={['md', 'md', '2xl']} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent bg="gray.900">
           <ModalCloseButton
@@ -103,10 +105,26 @@ const DetailsProductModal: ForwardRefRenderFunction<
                       </Text>
                     </VStack>
                   ) : (
-                    <VStack>
-                      <Text fontSize={['1.2rem', '1.2rem', '2xl']}>
-                        {product.name}
-                      </Text>
+                    <VStack align="flex-start">
+                      <HStack>
+                        <Text fontSize={['1.2rem', '1.2rem', '3xl']}>
+                          {product.name}
+                        </Text>
+                        <Text
+                          w={['15rem', '15rem', '26rem']}
+                          maxH="5rem"
+                          fontWeight={400}
+                          overflow="scroll"
+                          sx={{
+                            '::-webkit-scrollbar': {
+                              display: 'none',
+                            },
+                          }}
+                        >
+                          {product.description}
+                        </Text>
+                      </HStack>
+
                       <HStack>
                         <Text fontSize="1.5rem">
                           R${Number(product.price).toFixed(2).replace('.', ',')}
@@ -129,9 +147,9 @@ const DetailsProductModal: ForwardRefRenderFunction<
                           }
                           cursor="pointer"
                           align="center"
-                          bg="gray.800"
+                          bg="#FF6B00"
                           _hover={{
-                            background: '#FF6B00',
+                            background: 'gray.800',
                           }}
                           transition={['background 200ms']}
                         >
@@ -141,33 +159,19 @@ const DetailsProductModal: ForwardRefRenderFunction<
                       </HStack>
 
                       <VStack spacing={2}>
-                        <Text
-                          w={['15rem', '15rem', '26rem']}
-                          maxH="5rem"
-                          fontWeight={400}
-                          overflowY="auto"
-                          css={{
-                            '&::-webkit-scrollbar': {
-                              width: '4px',
-                            },
-                            '&::-webkit-scrollbar-track': {
-                              width: '6px',
-                            },
-                            '&::-webkit-scrollbar-thumb': {
-                              background: '#FF6B00',
-                              borderRadius: '24px',
-                            },
-                          }}
+                        <AspectRatio
+                          w={['18rem', '18rem', '40rem']}
+                          ratio={[16 / 9]}
                         >
-                          {product.description}
-                        </Text>
-
-                        <Image
-                          maxW={['45vh', '45vh', '60vh']}
-                          src={
-                            showImage === '' ? product.photos[0].url : showImage
-                          }
-                        />
+                          <Img
+                            src={
+                              showImage === ''
+                                ? product.photos[0].url
+                                : showImage
+                            }
+                            objectFit="cover"
+                          />
+                        </AspectRatio>
                       </VStack>
                       <Flex
                         flexWrap="wrap"
@@ -177,18 +181,12 @@ const DetailsProductModal: ForwardRefRenderFunction<
                         p={2}
                       >
                         {product.photos.map(photo => (
-                          <Image
-                            _hover={{ opacity: 1 }}
-                            transition="opacity 200ms"
-                            key={photo.id}
-                            opacity={0.9}
-                            cursor="pointer"
-                            onClick={() => setShowImage(photo.url)}
-                            borderRadius="1rem 1rem 0"
-                            h="5rem"
-                            w={['4rem', '4rem']}
-                            src={photo.url}
-                          />
+                          <AspectRatio
+                            w={['5rem', '5rem', '7rem']}
+                            ratio={1 / 1}
+                          >
+                            <Img src={photo.url} objectFit="cover" />
+                          </AspectRatio>
                         ))}
                       </Flex>
                     </VStack>

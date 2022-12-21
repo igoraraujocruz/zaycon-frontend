@@ -27,6 +27,7 @@ interface CreateProductProps {
   amount: number;
   photos: File[];
   category: string;
+  destaque: boolean;
 }
 
 interface UpdateProductProps {
@@ -36,6 +37,7 @@ interface UpdateProductProps {
   price?: number;
   points?: number;
   amount?: number;
+  destaque?: boolean;
 }
 
 interface PhotosProps {
@@ -110,6 +112,7 @@ export async function createProduct(product: CreateProductProps) {
   formData.append('description', product.description);
   formData.append('points', product.points.toString());
   formData.append('category', product.category.toString());
+  formData.append('destaque', product.destaque.toString());
 
   product.photos.forEach(file => {
     formData.append('photos', file);

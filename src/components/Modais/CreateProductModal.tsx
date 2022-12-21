@@ -14,6 +14,7 @@ import {
   Select,
   Text,
   FormControl,
+  Checkbox,
 } from '@chakra-ui/react';
 import {
   forwardRef,
@@ -40,6 +41,7 @@ type CreateFormData = {
   points: number;
   photos: File[];
   category: string;
+  destaque: boolean;
 };
 
 export interface ContractCreateProductModal {
@@ -52,6 +54,7 @@ const createFormSchema = yup.object().shape({
   amount: yup.number().required('A quantidade é necessária'),
   description: yup.string().required('Descrição do produto é obrigatória'),
   category: yup.string().required('A categoria do produto é obrigatória'),
+  destaque: yup.boolean(),
   price: yup
     .string()
     .typeError('Insira um valor')
@@ -98,6 +101,7 @@ const CreateProductModal: ForwardRefRenderFunction<
         points: values.points,
         photos: inputFileRef.current.images,
         category: values.category,
+        destaque: values.destaque,
       });
 
       inputFileRef.current?.setImages([]);
@@ -132,6 +136,9 @@ const CreateProductModal: ForwardRefRenderFunction<
         <ModalBody>
           <Flex onSubmit={handleSubmit(onSubmit)} as="form" flexDir="column">
             <Stack spacing="0.5">
+              <Checkbox {...register('destaque')} colorScheme="green">
+                Destacar
+              </Checkbox>
               <Input
                 error={errors.name}
                 name="name"

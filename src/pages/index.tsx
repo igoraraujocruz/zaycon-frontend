@@ -14,6 +14,8 @@ import {
   VStack,
   Stack,
   Select,
+  AspectRatio,
+  Img,
 } from '@chakra-ui/react';
 import Head from 'next/head';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -29,7 +31,7 @@ import DetailsProductModal, {
 import BagModal, { IBagModal } from '../components/Modais/BagModal';
 import { useCart } from '../services/hooks/useCart';
 import { WhatsApp } from '../components/Whatsapp';
-import { NavBar } from '../components/NavBar/Navbar';
+import { MyCarousel } from '../components/Carousel';
 
 interface SearchProps {
   search: string;
@@ -55,6 +57,8 @@ export default function Home() {
     setProduct(product);
     modalDetails.current.onOpen();
   }, []);
+
+  console.log(itemFilters);
 
   const onSubmit = async ({ search }: SearchProps) => {
     try {
@@ -102,8 +106,8 @@ export default function Home() {
           justify="center"
           flexDir={['column', 'column', 'row']}
           align="center"
-          mt={['2rem', '2rem', '3rem']}
-          mb={['1rem', '1rem', 0]}
+          mt={['2rem', '2rem', '1rem']}
+          mb={['1rem', '1rem', '0.5rem']}
         >
           <Stack flexDir="row">
             <Heading>Zaycon</Heading>
@@ -115,33 +119,17 @@ export default function Home() {
           </Stack>
 
           <HStack justify="flex-end" w="70%">
-            <Link href="/admin">
-              <Button
-                cursor="pointer"
-                fontWeight={600}
-                bg="gray.800"
-                _hover={{
-                  bg: 'orangeHover',
-                }}
-              >
-                Acessar
-              </Button>
-            </Link>
             <Link href="/newSeller">
-              <Button
-                cursor="pointer"
-                fontWeight={600}
-                bg="gray.800"
-                _hover={{
-                  bg: 'orangeHover',
-                }}
-              >
-                Seja um vendedor
-              </Button>
+              <Text cursor="pointer">Quero ser um vendedor</Text>
+            </Link>
+            <Link href="/admin">
+              <Text cursor="pointer">Acessar</Text>
             </Link>
           </HStack>
         </Flex>
-        <Flex justify="center">
+
+        <MyCarousel />
+        <Flex justify="center" mt="-2rem">
           <Select
             mb={['1rem', '1rem', 0]}
             w="12rem"
@@ -167,7 +155,6 @@ export default function Home() {
         </Flex>
 
         <HStack
-          mt={[0, 0, '1rem']}
           pr={[0, 0, '1rem']}
           as="form"
           onSubmit={handleSubmit(onSubmit)}
@@ -212,63 +199,118 @@ export default function Home() {
               ]}
               gap="2rem"
             >
-              {category.map(product => (
-                <Flex key={product.id} flexDir="column" alignItems="center">
-                  <Flex
-                    cursor="pointer"
-                    onClick={() => openUploadModal(product)}
-                    key={product.id}
-                    flexDir="column"
-                    alignItems="center"
-                  >
-                    <Text w="15rem" fontWeight="600" cursor="pointer">
-                      {product.name}
-                    </Text>
+              {itemFilters.length > 0
+                ? itemFilters.map(item => (
+                    <Flex key={item.id} flexDir="column" alignItems="center">
+                      <Flex
+                        cursor="pointer"
+                        onClick={() => openUploadModal(item)}
+                        flexDir="column"
+                        justify="center"
+                        alignItems="center"
+                      >
+                        <Text w="15rem" fontWeight="600" cursor="pointer">
+                          {item.name}
+                        </Text>
 
-                    <Image
-                      w={['250px', '250px', '300px']}
-                      zIndex={1}
-                      h="324.29px"
-                      src={
-                        !product.photos[0]
-                          ? 'placeholder.png'
-                          : product.photos[0].url
-                      }
-                    />
-                    <Text
-                      overflow="hidden"
-                      textOverflow="ellipsis"
-                      whiteSpace="nowrap"
-                      mt="0.5rem"
-                      w={['15.7rem', '15.7rem', '18.8rem']}
-                      maxH="5rem"
-                    >
-                      {product.description}
-                    </Text>
-                  </Flex>
+                        <AspectRatio w="20rem" ratio={1 / 1}>
+                          <Img src={item.photos[0]?.url} objectFit="cover" />
+                        </AspectRatio>
+                        <Text
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                          whiteSpace="nowrap"
+                          mt="0.5rem"
+                          w={['15.7rem', '15.7rem', '18.8rem']}
+                          maxH="5rem"
+                        >
+                          {item.description}
+                        </Text>
+                      </Flex>
 
-                  <HStack mb="1rem" mt="0.5rem" spacing="0.5rem" align="center">
-                    <Text align="center" fontSize="1.5rem">
-                      R${Number(product.price).toFixed(2).replace('.', ',')}
-                    </Text>
-                    <Flex
-                      p="0.5rem"
-                      borderRadius="0.2rem"
-                      onClick={() => saveOnCookie(product)}
-                      cursor="pointer"
-                      align="center"
-                      bg="gray.800"
-                      _hover={{
-                        background: '#FF6B00',
-                      }}
-                      transition={['background 200ms']}
-                    >
-                      <Text>Comprar</Text>
-                      <FiShoppingCart cursor="pointer" size={30} />
+                      <HStack
+                        mb="1rem"
+                        mt="0.5rem"
+                        spacing="0.5rem"
+                        align="center"
+                      >
+                        <Text align="center" fontSize="1.5rem">
+                          R${Number(item.price).toFixed(2).replace('.', ',')}
+                        </Text>
+                        <Flex
+                          p="0.5rem"
+                          borderRadius="0.2rem"
+                          onClick={() => saveOnCookie(item)}
+                          cursor="pointer"
+                          align="center"
+                          bg="gray.800"
+                          _hover={{
+                            background: '#FF6B00',
+                          }}
+                          transition={['background 200ms']}
+                        >
+                          <Text>Comprar</Text>
+                          <FiShoppingCart cursor="pointer" size={30} />
+                        </Flex>
+                      </HStack>
                     </Flex>
-                  </HStack>
-                </Flex>
-              ))}
+                  ))
+                : category.map(product => (
+                    <Flex key={product.id} flexDir="column" alignItems="center">
+                      <Flex
+                        cursor="pointer"
+                        onClick={() => openUploadModal(product)}
+                        key={product.id}
+                        flexDir="column"
+                        justify="center"
+                        alignItems="center"
+                      >
+                        <Text w="15rem" fontWeight="600" cursor="pointer">
+                          {product.name}
+                        </Text>
+
+                        <AspectRatio w="20rem" ratio={1 / 1}>
+                          <Img src={product.photos[0]?.url} objectFit="cover" />
+                        </AspectRatio>
+                        <Text
+                          overflow="hidden"
+                          textOverflow="ellipsis"
+                          whiteSpace="nowrap"
+                          mt="0.5rem"
+                          w={['15.7rem', '15.7rem', '18.8rem']}
+                          maxH="5rem"
+                        >
+                          {product.description}
+                        </Text>
+                      </Flex>
+
+                      <HStack
+                        mb="1rem"
+                        mt="0.5rem"
+                        spacing="0.5rem"
+                        align="center"
+                      >
+                        <Text align="center" fontSize="1.5rem">
+                          R${Number(product.price).toFixed(2).replace('.', ',')}
+                        </Text>
+                        <Flex
+                          p="0.5rem"
+                          borderRadius="0.2rem"
+                          onClick={() => saveOnCookie(product)}
+                          cursor="pointer"
+                          align="center"
+                          bg="gray.800"
+                          _hover={{
+                            background: '#FF6B00',
+                          }}
+                          transition={['background 200ms']}
+                        >
+                          <Text>Comprar</Text>
+                          <FiShoppingCart cursor="pointer" size={30} />
+                        </Flex>
+                      </HStack>
+                    </Flex>
+                  ))}
             </Grid>
           )}
         </Flex>

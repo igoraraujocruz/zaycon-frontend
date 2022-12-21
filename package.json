@@ -31,6 +31,7 @@
     "react-icons": "^4.4.0",
     "react-medium-image-zoom": "^4.4.3",
     "react-query": "^3.39.1",
+    "react-responsive-carousel": "^3.2.23",
     "react-text-mask": "^5.5.0",
     "socket.io-client": "^4.5.4",
     "text-mask-addons": "^3.8.0",
