@@ -1,8 +1,7 @@
-import { Flex, Grid, HStack, Stack } from '@chakra-ui/react';
+import { Flex, Stack } from '@chakra-ui/react';
 import Head from 'next/head';
 import nookies from 'nookies';
 import { useContext } from 'react';
-import CreateProducts from '../admin/products/create';
 import { api } from '../../services/apiClient';
 import { withSSRAuth } from '../../utils/WithSSRAuth';
 import { Admin } from '../../components/Can';
