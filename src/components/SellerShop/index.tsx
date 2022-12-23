@@ -46,7 +46,7 @@ export const SellerShop = () => {
   });
 
   return (
-    <Flex flexDir="column" align="center" mt={['1rem']}>
+    <Flex flexDir="column" align="flex-start" mt={['1rem']}>
       <DetailsShopModal shop={shop} ref={modalDetailsShop} />
       <Heading size="md">Minhas Vendas</Heading>
       <Flex
@@ -60,7 +60,7 @@ export const SellerShop = () => {
           },
         }}
       >
-        <VStack align="center">
+        <VStack align="flex-start">
           {data?.shop.map(shop => (
             <Flex key={shop.id}>
               <HStack
@@ -75,7 +75,7 @@ export const SellerShop = () => {
                     year: '2-digit',
                   })}
                 </Text>
-                <Text>{shop.client.name}</Text>
+                <Text>{shop.client.name.toUpperCase()}</Text>
               </HStack>
             </Flex>
           ))}

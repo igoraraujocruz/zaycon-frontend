@@ -39,7 +39,7 @@ export const AllShop = () => {
   }, []);
 
   return (
-    <Flex flexDir="column" mt={['1rem']} align="center">
+    <Flex flexDir="column" mt={['1rem']} align="flex-start">
       <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
       <Heading size="md">Todas as vendas</Heading>
       <Flex
@@ -54,7 +54,7 @@ export const AllShop = () => {
           },
         }}
       >
-        <VStack align="center">
+        <VStack align="flex-start">
           {data?.map(
             shop =>
               shop.paid && (
@@ -68,7 +68,7 @@ export const AllShop = () => {
                       {shop.createdAt}
                     </Text>
                     <Text color={shop.status === 'Entregue' && '#A9A9A9'}>
-                      {shop.client.name}
+                      {shop.client.name.toUpperCase()}
                     </Text>
                     {shop.status === 'Preparando' && <BsBoxSeam size={28} />}
                     {shop.status === 'Enviado' && <TbTruckDelivery size={28} />}

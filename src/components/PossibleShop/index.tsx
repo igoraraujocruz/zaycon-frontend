@@ -36,7 +36,7 @@ export const PossibleShop = () => {
   }, []);
 
   return (
-    <Flex flexDir="column" align="center" mt={['1rem']}>
+    <Flex flexDir="column" align="flex-start" mt={['1rem']}>
       <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
 
       <Heading size="md">Possíveis Vendas</Heading>
@@ -52,7 +52,7 @@ export const PossibleShop = () => {
           },
         }}
       >
-        <VStack align="center">
+        <VStack align="flex-start">
           {data?.map(
             shop =>
               !shop.paid && (
@@ -63,7 +63,7 @@ export const PossibleShop = () => {
                     onClick={() => handleModal(shop)}
                   >
                     <Text>{shop.createdAt}</Text>
-                    <Text>{shop.client.name}</Text>
+                    <Text>{shop.client.name.toUpperCase()}</Text>
                   </HStack>
                 </Flex>
               ),

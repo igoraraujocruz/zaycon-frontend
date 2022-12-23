@@ -39,7 +39,6 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Howl, Howler } from 'howler';
-import { check } from 'prettier';
 import { api } from '../../services/apiClient';
 import { useCart } from '../../services/hooks/useCart';
 import { Input } from '../Form/Input';
@@ -59,6 +58,17 @@ type CreateFormData = {
   email: string;
   numberPhone: string;
   seller: string;
+  numberAddress: number;
+  obs: string;
+};
+
+type Adress = {
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
 };
 
 const createFormSchema = yup.object().shape({
@@ -68,6 +78,8 @@ const createFormSchema = yup.object().shape({
   cep: yup.string().required('O CEP é obrigatório'),
   address: yup.string().required('O endereço é necessário'),
   email: yup.string().required('Email é obrigatório').email(),
+  numberAddress: yup.number().required('O número da residência é necessário'),
+  obs: yup.string().required('Complemento é necessário'),
   numberPhone: yup
     .string()
     .required('Nº de Celular é obrigatório')
@@ -98,6 +110,17 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const router = useRouter();
 
   const sellerUserName = router.query.seller;
+
+  async function copyTextToClipboard(text: string) {
+    if ('clipboard' in navigator) {
+      return navigator.clipboard.writeText(text);
+    }
+    return document.execCommand('copy', true, text);
+  }
+
+  const handleCopyClick = () => {
+    copyTextToClipboard(qrCode.qrcode);
+  };
 
   useEffect(() => {
     if (sellerUserName) {
@@ -196,7 +219,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
       const client = await api.post('/clients', {
         name: order.name,
         cep: order.cep,
-        address: order.address,
+        address: `${order.address}, Nº ${order.numberAddress} - ${order.obs}`,
         email: order.email,
         numberPhone: order.numberPhone,
       });
@@ -298,18 +321,21 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                             fontFamily="Anek Devanagari"
                             align="start"
                           >
-                            <Text w={['10rem', '10rem', '15rem']}>
+                            <Text w={['7.5rem', '7.5rem', '15rem']}>
                               Nome: {cart[key].product.name}
                             </Text>
-                            <Text w={['10rem', '10rem', '15rem']}>
+                            <Text w={['7.5rem', '7.5rem', '15rem']}>
                               Preço Unitário: R$ {cart[key].product.price}
                             </Text>
-                            <Text w={['10rem', '10rem', '15rem']}>
+                            <Text w={['7.5rem', '7.5rem', '15rem']}>
                               Subtotal: R${' '}
                               {subTotal.toFixed(2).replace('.', ',')}
                             </Text>
-                            <Text>Descrição:</Text>
+                            <Text w={['7.5rem', '7.5rem', '15rem']}>
+                              Descrição:
+                            </Text>
                             <Text
+                              mt={['0.5rem', '0.5rem', 0]}
                               maxH="6rem"
                               css={{
                                 '&::-webkit-scrollbar': {
@@ -324,11 +350,16 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                                 },
                               }}
                               overflowY="auto"
-                              w="15rem"
+                              w={['7.5rem', '7.5rem', '15rem']}
                             >
                               {cart[key].product.description}
                             </Text>
-                            <Flex align="center" as="form" w="100%">
+                            <Flex
+                              align="center"
+                              as="form"
+                              w="100%"
+                              flexDir={['column', 'column', 'row']}
+                            >
                               <Button
                                 bg="gray.700"
                                 _hover={{ background: 'gray.900' }}
@@ -419,6 +450,17 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                       <Input {...register('address')} error={errors.address} />
                     </FormControl>
                     <FormControl>
+                      <FormLabel>Nº da Residência</FormLabel>
+                      <Input
+                        {...register('numberAddress')}
+                        error={errors.name}
+                      />
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>Complemento</FormLabel>
+                      <Input {...register('obs')} error={errors.name} />
+                    </FormControl>
+                    <FormControl>
                       <FormLabel>Email</FormLabel>
                       <Input {...register('email')} error={errors.email} />
                     </FormControl>
@@ -475,7 +517,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                 ) : !paid ? (
                   <VStack>
                     <Heading size="1xl">Pronto!</Heading>
-                    <Text align="center">
+                    <Text align="center" w="15rem">
                       Agora é só efetuar o pagamento que assim que for
                       finalizado você receberá uma mensagem.
                     </Text>
@@ -485,10 +527,26 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                       ou
                     </Heading>
                     <Text>Pix Copia e Cola</Text>
-                    <VStack align="center" bg="gray.700" borderRadius="0.5rem">
-                      <Text align="center" w="25rem">
+                    <VStack align="center" bg="orange" borderRadius="0.5rem">
+                      <Text
+                        align="center"
+                        color="#000"
+                        w={['15rem', '15rem', '25rem']}
+                      >
                         {qrCode.qrcode}
                       </Text>
+                      <HStack p="0.5rem" w={['100%']} justify="center">
+                        <Button
+                          _hover={{
+                            bg: '#1a202c',
+                          }}
+                          bg="#181b23"
+                          color="#fff"
+                          onClick={handleCopyClick}
+                        >
+                          Copiar
+                        </Button>
+                      </HStack>
                     </VStack>
                   </VStack>
                 ) : (
