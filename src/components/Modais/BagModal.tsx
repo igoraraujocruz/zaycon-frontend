@@ -254,6 +254,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
           fill="white"
           bg="gray.800"
           borderRadius={50}
+          border="0.2rem #fff solid"
           boxShadow="15px 2px 6px rgba(0,0,0,0.4)"
           position="fixed"
           w={['4rem', '4rem', '4rem', '4rem']}
@@ -262,7 +263,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
           left={['80vw', '80vw', '85vw', '90vw']}
         >
           {itemsCount > 0 && <span>{itemsCount}</span>}
-          <FiShoppingCart size="35" />
+          <FiShoppingCart size="30" />
         </Flex>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose}>
