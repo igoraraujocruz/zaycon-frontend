@@ -1,5 +1,8 @@
 import { Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import { useCallback, useRef, useState } from 'react';
+import { BsBoxSeam } from 'react-icons/bs';
+import { TbTruckDelivery } from 'react-icons/tb';
+import { FiCheck } from 'react-icons/fi';
 import { withSSRAuth } from '../../utils/WithSSRAuth';
 import DetailsAllShop, {
   DetailsAllShopModalHandle,
@@ -24,7 +27,7 @@ interface Shop {
   status: string;
 }
 
-export const PossibleShop = () => {
+export const FinishShop = () => {
   const modalDetailsAllShop = useRef<DetailsAllShopModalHandle>(null);
   const [shop, setShop] = useState({} as Shop);
 
@@ -38,11 +41,10 @@ export const PossibleShop = () => {
   return (
     <Flex flexDir="column" align="flex-start" mb={['1rem', '1rem', 0]}>
       <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
-
-      <Heading size="md">Possíveis Vendas</Heading>
+      <Heading size="md">Vendas Concluidas</Heading>
       <Flex
-        maxH={['15rem', '15rem', '20rem']}
         flexDir="column"
+        maxH={['15rem', '15rem', '20rem']}
         w={['18rem', '18rem', '25rem']}
         overflow="scroll"
         sx={{
@@ -54,17 +56,22 @@ export const PossibleShop = () => {
         <VStack align="flex-start">
           {data?.map(
             shop =>
-              !shop.paid && (
-                <Flex key={shop.id} mt="1rem">
-                  <HStack
-                    color={shop.paid ? '#00FF00' : '#A9A9A9'}
-                    cursor="pointer"
-                    onClick={() => handleModal(shop)}
-                  >
-                    <Text>{shop.createdAt}</Text>
-                    <Text>{shop.client.name.toUpperCase()}</Text>
-                  </HStack>
-                </Flex>
+              shop.paid &&
+              shop.status === 'Entregue' && (
+                <HStack
+                  align="flex-start"
+                  key={shop.id}
+                  color={shop.paid ? '#00FF00' : '#A9A9A9'}
+                  cursor="pointer"
+                  onClick={() => handleModal(shop)}
+                >
+                  <Text color={shop.status === 'Entregue' && '#A9A9A9'}>
+                    {shop.createdAt}
+                  </Text>
+                  <Text color={shop.status === 'Entregue' && '#A9A9A9'}>
+                    {shop.client.name.toUpperCase()}
+                  </Text>
+                </HStack>
               ),
           )}
         </VStack>

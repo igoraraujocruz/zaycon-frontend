@@ -1,4 +1,4 @@
-import { Flex, Stack } from '@chakra-ui/react';
+import { Flex, Grid, Stack } from '@chakra-ui/react';
 import Head from 'next/head';
 import nookies from 'nookies';
 import { useContext } from 'react';
@@ -12,6 +12,7 @@ import { SocketContext } from '../../services/hooks/useSocket';
 import { queryClient } from '../../services/queryClient';
 import { PossibleShop } from '../../components/PossibleShop';
 import { Products } from '../../components/Products';
+import { FinishShop } from '../../components/FinishShop';
 
 const PainelAdm = () => {
   const socket = useContext(SocketContext);
@@ -29,14 +30,27 @@ const PainelAdm = () => {
       <Head>
         <title>Painel Adm| Zaycon</title>
       </Head>
-      <Flex h="100vh" flexDir="column" justify="flex-start" align="center">
+      <Flex h="100vh" flexDir="column" align="center">
         <HeaderPainel />
 
-        <Stack spacing="1rem" flexDir={['column', 'column', 'row']}>
+        <Grid
+          w="100%"
+          justifyItems="center"
+          mt="3rem"
+          templateColumns={[
+            '1fr',
+            '1fr',
+            '1fr 1fr',
+            '1fr 1fr',
+            '1fr 1fr 1fr',
+            '1fr 1fr 1fr 1fr',
+          ]}
+        >
           <PossibleShop />
           <AllShop />
+          <FinishShop />
           <SellerShop />
-        </Stack>
+        </Grid>
 
         <Stack
           mt={['1rem', '1rem', '3rem']}
@@ -79,6 +93,6 @@ export const getServerSideProps = withSSRAuth(async ctx => {
       },
     };
   } catch (err) {
-    // continue regardless of error
+    //
   }
 });

@@ -1,4 +1,4 @@
-import { Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
+import { Flex, Heading, HStack, Spinner, Text, VStack } from '@chakra-ui/react';
 import { useCallback, useRef, useState } from 'react';
 import { BsBoxSeam } from 'react-icons/bs';
 import { TbTruckDelivery } from 'react-icons/tb';
@@ -39,13 +39,12 @@ export const AllShop = () => {
   }, []);
 
   return (
-    <Flex flexDir="column" mt={['1rem']} align="flex-start">
+    <Flex flexDir="column" align="flex-start" mb={['1rem', '1rem', 0]}>
       <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
       <Heading size="md">Todas as vendas</Heading>
       <Flex
         flexDir="column"
         maxH={['15rem', '15rem', '20rem']}
-        mr={[0, 0, '1rem']}
         w={['18rem', '18rem', '25rem']}
         overflow="scroll"
         sx={{
@@ -57,22 +56,25 @@ export const AllShop = () => {
         <VStack align="flex-start">
           {data?.map(
             shop =>
-              shop.paid && (
+              shop.paid &&
+              shop.status !== 'Entregue' && (
                 <Flex key={shop.id}>
                   <HStack
                     color={shop.paid ? '#00FF00' : '#A9A9A9'}
                     cursor="pointer"
                     onClick={() => handleModal(shop)}
                   >
+                    {shop.status === 'Preparando' && <BsBoxSeam size={28} />}
+                    {shop.status === 'Enviado' && <TbTruckDelivery size={28} />}
+                    {shop.status === 'Aguardando Pagamento' && (
+                      <Spinner size="md" />
+                    )}
                     <Text color={shop.status === 'Entregue' && '#A9A9A9'}>
                       {shop.createdAt}
                     </Text>
                     <Text color={shop.status === 'Entregue' && '#A9A9A9'}>
                       {shop.client.name.toUpperCase()}
                     </Text>
-                    {shop.status === 'Preparando' && <BsBoxSeam size={28} />}
-                    {shop.status === 'Enviado' && <TbTruckDelivery size={28} />}
-                    {shop.status === 'Entregue' && <FiCheck size={28} />}
                   </HStack>
                 </Flex>
               ),
