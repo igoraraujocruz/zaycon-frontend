@@ -1,4 +1,11 @@
-import { AspectRatio, Flex, Heading, Img, Text } from '@chakra-ui/react';
+import {
+  AspectRatio,
+  Flex,
+  Heading,
+  Img,
+  Spinner,
+  Text,
+} from '@chakra-ui/react';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import { useEffect, useRef, useState } from 'react';
@@ -44,6 +51,17 @@ export const MyCarousel = () => {
   return (
     <>
       <DetailsProductModal product={productSelected} ref={modalDetails} />
+
+      {productsDestaque.length <= 0 && (
+        <Flex
+          h={['30rem', '30rem', '42.5rem']}
+          justify="center"
+          align="center"
+          w="100%"
+        >
+          <Spinner size="lg" color="orangeHover" />
+        </Flex>
+      )}
       <Carousel autoPlay infiniteLoop>
         {productsDestaque
           .filter(e => e.destaque === true)
@@ -56,8 +74,8 @@ export const MyCarousel = () => {
               align="center"
               mb="2rem"
             >
-              <AspectRatio w="100%" ratio={25 / 5}>
-                <Img src={product.photos[0]?.url} objectFit="cover" />
+              <AspectRatio w="100%" ratio={[10 / 5, 10 / 5, 19 / 5]}>
+                <Img src={product.photos[0]?.url} objectFit="fill" />
               </AspectRatio>
 
               <Heading mt="1rem">{product.name}</Heading>
