@@ -145,8 +145,12 @@ const SearchInputBase: ForwardRefRenderFunction<
         justify="flex-start"
       >
         {!noProductFound ? (
-          <Flex w="100%" justify="center" align="center">
-            {isLoading && <Spinner color="orangeHover" size="lg" />}
+          <Flex w="100%" justify="flex-start" align="center">
+            {isLoading && (
+              <Flex justify="center" w="100%">
+                <Spinner color="orangeHover" size="lg" />
+              </Flex>
+            )}
             {itemFilters.map(product => (
               <ScaleFade initialScale={0.9} in>
                 <VStack p="1rem" maxH="25rem" justify="center" key={product.id}>
