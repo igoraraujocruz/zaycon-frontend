@@ -4,7 +4,7 @@ import { queryClient } from '../queryClient';
 
 export async function instanceIsConnected() {
   const response = await axios.get(
-    `http://3.84.2.138/instance/info?key=1&token=a6d54a5w6d65`,
+    `https://whatsapp.zaycon.shop/instance/info?key=1&token=a6d54a5w6d65`,
   );
 
   return {
@@ -19,7 +19,7 @@ export function useInfoWhatsappInstance() {
 
 export async function createWhatsappInstance() {
   const response = await axios.get(
-    `http://3.84.2.138/instance/init?key=1&token=a6d54a5w6d65`,
+    `https://whatsapp.zaycon.shop/instance/init?key=1&token=a6d54a5w6d65`,
   );
 
   queryClient.invalidateQueries('infoWhatsappInstance');
@@ -29,14 +29,16 @@ export async function createWhatsappInstance() {
 
 export async function scanQrcodeWhatsappInstance(instanceName: string) {
   const response = await axios.get(
-    `http://3.84.2.138/instance/qr?key=${instanceName}&token=a6d54a5w6d65`,
+    `https://whatsapp.zaycon.shop/instance/qr?key=${instanceName}&token=a6d54a5w6d65`,
   );
 
   return response.data;
 }
 
 export async function logoutWhatsappInstance(instanceName: string) {
-  await axios.delete(`http://3.84.2.138/instance/logout?key=${instanceName}`);
+  await axios.delete(
+    `https://whatsapp.zaycon.shop/instance/logout?key=${instanceName}`,
+  );
 
   queryClient.invalidateQueries('infoWhatsappInstance');
 }
