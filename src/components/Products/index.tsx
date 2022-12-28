@@ -1,19 +1,15 @@
 import {
   Flex,
   Heading,
-  HStack,
   Table,
   Tbody,
   Td,
-  Text,
   Th,
   Thead,
   Tr,
 } from '@chakra-ui/react';
 import { useCallback, useRef, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
-
-import { useForm } from 'react-hook-form';
 import { withSSRAuth } from '../../utils/WithSSRAuth';
 
 import EditProductModal, {
@@ -61,8 +57,6 @@ export const Products = () => {
     setProduct(shop);
     modalEditProduct.current.onOpen();
   }, []);
-
-  console.log(filterProductName);
 
   return (
     <Flex flexDir="column" align="center" mt={['1rem']} ml="2rem" mr="2rem">

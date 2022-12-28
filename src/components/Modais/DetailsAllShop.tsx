@@ -15,6 +15,7 @@ import {
   Heading,
   Select,
   Spinner,
+  useToast,
 } from '@chakra-ui/react';
 import {
   forwardRef,
@@ -67,6 +68,7 @@ const DetailsAllShop: ForwardRefRenderFunction<
 > = ({ shop }: Shop, ref) => {
   const [isSubmited, setIsSubmited] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   const { handleSubmit, register } = useForm();
 
@@ -77,7 +79,19 @@ const DetailsAllShop: ForwardRefRenderFunction<
 
   const onSubmit = async ({ status }: any) => {
     setIsSubmited(true);
-    await updateStatus(shop.id, status);
+    try {
+      await updateStatus(shop.id, status);
+    } catch (err) {
+      toast({
+        position: 'top',
+        title: `Conexão do Whatsapp`,
+        description: err.response.data.message,
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      });
+    }
+
     setIsSubmited(false);
     onClose();
   };
