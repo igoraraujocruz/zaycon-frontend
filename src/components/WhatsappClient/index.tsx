@@ -16,10 +16,7 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import axios from 'axios';
-
-import Router from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BsTrashFill } from 'react-icons/bs';
 import {
   createWhatsappInstance,
@@ -30,13 +27,13 @@ import {
 export const WhatsappClient = () => {
   const { data } = useInfoWhatsappInstance();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [linkInstance, setLinkInstance] = useState('');
+  const [instanceIsOk, setInstanceIsOk] = useState(false);
 
   const toast = useToast();
 
   const createInstance = async () => {
     try {
-      const instance = await createWhatsappInstance();
+      await createWhatsappInstance();
       toast({
         title: 'Instancia criada com sucesso!',
         status: 'success',
@@ -44,7 +41,7 @@ export const WhatsappClient = () => {
         isClosable: true,
       });
 
-      setLinkInstance(instance.qrcode.url);
+      setInstanceIsOk(true);
     } catch (error) {
       toast({
         title: 'Não foi possível criar a instancia',
@@ -93,7 +90,7 @@ export const WhatsappClient = () => {
             />
             <ModalHeader />
             <ModalBody>
-              {!linkInstance ? (
+              {!instanceIsOk ? (
                 <Flex justify="center">
                   <Button
                     onClick={() => createInstance()}
@@ -105,7 +102,10 @@ export const WhatsappClient = () => {
                 </Flex>
               ) : (
                 <Flex justify="center">
-                  <Link href={linkInstance} isExternal>
+                  <Link
+                    href="https://whatsapp.zaycon.shop/instance/qr?key=1"
+                    isExternal
+                  >
                     <Button bg="gray.800" _hover={{ bg: 'orangeHover' }}>
                       Ler Qrcode
                     </Button>
