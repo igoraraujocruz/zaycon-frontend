@@ -5,7 +5,6 @@ import { signOut } from '../../services/hooks/useAuth';
 import { SocketContext } from '../../services/hooks/useSocket';
 import { useSeller } from '../../services/hooks/useUsers';
 import { queryClient } from '../../services/queryClient';
-import { WhatsappClient } from '../WhatsappClient';
 
 export const HeaderPainel = () => {
   const { data } = useSeller();
@@ -70,8 +69,6 @@ export const HeaderPainel = () => {
           <Text>Meus pontos: {data?.points}</Text>
         </VStack>
       </Flex>
-      <WhatsappClient />
-
       <Flex align="center" mt="1rem">
         <Flex
           flexDir={['column', 'column', 'column', 'row']}
