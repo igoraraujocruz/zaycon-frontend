@@ -48,6 +48,7 @@ export const Chats = () => {
   }, []);
 
   socket.on('newMessage', async () => {
+    await queryClient.invalidateQueries('account');
     await queryClient.invalidateQueries('ChatByAccount');
   });
 
