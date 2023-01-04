@@ -22,6 +22,7 @@ interface Message {
   accountId: string;
   message: string;
   createdAt: string;
+  isClient: boolean;
 }
 
 export const getAccounts = async (): Promise<NewAccount[]> => {
@@ -58,9 +59,10 @@ export const getChatByAccount = async (
 
     const chat = data.map((message: Message) => {
       return {
-        id: message._id,
+        _id: message._id,
         accountId: message.accountId,
         message: message.message,
+        isClient: message.isClient,
         createdAt: new Date(message.createdAt).toLocaleDateString('pt-BR', {
           day: '2-digit',
           month: '2-digit',

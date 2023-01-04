@@ -7,24 +7,65 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useCallback, useContext, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { api } from '../../services/apiClient';
 import { useAccount, useChatByAccount } from '../../services/hooks/useChats';
 import { SocketContext } from '../../services/hooks/useSocket';
 import { queryClient } from '../../services/queryClient';
 
+type MessageValidate = {
+  message: string;
+};
+
+interface Account {
+  id: string;
+  name: string;
+  plataform: string;
+  numberPhone: string;
+  createdAt: string;
+}
+
+const messageSchema = yup.object().shape({
+  message: yup.string().required(),
+});
+
 export const Chats = () => {
-  const [accountId, setAccountId] = useState('');
+  const [infoAccount, setInfoAccount] = useState({} as Account);
   const { data } = useAccount();
-  const { data: dataChatByAccount } = useChatByAccount(accountId);
+  const { data: dataChatByAccount } = useChatByAccount(infoAccount.id);
   const socket = useContext(SocketContext);
 
-  const getData = useCallback((accountId: string) => {
-    setAccountId(accountId);
+  const { register, handleSubmit, reset } = useForm<MessageValidate>({
+    resolver: yupResolver(messageSchema),
+  });
+
+  const getData = useCallback((account: Account) => {
+    setInfoAccount(account);
   }, []);
 
   socket.on('newMessage', async () => {
     await queryClient.invalidateQueries('ChatByAccount');
   });
+
+  const onSubmit: SubmitHandler<MessageValidate> = async ({
+    message,
+  }: MessageValidate) => {
+    try {
+      await api.post('/chat/webhook', {
+        name: infoAccount.name,
+        message,
+        plataform: infoAccount.plataform,
+        numberPhone: infoAccount.numberPhone,
+      });
+
+      reset();
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Flex bg="red" w="100%" h="100%">
@@ -33,11 +74,11 @@ export const Chats = () => {
           <HStack
             key={chat.id}
             align="center"
-            bg={accountId === chat.id && 'gray.700'}
+            bg={infoAccount.id === chat.id && 'gray.700'}
             _hover={{ background: 'gray.700' }}
             p="2rem"
             justifyContent="space-between"
-            onClick={() => getData(chat.id)}
+            onClick={() => getData(chat)}
             transition={['background 200ms']}
             cursor="pointer"
             justify="center"
@@ -81,7 +122,7 @@ export const Chats = () => {
           {dataChatByAccount?.map(message => (
             <HStack
               key={message._id}
-              bg="gray.800"
+              bg={message.isClient ? 'gray.800' : 'gray.600'}
               borderRadius="2rem"
               pr="2rem"
             >
@@ -90,9 +131,18 @@ export const Chats = () => {
             </HStack>
           ))}
         </VStack>
-        <HStack align="center" w="100%" justify="center" h="4rem">
-          <Input w="80%" h="3rem" />
-          <Button bg="orangeHover">Enviar</Button>
+        <HStack
+          as="form"
+          onSubmit={handleSubmit(onSubmit)}
+          align="center"
+          w="100%"
+          justify="center"
+          h="4rem"
+        >
+          <Input w="80%" h="3rem" {...register('message')} />
+          <Button type="submit" bg="orangeHover">
+            Enviar
+          </Button>
         </HStack>
       </VStack>
     </Flex>
