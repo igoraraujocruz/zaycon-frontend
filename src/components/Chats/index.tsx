@@ -136,6 +136,7 @@ export const Chats = () => {
             <HStack
               key={message._id}
               bg={message.isClient ? 'gray.800' : 'gray.600'}
+              ml={message!.isClient && '4rem'}
               borderRadius="2rem"
               pr="2rem"
             >
