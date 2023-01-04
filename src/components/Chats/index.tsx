@@ -136,8 +136,8 @@ export const Chats = () => {
             <HStack
               key={message._id}
               bg={message.isClient ? 'gray.800' : 'gray.600'}
-              ml={message!.isClient && '4rem'}
               borderRadius="2rem"
+              ml={message.isClient ? 0 : '4rem'}
               pr="2rem"
             >
               <Text fontSize="0.7rem">({message.createdAt}) : </Text>
