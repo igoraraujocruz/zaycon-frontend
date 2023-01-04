@@ -25,7 +25,7 @@ interface Message {
 }
 
 export const getAccounts = async (): Promise<NewAccount[]> => {
-  const { data } = await api.get('/clients/chat');
+  const { data } = await api.get('/chat');
 
   const chat = data.map((account: Account) => {
     return {
@@ -54,9 +54,7 @@ export const getChatByAccount = async (
   accountId: string,
 ): Promise<Message[]> => {
   if (accountId) {
-    const { data } = await api.get(
-      `/clients/chatByAccount?account=${accountId}`,
-    );
+    const { data } = await api.get(`/chat/chatByAccount?account=${accountId}`);
 
     const chat = data.map((message: Message) => {
       return {
