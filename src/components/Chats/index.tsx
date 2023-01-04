@@ -66,7 +66,18 @@ export const Chats = () => {
       </VStack>
 
       <VStack bg="gray.700" w="100%">
-        <VStack p="2rem" align="flex-start" w="100%" h="100%">
+        <VStack
+          p="2rem"
+          align="flex-start"
+          w="100%"
+          h="100%"
+          overflowY="auto"
+          sx={{
+            '::-webkit-scrollbar': {
+              display: 'none',
+            },
+          }}
+        >
           {dataChatByAccount?.map(message => (
             <HStack
               key={message._id}
