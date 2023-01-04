@@ -8,7 +8,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { api } from '../../services/apiClient';
@@ -37,6 +37,7 @@ export const Chats = () => {
   const { data } = useAccount();
   const { data: dataChatByAccount } = useChatByAccount(infoAccount.id);
   const socket = useContext(SocketContext);
+  const messageEndRef = useRef(null);
 
   const { register, handleSubmit, reset } = useForm<MessageValidate>({
     resolver: yupResolver(messageSchema),
@@ -49,6 +50,10 @@ export const Chats = () => {
   socket.on('newMessage', async () => {
     await queryClient.invalidateQueries('ChatByAccount');
   });
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView();
+  }, [dataChatByAccount]);
 
   const onSubmit: SubmitHandler<MessageValidate> = async ({
     message,
@@ -113,9 +118,16 @@ export const Chats = () => {
           w="100%"
           h="100%"
           overflowY="auto"
-          sx={{
-            '::-webkit-scrollbar': {
-              display: 'none',
+          css={{
+            '&::-webkit-scrollbar': {
+              width: '4px',
+            },
+            '&::-webkit-scrollbar-track': {
+              width: '6px',
+            },
+            '&::-webkit-scrollbar-thumb': {
+              background: '#FF6B00',
+              borderRadius: '24px',
             },
           }}
         >
@@ -130,6 +142,8 @@ export const Chats = () => {
               <Text>{message.message}</Text>
             </HStack>
           ))}
+
+          <Flex ref={messageEndRef} />
         </VStack>
         <HStack
           as="form"
