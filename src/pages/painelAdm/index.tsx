@@ -13,6 +13,7 @@ import { queryClient } from '../../services/queryClient';
 import { PossibleShop } from '../../components/PossibleShop';
 import { Products } from '../../components/Products';
 import { FinishShop } from '../../components/FinishShop';
+import { Chats } from '../../components/Chats';
 
 const PainelAdm = () => {
   const socket = useContext(SocketContext);
@@ -57,8 +58,10 @@ const PainelAdm = () => {
           flexDir={['column', 'column', 'row']}
           justify="flex-start"
           w="95%"
+          h="70%"
         >
           <Products />
+          <Chats />
         </Stack>
       </Flex>
     </Admin>
