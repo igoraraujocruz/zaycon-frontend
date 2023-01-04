@@ -24,6 +24,7 @@
       "prettier"
   ],
   "rules": {
+    "no-underscore-dangle": "off",
     "array-callback-return": "off",
     "react/no-array-index-key": "off",
     "no-plusplus": "off",
