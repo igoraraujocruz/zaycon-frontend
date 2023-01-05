@@ -45,12 +45,12 @@ export const Chats = () => {
 
   const getData = useCallback((account: Account) => {
     setInfoAccount(account);
+    console.log(account);
   }, []);
 
   socket.on('newMessage', async () => {
     await queryClient.invalidateQueries('account');
     await queryClient.invalidateQueries('ChatByAccount');
-    console.log('chamouuuuuuu');
   });
 
   useEffect(() => {
