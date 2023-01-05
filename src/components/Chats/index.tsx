@@ -50,6 +50,7 @@ export const Chats = () => {
   socket.on('newMessage', async () => {
     await queryClient.invalidateQueries('account');
     await queryClient.invalidateQueries('ChatByAccount');
+    console.log('chamouuuuuuu');
   });
 
   useEffect(() => {
@@ -137,7 +138,6 @@ export const Chats = () => {
               key={message._id}
               bg={message.isClient ? 'gray.800' : 'gray.600'}
               borderRadius="2rem"
-              ml={message.isClient ? 0 : '4rem'}
               pr="2rem"
             >
               <Text fontSize="0.7rem">({message.createdAt}) : </Text>
