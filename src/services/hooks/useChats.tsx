@@ -58,6 +58,8 @@ export const getChatByAccount = async (
     console.log(accountId);
     const { data } = await api.get(`/chat/chatByAccount?account=${accountId}`);
 
+    console.log(data);
+
     const chat = data.map((message: Message) => {
       return {
         _id: message._id,
