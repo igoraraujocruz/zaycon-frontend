@@ -17,6 +17,8 @@ import { useAccount, useChatByAccount } from '../../services/hooks/useChats';
 import { SocketContext } from '../../services/hooks/useSocket';
 import { queryClient } from '../../services/queryClient';
 
+console.log(process.env.NEXT_PUBLIC_INSTAGRAM_TOKEN);
+
 type MessageValidate = {
   message: string;
 };
