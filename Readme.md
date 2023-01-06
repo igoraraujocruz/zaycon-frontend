@@ -1,4 +1,4 @@
-<h1 align="center">Snap
+<h1 align="center">Zaycon
 </h1>
 
 <h3 align="center">Uma loja para gerenciar usuários, clientes, pontos, e compras</h3>
