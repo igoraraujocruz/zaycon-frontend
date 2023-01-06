@@ -61,12 +61,26 @@ export const Chats = () => {
     message,
   }: MessageValidate) => {
     try {
-      await api.post('/chat/webhook', {
-        name: infoAccount.name,
-        message,
-        platform: infoAccount.platform,
-        referencePoint: infoAccount.referencePoint,
-      });
+      if (infoAccount.platform === 'Whatsapp') {
+        await api.post('/chat/webhook', {
+          name: infoAccount.name,
+          message,
+          platform: infoAccount.platform,
+          referencePoint: infoAccount.referencePoint,
+        });
+      }
+
+      if (infoAccount.platform === 'Instagram') {
+        await api.post('https://graph.facebook.com/v15.0/PAGE-ID/messages', {
+          access_token: process.env.NEXT_PUBLIC_INSTAGRAM_TOKEN,
+          recipient: {
+            id: infoAccount.referencePoint,
+          },
+          message: {
+            text: message,
+          },
+        });
+      }
 
       reset();
     } catch (err) {
