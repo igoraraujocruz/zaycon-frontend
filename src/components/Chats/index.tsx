@@ -23,8 +23,8 @@ type MessageValidate = {
 interface Account {
   id: string;
   name: string;
-  plataform: string;
-  numberPhone: string;
+  platform: string;
+  referencePoint: string;
   createdAt: string;
 }
 
@@ -45,7 +45,6 @@ export const Chats = () => {
 
   const getData = useCallback((account: Account) => {
     setInfoAccount(account);
-    console.log(account);
   }, []);
 
   socket.on('newMessage', async () => {
@@ -64,8 +63,8 @@ export const Chats = () => {
       await api.post('/chat/webhook', {
         name: infoAccount.name,
         message,
-        plataform: infoAccount.plataform,
-        numberPhone: infoAccount.numberPhone,
+        platform: infoAccount.platform,
+        referencePoint: infoAccount.referencePoint,
       });
 
       reset();
@@ -93,7 +92,7 @@ export const Chats = () => {
             h="3.5rem"
           >
             <Text>{chat.name}</Text>
-            {chat.plataform === 'Whatsapp' && (
+            {chat.platform === 'Whatsapp' && (
               <Box
                 fill="white"
                 bg="#4dc247"

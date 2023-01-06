@@ -4,16 +4,16 @@ import { api } from '../apiClient';
 interface Account {
   _id: string;
   name: string;
-  plataform: string;
-  numberPhone: string;
+  platform: string;
+  referencePoint: string;
   createdAt: string;
 }
 
 interface NewAccount {
   id: string;
   name: string;
-  plataform: string;
-  numberPhone: string;
+  platform: string;
+  referencePoint: string;
   createdAt: string;
 }
 
@@ -32,8 +32,8 @@ export const getAccounts = async (): Promise<NewAccount[]> => {
     return {
       id: account._id,
       name: account.name,
-      plataform: account.plataform,
-      numberPhone: account.numberPhone,
+      platform: account.platform,
+      referencePoint: account.referencePoint,
       createdAt: new Date(account.createdAt).toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: '2-digit',
@@ -55,10 +55,7 @@ export const getChatByAccount = async (
   accountId: string,
 ): Promise<Message[]> => {
   if (accountId) {
-    console.log(accountId);
     const { data } = await api.get(`/chat/chatByAccount?account=${accountId}`);
-
-    console.log(data);
 
     const chat = data.map((message: Message) => {
       return {
