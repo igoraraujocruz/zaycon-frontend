@@ -3,6 +3,7 @@ import {
   Button,
   Flex,
   HStack,
+  Img,
   Input,
   Text,
   VStack,
@@ -107,6 +108,9 @@ export const Chats = () => {
                   />
                 </svg>
               </Box>
+            )}
+            {chat.platform === 'Instagram' && (
+              <Img src="instagram-icon.svg" w="2rem" alt="instagram icon" />
             )}
           </HStack>
         ))}
