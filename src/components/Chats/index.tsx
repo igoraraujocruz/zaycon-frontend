@@ -19,8 +19,6 @@ import { queryClient } from '../../services/queryClient';
 
 console.log(process.env.NEXT_PUBLIC_INSTAGRAM_TOKEN);
 
-console.log(process.env.INSTAGRAM_TOKEN);
-
 type MessageValidate = {
   message: string;
 };
