@@ -34,8 +34,7 @@ import { WhatsApp } from '../components/Whatsapp';
 import { MyCarousel } from '../components/Carousel';
 
 export default function Home() {
-  const { addToCart } = useCart();
-  const toast = useToast();
+  const { addProduct } = useCart();
   const { isLoading, error, isFetching } = useProducts();
   const { register } = useForm();
 
@@ -53,17 +52,6 @@ export default function Home() {
     setProduct(product);
     modalDetails.current.onOpen();
   }, []);
-
-  const saveOnCookie = (product: Product) => {
-    toast({
-      position: 'bottom-right',
-      title: 'Adicionado no carrinho de compras',
-      status: 'success',
-      duration: 2000,
-      isClosable: true,
-    });
-    addToCart(product);
-  };
 
   const getProductByCategory = async (value: string) => {
     if (value === 'all') {
@@ -96,8 +84,8 @@ export default function Home() {
           <Stack ml={[0, 0, '10rem']} flexDir="row">
             <Heading>Zaycon</Heading>
             <Link href="https://www.instagram.com/zaycon.connect" isExternal>
-              <Flex mt="-0.5rem" ml="1rem" cursor="pointer">
-                <GrInstagram color="white" size={25} />
+              <Flex ml="0.5rem" cursor="pointer">
+                <GrInstagram color="white" size={28} />
               </Flex>
             </Link>
           </Stack>
@@ -209,7 +197,7 @@ export default function Home() {
                     <Flex
                       p="0.5rem"
                       borderRadius="0.2rem"
-                      onClick={() => saveOnCookie(product)}
+                      onClick={() => addProduct(product.id)}
                       cursor="pointer"
                       align="center"
                       bg="gray.800"

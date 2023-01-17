@@ -1,5 +1,7 @@
+import { useToast } from '@chakra-ui/react';
 import {
   useEffect,
+  useRef,
   createContext,
   ReactNode,
   useContext,
@@ -7,13 +9,24 @@ import {
 } from 'react';
 import { api } from '../apiClient';
 
+interface Photos {
+  id: string;
+  url: string;
+}
+
 interface Product {
   id: string;
   name: string;
   description: string;
-  amount: number;
   price: number;
+  amount: number;
+  category: string;
   slug: string;
+  photos: Photos[];
+}
+
+interface CartProviderProps {
+  children: ReactNode;
 }
 
 interface UpdateProductAmount {
@@ -21,105 +34,192 @@ interface UpdateProductAmount {
   amount: number;
 }
 
-interface CartProviderProps {
-  children: ReactNode;
-}
-
 interface CartContextData {
-  cart: any;
-  addToCart: (product: any) => void;
-  removeFromCart: (productId: string) => void;
-  decreaseAmount: (product: any) => void;
+  cart: Product[];
+  addProduct: (productId: string) => Promise<void>;
+  removeProduct: (productId: string) => void;
+  updateProductAmount: ({ productId, amount }: UpdateProductAmount) => void;
+  removeAllProductsInBag: () => void;
 }
 
 const CartContext = createContext<CartContextData>({} as CartContextData);
 
-function CartProvider({ children }: CartProviderProps) {
-  const [cart, setCart] = useState({} as any);
+export function CartProvider({ children }: CartProviderProps): JSX.Element {
+  const toast = useToast();
 
-  useEffect(() => {
-    const cartLocal = window.localStorage.getItem('cart');
+  const [cart, setCart] = useState<Product[]>(() => {
+    if (typeof window !== 'undefined') {
+      const storagedCart = localStorage.getItem('babi-show:cart');
 
-    if (cartLocal) {
-      setCart(JSON.parse(cartLocal));
-    }
-  }, []);
-
-  const addToCart = product => {
-    setCart(old => {
-      let quantity = 0;
-
-      if (old[product.id]) {
-        quantity = old[product.id].quantity;
+      if (storagedCart) {
+        return JSON.parse(storagedCart);
       }
 
-      const newCart = {
-        ...old,
-        [product.id]: {
-          quantity: quantity + 1,
-          product,
-        },
-      };
+      return [];
+    }
+  });
 
-      window.localStorage.setItem('cart', JSON.stringify(newCart));
-      return newCart;
-    });
-  };
+  const prevCartRef = useRef<Product[]>();
 
-  const removeFromCart = productId => {
-    setCart(old => {
-      const newCart = {};
-      Object.keys(old).forEach(id => {
-        if (id !== productId) {
-          newCart[id] = old[id];
-        }
+  useEffect(() => {
+    prevCartRef.current = cart;
+  });
+
+  const cartPreviousValue = prevCartRef.current ?? cart;
+
+  useEffect(() => {
+    if (cartPreviousValue !== cart) {
+      localStorage.setItem('babi-show:cart', JSON.stringify(cart));
+    }
+  }, [cart, cartPreviousValue]);
+
+  const addProduct = async (productId: string) => {
+    try {
+      const updatedCart = [...cart];
+      const productExists = updatedCart.find(
+        product => product.id === productId,
+      );
+      const stock = await api.get<Product>(`/products?productId=${productId}`);
+      const stockAmount = stock.data.amount;
+      const currentAmount = productExists ? productExists.amount : 0;
+      const amount = currentAmount + 1;
+
+      if (amount > stockAmount) {
+        toast({
+          position: 'bottom-right',
+          title: 'Quantidade solicitada fora de estoque',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      if (productExists) {
+        productExists.amount = amount;
+      } else {
+        const product = await api.get<Product>(
+          `/products?productId=${productId}`,
+        );
+
+        const newProduct = {
+          ...product.data,
+          amount: 1,
+        };
+        updatedCart.push(newProduct);
+      }
+
+      setCart(updatedCart);
+      toast({
+        position: 'top',
+        title: `Adicionado ao Carrinho!`,
+        status: 'success',
+        duration: 1000,
+        isClosable: true,
       });
-      window.localStorage.setItem('cart', JSON.stringify(newCart));
-      return newCart;
-    });
+    } catch {
+      toast({
+        position: 'bottom-right',
+        title: 'Erro na adição do produto',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      });
+    }
   };
 
-  const decreaseAmount = product => {
-    const cartLocal = window.localStorage.getItem('cart');
-    const cart = JSON.parse(cartLocal);
+  const removeProduct = (productId: string) => {
+    try {
+      const updatedCart = [...cart];
+      const productIndex = updatedCart.findIndex(
+        product => product.id === productId,
+      );
 
-    if (cart[product.id].quantity <= 1) {
-      removeFromCart(product.id);
-      return;
+      if (productIndex >= 0) {
+        updatedCart.splice(productIndex, 1);
+        setCart(updatedCart);
+      } else {
+        throw Error();
+      }
+    } catch {
+      toast({
+        position: 'bottom-right',
+        title: 'Erro na remoção do produto',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      });
     }
+  };
 
-    if (cart[product.id].quantity < 1) {
-      console.log(product.id);
-      removeFromCart(product.id);
+  const removeAllProductsInBag = () => {
+    setCart([]);
+  };
+
+  const updateProductAmount = async ({
+    productId,
+    amount,
+  }: UpdateProductAmount) => {
+    try {
+      if (amount <= 0) {
+        return;
+      }
+
+      const stock = await api.get(`/products?productId=${productId}`);
+      const stockAmount = stock.data.amount;
+
+      if (amount > stockAmount) {
+        toast({
+          position: 'bottom-right',
+          title: 'Quantidade solicitada fora de estoque',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+
+        return;
+      }
+
+      const updatedCart = [...cart];
+
+      const productExist = updatedCart.find(
+        product => product.id === productId,
+      );
+
+      if (productExist) {
+        productExist.amount = amount;
+        setCart(updatedCart);
+      } else {
+        throw Error();
+      }
+    } catch {
+      toast({
+        position: 'bottom-right',
+        title: 'Erro na alteração de quantidade do produto',
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      });
     }
-
-    setCart(old => {
-      const newCart = {
-        ...old,
-        [product.id]: {
-          quantity: cart[product.id].quantity - 1,
-          product,
-        },
-      };
-
-      window.localStorage.setItem('cart', JSON.stringify(newCart));
-      return newCart;
-    });
   };
 
   return (
     <CartContext.Provider
-      value={{ cart, addToCart, removeFromCart, decreaseAmount }}
+      value={{
+        cart,
+        addProduct,
+        removeProduct,
+        updateProductAmount,
+        removeAllProductsInBag,
+      }}
     >
       {children}
     </CartContext.Provider>
   );
 }
 
-function useCart(): CartContextData {
+export function useCart(): CartContextData {
   const context = useContext(CartContext);
 
   return context;
 }
-
-export { CartProvider, useCart };

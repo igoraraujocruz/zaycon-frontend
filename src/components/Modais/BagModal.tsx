@@ -44,6 +44,7 @@ import { useCart } from '../../services/hooks/useCart';
 import { Input } from '../Form/Input';
 import { MaskedInput } from '../Form/MaskedInput';
 import { SocketContext } from '../../services/hooks/useSocket';
+import { formatPrice } from '../../utils/format';
 
 export interface IBagModal {
   onOpen: () => void;
@@ -62,14 +63,14 @@ type CreateFormData = {
   obs: string;
 };
 
-type Adress = {
-  cep: string;
-  logradouro: string;
-  complemento: string;
-  bairro: string;
-  localidade: string;
-  uf: string;
-};
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  amount: number;
+  category: string;
+  slug: string;
+}
 
 const createFormSchema = yup.object().shape({
   typeOfPayment: yup.string().required('O tipo de pagamento é necessário'),
@@ -91,20 +92,24 @@ const createFormSchema = yup.object().shape({
 
 const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const [finishShop, setFinishShop] = useState(false);
-  const [haveItems, setHaveItems] = useState(false);
   const [imagemIsLoading, setImagemIsLoading] = useState(false);
   const [qrCode, setQrCode] = useState({} as any);
   const [paid, setIsPaid] = useState(false);
   const [dataPaiment, setdataPaiment] = useState({} as any);
   const [mySocketId, setMySocketId] = useState('');
   const [seller, setSeller] = useState({} as any);
-  const [product, setProduct] = useState({} as any);
 
   const socket = useContext(SocketContext);
 
   const sound = new Howl({
     src: ['notification.mp3'],
   });
+
+  useEffect(() => {
+    socket.on('mySocketId', data => {
+      setMySocketId(data);
+    });
+  }, [mySocketId, socket]);
 
   Howler.volume(0.002);
   const router = useRouter();
@@ -145,19 +150,30 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
     setMySocketId(data);
   });
 
-  const { cart, addToCart, removeFromCart, decreaseAmount } = useCart();
+  const { cart, removeProduct, updateProductAmount, removeAllProductsInBag } =
+    useCart();
 
-  useEffect(() => {
-    if (Object.keys(cart).length > 0) {
-      setHaveItems(true);
-    } else {
-      setHaveItems(false);
-    }
-  }, [cart]);
+  const cartFormatted = cart?.map(product => ({
+    ...product,
+    priceFormatted: formatPrice(product.price),
+    subTotal: formatPrice(product.price * product.amount),
+  }));
 
-  const subTotal = Object.keys(cart).reduce((prev, current) => {
-    return prev + cart[current].quantity * cart[current].product.price;
+  const total = cart?.reduce((sumTotal, product) => {
+    return sumTotal + product.price * product.amount;
   }, 0);
+
+  function handleProductIncrement(product: Product) {
+    updateProductAmount({ productId: product.id, amount: product.amount + 1 });
+  }
+
+  function handleProductDecrement(product: Product) {
+    updateProductAmount({ productId: product.id, amount: product.amount - 1 });
+  }
+
+  function handleRemoveProduct(productId: string) {
+    removeProduct(productId);
+  }
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
@@ -166,100 +182,57 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CreateFormData>({
     resolver: yupResolver(createFormSchema),
   });
 
-  const itemsCount = Object.keys(cart).reduce((prev, curr) => {
-    return prev + cart[curr].quantity;
-  }, 0);
-
   const onSubmit: SubmitHandler<CreateFormData> = async (
     values: CreateFormData,
   ) => {
-    const order = { ...values };
+    setFinishShop(!finishShop);
 
-    const allOrdersIsOk = Object.keys(cart).map(curr => {
-      const item = {
-        quantity: cart[curr].quantity,
-        productId: cart[curr].product.id,
-      };
-
-      async function verifyAmountProduct() {
-        const response = await api.get(`/products?productId=${item.productId}`);
-
-        const quantityConfirmation = item.quantity <= response.data.amount;
-
-        if (!quantityConfirmation) {
-          toast({
-            position: 'top',
-            title: `Não temos essa quantia de ${response.data.name} em nosso estoque`,
-            description: `Possuímos apenas a quantidade: ${response.data.amount}`,
-            status: 'error',
-            duration: 4000,
-            isClosable: true,
-          });
-        }
-      }
-
-      verifyAmountProduct();
-
-      api
-        .get(`/products?productId=${item.productId}`)
-        .then(response => setProduct(response.data));
-
-      const quantityConfirmation = item.quantity <= product.amount;
-
-      return quantityConfirmation;
+    const client = await api.post('/clients', {
+      name: values.name,
+      cep: values.cep,
+      email: values.email,
+      numberPhone: values.numberPhone,
+      address: values.address,
     });
 
-    const check = allOrdersIsOk.every(element => element === true);
+    const shop = await api.post('/shop', {
+      clientId: client.data.id,
+      socketId: mySocketId,
+      typeOfPayment: 'pix',
+      sellerId: seller.id,
+    });
 
-    if (check) {
-      const client = await api.post('/clients', {
-        name: order.name,
-        cep: order.cep,
-        address: `${order.address}, Nº ${order.numberAddress} - ${order.obs}`,
-        email: order.email,
-        numberPhone: order.numberPhone,
+    cartFormatted.map(async product => {
+      await api.post('/orders', {
+        productId: product.id,
+        shopId: shop.data.id,
+        quantity: product.amount,
       });
+    });
 
-      const shop = await api.post('/shop', {
-        clientId: client.data.id,
-        typeOfPayment: order.typeOfPayment,
-        socketId: mySocketId,
-        sellerId: seller.id,
-      });
+    const charge = await api.post('/shop/gerencianet', {
+      shopId: shop.data.id,
+    });
 
-      Object.keys(cart).map(async curr => {
-        const item = {
-          quantity: cart[curr].quantity,
-          productId: cart[curr].product.id,
-        };
+    setQrCode(charge.data);
 
-        try {
-          const response = await api.post('/orders', {
-            productId: item.productId,
-            shopId: shop.data.id,
-            quantity: item.quantity,
-          });
-          return response.data;
-        } catch (err) {
-          // no-error
-        }
-      });
+    setImagemIsLoading(!imagemIsLoading);
 
-      setTimeout(async () => {
-        const charge = await api.post('/shop/gerencianet', {
-          shopId: shop.data.id,
-        });
-        setQrCode(charge.data);
-        setImagemIsLoading(!imagemIsLoading);
-      }, 2000);
-
-      setFinishShop(!finishShop);
-      window.localStorage.setItem('cart', JSON.stringify({}));
-    }
+    toast({
+      position: 'bottom',
+      title: `Tudo Certo!`,
+      description: `Compra efetuada com sucesso.`,
+      status: 'success',
+      duration: 2000,
+      isClosable: true,
+    });
+    removeAllProductsInBag();
+    reset();
   };
 
   useImperativeHandle(ref, () => ({
@@ -285,7 +258,6 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
           top={['63vh', '63vh', '69vh']}
           left={['80vw', '80vw', '85vw', '90vw']}
         >
-          {itemsCount > 0 && <span>{itemsCount}</span>}
           <FiShoppingCart size="30" />
         </Flex>
       </Box>
@@ -300,18 +272,18 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
           <ModalHeader />
           {!finishShop ? (
             <ModalBody>
-              {haveItems ? (
+              {cartFormatted?.length > 0 ? (
                 <>
                   <Flex flexDir="column">
-                    {Object.keys(cart).map(key => {
+                    {cartFormatted?.map(product => {
                       return (
-                        <Flex key={key} w="100%" h="100%" mb="1rem">
+                        <Flex key={product.id} w="100%" h="100%" mb="1rem">
                           <Image
                             w={['9rem']}
                             h={['10rem']}
                             src={
-                              cart[key].product?.photos[0]
-                                ? cart[key].product.photos[0].url
+                              product?.photos[0]
+                                ? product.photos[0].url
                                 : 'placeholder.png'
                             }
                           />
@@ -322,14 +294,14 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                             align="start"
                           >
                             <Text w={['7.5rem', '7.5rem', '15rem']}>
-                              Nome: {cart[key].product.name}
+                              Nome: {product.name}
                             </Text>
                             <Text w={['7.5rem', '7.5rem', '15rem']}>
-                              Preço Unitário: R$ {cart[key].product.price}
+                              Preço Unitário: R$ {product.price}
                             </Text>
                             <Text w={['7.5rem', '7.5rem', '15rem']}>
-                              Subtotal: R${' '}
-                              {subTotal.toFixed(2).replace('.', ',')}
+                              Subtotal:{' '}
+                              {formatPrice(product.amount * product.price)}
                             </Text>
                             <Text w={['7.5rem', '7.5rem', '15rem']}>
                               Descrição:
@@ -352,7 +324,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                               overflowY="auto"
                               w={['7.5rem', '7.5rem', '15rem']}
                             >
-                              {cart[key].product.description}
+                              {product.description}
                             </Text>
                             <Flex
                               align="center"
@@ -364,9 +336,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                                 bg="gray.700"
                                 _hover={{ background: 'gray.900' }}
                                 h="2rem"
-                                onClick={() =>
-                                  removeFromCart(cart[key].product.id)
-                                }
+                                onClick={() => handleRemoveProduct(product.id)}
                               >
                                 <BsFillTrashFill color="#fff" />
                               </Button>
@@ -378,7 +348,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                                 flexDir="column"
                               >
                                 <Text>Quantidade</Text>
-                                <Text>{cart[key].quantity}</Text>
+                                <Text>{product.amount}</Text>
                               </Flex>
                             </Flex>
                             <HStack
@@ -389,9 +359,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                                 bg="gray.700"
                                 _hover={{ background: 'gray.900' }}
                                 h="2rem"
-                                onClick={() =>
-                                  decreaseAmount(cart[key].product)
-                                }
+                                onClick={() => handleProductDecrement(product)}
                               >
                                 <AiOutlineMinus color="#fff" />
                               </Button>
@@ -399,7 +367,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                                 bg="gray.700"
                                 _hover={{ background: 'gray.900' }}
                                 h="2rem"
-                                onClick={() => addToCart(cart[key].product)}
+                                onClick={() => handleProductIncrement(product)}
                               >
                                 <AiOutlinePlus color="#fff" />
                               </Button>
@@ -409,19 +377,13 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                       );
                     })}
                   </Flex>
+                  <Text>Valor total dos Produtos: {formatPrice(total)}</Text>
                   <Text>
-                    Valor total dos Produtos: R${' '}
-                    {subTotal.toFixed(2).replace('.', ',')}
-                  </Text>
-                  <Text>
-                    Taxa para Geradora do Pix: R${' '}
-                    {((subTotal * 1.19) / 100).toFixed(2).replace('.', ',')}
+                    Taxa para Geradora do Pix:{' '}
+                    {formatPrice((total * 1.19) / 100)}
                   </Text>
                   <Text fontWeight="600">
-                    Total a pagar: R${' '}
-                    {(subTotal + (subTotal * 1.19) / 100)
-                      .toFixed(2)
-                      .replace('.', ',')}
+                    Total a pagar: {formatPrice(total + (total * 1.19) / 100)}
                   </Text>
                   <VStack
                     mt="1rem"
