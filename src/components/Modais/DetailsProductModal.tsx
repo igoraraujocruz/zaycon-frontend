@@ -59,18 +59,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
   ProductProps
 > = ({ product }: ProductProps, ref) => {
   const toast = useToast();
-  const { addToCart } = useCart();
-
-  const saveOnCookie = (product: Product) => {
-    toast({
-      position: 'bottom-right',
-      title: 'Adicionado no carrinho de compras',
-      status: 'success',
-      duration: 2000,
-      isClosable: true,
-    });
-    addToCart(product);
-  };
+  const { addProduct } = useCart();
 
   const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
   const [showImage, setShowImage] = useState('');
@@ -134,21 +123,7 @@ const DetailsProductModal: ForwardRefRenderFunction<
                         <Flex
                           p="0.5rem"
                           borderRadius="0.2rem"
-                          onClick={() =>
-                            saveOnCookie({
-                              id: product.id,
-                              name: product.name,
-                              amount: product.amount,
-                              description: product.description,
-                              price: product.price,
-                              slug: product.slug,
-                              points: product.points,
-                              photos: product.photos,
-                              category: product.category,
-                              destaque: product.destaque,
-                              createdAt: product.createdAt,
-                            })
-                          }
+                          onClick={() => addProduct(product.id)}
                           cursor="pointer"
                           align="center"
                           bg="#FF6B00"

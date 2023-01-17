@@ -44,8 +44,7 @@ const SearchInputBase: ForwardRefRenderFunction<
   const [itemFilters, setItemFilters] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [product, setProduct] = useState({} as Product);
-  const toast = useToast();
-  const { addToCart } = useCart();
+  const { addProduct } = useCart();
 
   const { handleSubmit, register } = useForm();
   const modalDetails = useRef<DetailsProductModalHandle>(null);
@@ -74,17 +73,6 @@ const SearchInputBase: ForwardRefRenderFunction<
   const getProduct = (product: Product) => {
     setProduct(product);
     modalDetails.current.onOpen();
-  };
-
-  const saveOnCookie = (product: Product) => {
-    toast({
-      position: 'bottom-right',
-      title: 'Adicionado no carrinho de compras',
-      status: 'success',
-      duration: 2000,
-      isClosable: true,
-    });
-    addToCart(product);
   };
 
   return (
@@ -172,7 +160,7 @@ const SearchInputBase: ForwardRefRenderFunction<
                   <Flex
                     p="0.5rem"
                     borderRadius="0.2rem"
-                    onClick={() => saveOnCookie(product)}
+                    onClick={() => addProduct(product.id)}
                     cursor="pointer"
                     align="center"
                     bg="gray.800"
