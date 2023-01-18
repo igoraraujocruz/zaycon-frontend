@@ -37,6 +37,7 @@ export const HeaderPainel = () => {
       flexDir={['column', 'column', 'column', 'row']}
       justify="space-between"
       w="100%"
+      color="white"
     >
       <Flex align="center" justify="center" flexDir="row" ml="2rem">
         <Heading size="lg">Zaycon</Heading>

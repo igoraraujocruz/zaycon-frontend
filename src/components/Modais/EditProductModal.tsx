@@ -183,12 +183,8 @@ const DetailsProductModal: ForwardRefRenderFunction<
       <DeleteModal ref={deleteModalRef} photoId={photoId} />
       <Modal size="6xl" isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg="gray.900">
-          <ModalCloseButton
-            bg="orange"
-            _hover={{ bg: 'orangeHover' }}
-            color="#fff"
-          />
+        <ModalContent bg="gray.900" color="#fff">
+          <ModalCloseButton />
           <ModalHeader />
           <ModalBody>
             <Flex flexDir={['column', 'column', 'row']} justify="space-between">
@@ -211,9 +207,6 @@ const DetailsProductModal: ForwardRefRenderFunction<
                       _hover={{
                         borderColor: 'none',
                       }}
-                      focusBorderColor="#FF6B00"
-                      border="0.13rem solid"
-                      borderColor="gray.600"
                       w="12rem"
                       {...register('category')}
                     >
@@ -241,20 +234,27 @@ const DetailsProductModal: ForwardRefRenderFunction<
                     </Select>
                   </FormControl>
                   <Input
-                    bg="gray.800"
+                    color="#04070D"
                     name="name"
                     label="Nome"
                     {...register('name')}
                     placeholder={product.name}
                   />
                   <Input
-                    bg="gray.800"
+                    color="#04070D"
                     name="price"
                     label="Preço"
                     {...register('price')}
                   />
                   <Textarea
-                    bg="gray.800"
+                    bg="inputBg"
+                    color="#04070D"
+                    _focus={{
+                      bg: 'inputBg',
+                    }}
+                    _hover={{
+                      border: 'none',
+                    }}
                     css={{
                       '&::-webkit-scrollbar': {
                         width: '4px',
@@ -272,24 +272,25 @@ const DetailsProductModal: ForwardRefRenderFunction<
                     {...register('description')}
                   />
                   <Input
-                    bg="gray.800"
+                    color="#04070D"
                     name="points"
                     label="Pontos"
                     {...register('points')}
                   />
                   <Input
-                    bg="gray.800"
+                    color="#04070D"
                     name="amount"
                     label="Estoque"
                     {...register('amount')}
                   />
                 </Stack>
                 <Button
-                  bg="#FF6B00"
-                  _hover={{ bg: 'orangeHover' }}
+                  bg="#04070D"
                   type="submit"
+                  _hover={{
+                    bg: '#04070D',
+                  }}
                   mt="6"
-                  colorScheme="orange"
                   size="lg"
                 >
                   Salvar
@@ -372,9 +373,9 @@ const DetailsProductModal: ForwardRefRenderFunction<
                       <Button
                         type="submit"
                         disabled={!inputFileRef.current?.images.length && true}
-                        bg="orange"
-                        _hover={{ bg: 'orangeHover' }}
+                        _hover={{ bg: '#04070D' }}
                         size="lg"
+                        bg="#04070D"
                       >
                         Upload
                       </Button>
@@ -384,18 +385,6 @@ const DetailsProductModal: ForwardRefRenderFunction<
               </Flex>
             </Flex>
           </ModalBody>
-
-          <ModalFooter>
-            <Button
-              color="#fff"
-              bg="orange"
-              _hover={{ bg: 'orangeHover' }}
-              mr={3}
-              onClick={onClose}
-            >
-              Close
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </Flex>

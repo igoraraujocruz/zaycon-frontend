@@ -68,12 +68,12 @@ export function ForgotPasswordModal() {
 
   return (
     <Flex mt="2rem" justify="center">
-      <Text color="#fff" onClick={onOpen} cursor="pointer">
+      <Text color="itemColor" onClick={onOpen} cursor="pointer">
         Esqueci minha senha
       </Text>
       <Modal isCentered isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg="gray.900" alignItems="center" textAlign="center">
+        <ModalContent bg="itemColor" alignItems="center" textAlign="center">
           <ModalHeader fontSize="1.2rem" fontWeight="normal" color="#ffffff">
             Recuperação de senha
           </ModalHeader>
@@ -98,8 +98,8 @@ export function ForgotPasswordModal() {
                   <Button
                     type="submit"
                     mt="6"
-                    bg="orange"
-                    _hover={{ bg: 'orangeHover' }}
+                    bg="#04070D"
+                    _hover={{ bg: '04070D' }}
                     color="white"
                     size="lg"
                   >
@@ -115,8 +115,8 @@ export function ForgotPasswordModal() {
           <ModalFooter>
             <Button
               color="#fff"
-              bg=""
-              _hover={{ bg: 'orange' }}
+              bg="#04070D"
+              _hover={{ bg: '#04070D' }}
               onClick={onClose}
             >
               Cancelar

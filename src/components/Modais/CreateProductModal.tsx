@@ -126,12 +126,8 @@ const CreateProductModal: ForwardRefRenderFunction<
   return (
     <Modal size="xs" isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent bg="gray.900">
-        <ModalCloseButton
-          bg="orange"
-          _hover={{ bg: 'orangeHover' }}
-          color="#fff"
-        />
+      <ModalContent bg="gray.900" color="#fff">
+        <ModalCloseButton />
         <ModalHeader />
         <ModalBody>
           <Flex onSubmit={handleSubmit(onSubmit)} as="form" flexDir="column">
@@ -140,6 +136,7 @@ const CreateProductModal: ForwardRefRenderFunction<
                 Destacar
               </Checkbox>
               <Input
+                color="itemColor"
                 error={errors.name}
                 name="name"
                 label="Nome"
@@ -147,6 +144,7 @@ const CreateProductModal: ForwardRefRenderFunction<
               />
               <MaskedInput
                 focusBorderColor="#FF6B00"
+                color="itemColor"
                 mask={realMask}
                 error={errors.price}
                 name="price"
@@ -156,43 +154,59 @@ const CreateProductModal: ForwardRefRenderFunction<
               <FormControl h="5rem">
                 <Text mt="0.5rem">Categoria</Text>
                 <Select
-                  _hover={{
-                    borderColor: 'none',
-                  }}
-                  focusBorderColor="#FF6B00"
-                  border="0.13rem solid"
-                  borderColor="gray.600"
                   w="12rem"
                   {...register('category')}
+                  bg="inputBg"
+                  color="itemColor"
                 >
-                  <option style={{ background: '#181B23' }} value="televisoes">
+                  <option
+                    style={{ background: '#181B23', color: '#fff' }}
+                    value="televisoes"
+                  >
                     Televisões
                   </option>
-                  <option style={{ background: '#181B23' }} value="informatica">
+                  <option
+                    style={{ background: '#181B23', color: '#fff' }}
+                    value="informatica"
+                  >
                     Informática
                   </option>
-                  <option style={{ background: '#181B23' }} value="som">
+                  <option
+                    style={{ background: '#181B23', color: '#fff' }}
+                    value="som"
+                  >
                     Audio
                   </option>
-                  <option style={{ background: '#181B23' }} value="utilitarios">
+                  <option
+                    style={{ background: '#181B23', color: '#fff' }}
+                    value="utilitarios"
+                  >
                     Utilitários
                   </option>
                 </Select>
               </FormControl>
 
               <Textarea
+                bg="inputBg"
+                _focus={{
+                  bg: 'inputBg',
+                }}
+                _hover={{ bg: 'inputBg' }}
                 error={errors.description}
                 name="description"
                 label="Descrição"
                 {...register('description')}
+                color="itemColor"
               />
               <Input
+                color="itemColor"
                 error={errors.amount}
                 name="amount"
                 label="Quantidade"
                 {...register('amount')}
               />
               <Input
+                color="itemColor"
                 type="number"
                 error={errors.points}
                 name="points"
@@ -204,11 +218,10 @@ const CreateProductModal: ForwardRefRenderFunction<
               <InputFile mt="1rem" ref={inputFileRef} />
             </Flex>
             <Button
-              bg="#FF6B00"
-              _hover={{ bg: 'orangeHover' }}
+              bg="#04070D"
+              _hover={{ bg: '#04070D' }}
               type="submit"
               mt="6"
-              colorScheme="orange"
               size="lg"
             >
               Cadastrar

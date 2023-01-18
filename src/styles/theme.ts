@@ -2,6 +2,12 @@ import { extendTheme } from '@chakra-ui/react';
 
 export const theme = extendTheme({
   colors: {
+    bg: '#f5f5fd',
+    white: '#fff',
+    bgItems: '#f5f5fd',
+    itemColor: '#14213D',
+    inputBg: '#E5E5E5',
+    inputColor: '#fff',
     gray: {
       '900': '#181B23',
       '50': '#EEEEF2',
@@ -16,8 +22,8 @@ export const theme = extendTheme({
   styles: {
     global: {
       body: {
-        bg: 'gray.900',
-        color: 'gray.50',
+        bg: 'bg',
+        color: 'itemColor',
       },
     },
   },

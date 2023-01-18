@@ -64,40 +64,47 @@ function Login() {
         h="100vh"
         align="center"
         justify="center"
+        bg="itemColor"
       >
         <Flex alignItems="center">
-          <Heading>Zaycon</Heading>
+          <Heading color="white">Zaycon</Heading>
         </Flex>
         <Flex
           onSubmit={handleSubmit(handleSignIn)}
           as="form"
           w="100%"
           maxWidth={[270, 270, 360]}
-          bg="gray.800"
           p={['4', '4', '8']}
           borderRadius={8}
           flexDir="column"
+          bg="#E5E5E5"
         >
-          <Stack spacing="4">
+          <Stack spacing="4" color="itemColor">
             <Input
+              color="itemColor"
               icon={AiOutlineUser}
               name="username"
               label="Username"
+              border="0.1rem solid"
+              borderColor="itemColor"
               {...register('username')}
             />
             <Input
+              color="itemColor"
               icon={RiLockPasswordLine}
               name="password"
               type="password"
               label="Senha"
+              border="0.1rem solid"
+              borderColor="itemColor"
               {...register('password')}
             />
           </Stack>
           <Button
             type="submit"
             mt={['4', '4', '6']}
-            bg="orange"
-            _hover={{ bg: '#953e00' }}
+            bg="itemColor"
+            _hover={{ bg: 'itemColor' }}
             color="white"
             size="lg"
           >

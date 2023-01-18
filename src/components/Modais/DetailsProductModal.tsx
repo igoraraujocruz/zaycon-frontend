@@ -58,7 +58,6 @@ const DetailsProductModal: ForwardRefRenderFunction<
   DetailsProductModalHandle,
   ProductProps
 > = ({ product }: ProductProps, ref) => {
-  const toast = useToast();
   const { addProduct } = useCart();
 
   const { isOpen, onOpen, onClose: closeModal } = useDisclosure();
@@ -78,12 +77,8 @@ const DetailsProductModal: ForwardRefRenderFunction<
     <Flex>
       <Modal size={['md', 'md', '2xl']} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg="gray.900">
-          <ModalCloseButton
-            bg="orange"
-            _hover={{ bg: 'orangeHover' }}
-            color="#fff"
-          />
+        <ModalContent bg="bg">
+          <ModalCloseButton />
           <ModalHeader />
           <ModalBody>
             <Flex justify="center" flexDir={['column', 'column', 'row']}>
@@ -126,11 +121,8 @@ const DetailsProductModal: ForwardRefRenderFunction<
                           onClick={() => addProduct(product.id)}
                           cursor="pointer"
                           align="center"
-                          bg="#FF6B00"
-                          _hover={{
-                            background: 'gray.800',
-                          }}
-                          transition={['background 200ms']}
+                          color="white"
+                          bg="itemColor"
                         >
                           <Text>Comprar</Text>
                           <FiShoppingCart cursor="pointer" size={30} />
@@ -174,18 +166,6 @@ const DetailsProductModal: ForwardRefRenderFunction<
               )}
             </Flex>
           </ModalBody>
-
-          <ModalFooter>
-            <Button
-              color="#fff"
-              bg="orange"
-              _hover={{ bg: 'orangeHover' }}
-              mr={3}
-              onClick={onClose}
-            >
-              Fechar
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </Flex>

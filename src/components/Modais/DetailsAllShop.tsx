@@ -100,12 +100,8 @@ const DetailsAllShop: ForwardRefRenderFunction<
     <Flex>
       <Modal size={['md', 'md', '2xl']} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent bg="gray.900">
-          <ModalCloseButton
-            bg="orange"
-            _hover={{ bg: 'orangeHover' }}
-            color="#fff"
-          />
+        <ModalContent bg="gray.900" color="#fff">
+          <ModalCloseButton />
           <ModalHeader />
           <ModalBody>
             <VStack spacing="1rem">

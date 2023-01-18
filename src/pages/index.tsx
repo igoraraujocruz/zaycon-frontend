@@ -28,10 +28,9 @@ import { Product, useProducts } from '../services/hooks/useProducts';
 import DetailsProductModal, {
   DetailsProductModalHandle,
 } from '../components/Modais/DetailsProductModal';
-import BagModal, { IBagModal } from '../components/Modais/BagModal';
 import { useCart } from '../services/hooks/useCart';
-import { WhatsApp } from '../components/Whatsapp';
 import { MyCarousel } from '../components/Carousel';
+import { Footer } from '../components/Footer';
 
 export default function Home() {
   const { addProduct } = useCart();
@@ -46,7 +45,6 @@ export default function Home() {
   }, []);
 
   const modalDetails = useRef<DetailsProductModalHandle>(null);
-  const bagModal = useRef<IBagModal>(null);
 
   const openUploadModal = useCallback((product: Product) => {
     setProduct(product);
@@ -70,46 +68,47 @@ export default function Home() {
         <title>Loja | Zaycon</title>
       </Head>
       <Flex flexDir="column" w="100%">
-        <BagModal ref={bagModal} />
-        <WhatsApp />
         <DetailsProductModal product={product} ref={modalDetails} />
 
         <Flex
           justify="center"
           flexDir={['column', 'column', 'row']}
           align="center"
-          mt={['2rem', '2rem', '1rem']}
-          mb={['1rem', '1rem', '0.5rem']}
+          p="0.5rem"
         >
-          <Stack ml={[0, 0, '10rem']} flexDir="row">
-            <Heading>Zaycon</Heading>
+          <HStack color="itemColor" spacing="0.5rem">
+            <Heading color="itemColor">Zaycon</Heading>
             <Link href="https://www.instagram.com/zaycon.connect" isExternal>
-              <Flex ml="0.5rem" cursor="pointer">
-                <GrInstagram color="white" size={28} />
+              <Flex cursor="pointer" mt="-0.2rem">
+                <GrInstagram color="#14213D" size={28} />
               </Flex>
             </Link>
-          </Stack>
-
-          <HStack
-            mr={[0, 0, '10rem']}
-            justify={['center', 'center', 'flex-end']}
-            w="100%"
-            spacing={['1.5rem', '1.5rem', '3rem']}
-          >
-            <Link href="/newSeller">
-              <Text cursor="pointer">Quero ser um vendedor</Text>
+            <Link
+              isExternal
+              href="https://api.whatsapp.com/send?phone=5527999147896&text=Olá, gostaria de saber mais sobre os produtos"
+            >
+              <Image
+                cursor="pointer"
+                w="2.2rem"
+                src="whatsapp2.svg"
+                alt="whatsapp"
+              />
             </Link>
-            <Link href="/admin">
-              <Text cursor="pointer">Acessar</Text>
-            </Link>
+            <HStack>
+              <Link href="/newSeller">
+                <Text cursor="pointer">Quero ser um vendedor</Text>
+              </Link>
+              <Link href="/admin">
+                <Text cursor="pointer">Acessar</Text>
+              </Link>
+            </HStack>
           </HStack>
         </Flex>
 
         <MyCarousel />
         <SearchInput
           w={['11rem', '11rem', '15rem', '18rem']}
-          borderColor="gray.600"
-          border="0.1rem solid black"
+          border="itemColor"
           name="search"
           {...register('search')}
         />
@@ -121,19 +120,19 @@ export default function Home() {
             focusBorderColor="none"
             onChange={e => getProductByCategory(e.target.value)}
           >
-            <option style={{ background: '#181B23' }} value="all">
+            <option style={{ background: '#E5E5E5' }} value="all">
               Todos os Produtos
             </option>
-            <option style={{ background: '#181B23' }} value="televisoes">
+            <option style={{ background: '#E5E5E5' }} value="televisoes">
               Televisões
             </option>
-            <option style={{ background: '#181B23' }} value="informatica">
+            <option style={{ background: '#E5E5E5' }} value="informatica">
               Informática
             </option>
-            <option style={{ background: '#181B23' }} value="som">
+            <option style={{ background: '#E5E5E5' }} value="som">
               Audio
             </option>
-            <option style={{ background: '#181B23' }} value="utilitarios">
+            <option style={{ background: '#E5E5E5' }} value="utilitarios">
               Utilitários
             </option>
           </Select>
@@ -159,6 +158,7 @@ export default function Home() {
                 '1fr 1fr 1fr',
                 '1fr 1fr 1fr 1fr 1fr',
               ]}
+              bg="bgItems"
               gap="2rem"
             >
               {category.map(product => (
@@ -195,19 +195,19 @@ export default function Home() {
                       R${Number(product.price).toFixed(2).replace('.', ',')}
                     </Text>
                     <Flex
-                      p="0.5rem"
+                      p="0.2rem"
                       borderRadius="0.2rem"
                       onClick={() => addProduct(product.id)}
                       cursor="pointer"
                       align="center"
-                      bg="gray.800"
+                      bg="itemColor"
                       _hover={{
-                        background: '#FF6B00',
+                        background: 'itemColor',
                       }}
                       transition={['background 200ms']}
                     >
-                      <Text>Comprar</Text>
-                      <FiShoppingCart cursor="pointer" size={30} />
+                      <Text color="white">Comprar</Text>
+                      <Image alt="carrinho" src="carrinho.png" />
                     </Flex>
                   </HStack>
                 </Flex>
@@ -215,6 +215,8 @@ export default function Home() {
             </Grid>
           )}
         </Flex>
+        <Flex h="10rem" />
+        <Footer />
       </Flex>
     </>
   );

@@ -74,7 +74,7 @@ export const MyCarousel = () => {
               align="center"
               mb="2rem"
             >
-              <AspectRatio w="100%" ratio={[10 / 5, 10 / 5, 19 / 5]}>
+              <AspectRatio w={['50%', '50%', '20%']} ratio={1 / 1}>
                 <Img src={product.photos[0]?.url} objectFit="fill" />
               </AspectRatio>
 

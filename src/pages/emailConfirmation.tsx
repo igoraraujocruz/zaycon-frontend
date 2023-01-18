@@ -1,4 +1,4 @@
-import { Button, Flex, Link, Text } from '@chakra-ui/react';
+import { Button, Flex, Heading, Link, Text } from '@chakra-ui/react';
 
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
@@ -33,16 +33,26 @@ export default function EmailConfirmation({ token }: TokenProps) {
         h="100vh"
         justify="center"
         align="center"
+        bg="itemColor"
       >
-        <Flex w="30rem" mt="5rem" justify="center" flexDir="column">
+        <Flex
+          w="30rem"
+          mt="5rem"
+          align="center"
+          justify="center"
+          flexDir="column"
+          color="white"
+        >
+          <Heading>Zaycon</Heading>
           <Text>Email Confirmado com Sucesso</Text>
           <Text>Agora você pode acessar a plataforma do vendedor</Text>
           <Link href="/admin">
             <Button
               fontSize="0.8rem"
-              bg="gray.800"
+              bg="white"
               size={['xs', 'md']}
-              _hover={{ bg: 'orangeHover' }}
+              _hover={{ bg: 'white' }}
+              color="itemColor"
             >
               Clique aqui para acessar a plataforma
             </Button>

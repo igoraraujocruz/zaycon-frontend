@@ -59,7 +59,17 @@ export const Products = () => {
   }, []);
 
   return (
-    <Flex flexDir="column" align="center" mt={['1rem']} ml="2rem" mr="2rem">
+    <Flex
+      flexDir="column"
+      align="center"
+      mt={['1rem']}
+      ml="2rem"
+      mr="2rem"
+      bg="gray.900"
+      color="#fff"
+      borderRadius="2rem"
+      p="2rem"
+    >
       <EditProductModal product={product} ref={modalEditProduct} />
       <CreateProductModal ref={modalCreateProduct} />
       <Flex align="center">
@@ -83,6 +93,7 @@ export const Products = () => {
           Produtos
         </Heading>
         <Input
+          color="itemColor"
           name="productFilterName"
           onChange={e => setFilterProductName(e.target.value)}
         />

@@ -6,12 +6,7 @@ import {
   FormLabel,
   InputProps as ChakraInputProps,
 } from '@chakra-ui/react';
-import {
-  ComponentType,
-  forwardRef,
-  ForwardRefRenderFunction,
-  useState,
-} from 'react';
+import { ComponentType, forwardRef, ForwardRefRenderFunction } from 'react';
 import { FieldError } from 'react-hook-form';
 import { IconBaseProps } from 'react-icons';
 import ReactMaskedInput from 'react-text-mask';
@@ -38,10 +33,6 @@ const MaskedInputBase: ForwardRefRenderFunction<
   HTMLInputElement,
   MaskedInputProps
 > = ({ name, label, error = null, icon: Icon, bg, mask, ...rest }, ref) => {
-  const [focus, setFocus] = useState(false);
-  const changeFocus = () => {
-    setFocus(!focus);
-  };
   return (
     <FormControl isInvalid={!!error}>
       {!!label && (
@@ -51,18 +42,18 @@ const MaskedInputBase: ForwardRefRenderFunction<
       )}
       <MaskedChakraInput
         as={ReactMaskedInput}
-        onBlur={() => changeFocus()}
-        onFocus={() => changeFocus()}
+        _focus={{
+          borderColor: 'inputBg',
+          bg: 'inputBg',
+        }}
         guide={false}
         mask={mask}
         name={name}
         id={name}
-        borderColor="#2d3748"
-        border={focus ? '0.15rem solid #FF6B00' : '0.15rem solid #2d3748'}
-        bgColor={bg || 'gray.900'}
+        bgColor="inputBg"
         variant="filled"
         _hover={{
-          bgColor: 'gray.900',
+          bgColor: 'inputBg',
         }}
         size="lg"
         ref={data => {

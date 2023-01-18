@@ -21,6 +21,7 @@ import {
   Box,
   Heading,
   useToast,
+  AspectRatio,
 } from '@chakra-ui/react';
 import {
   forwardRef,
@@ -241,307 +242,259 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   }));
 
   return (
-    <Flex>
-      <Box cursor="pointer" onClick={onOpen} zIndex={2}>
-        <Flex
-          flexDir="column"
-          justify="center"
-          align="center"
-          fill="white"
-          bg="gray.800"
-          borderRadius={50}
-          border="0.2rem #fff solid"
-          boxShadow="15px 2px 6px rgba(0,0,0,0.4)"
-          position="fixed"
-          w={['4rem', '4rem', '4rem', '4rem']}
-          h={['4rem', '4rem', '4rem']}
-          top={['63vh', '63vh', '69vh']}
-          left={['80vw', '80vw', '85vw', '90vw']}
-        >
-          <FiShoppingCart size="30" />
-        </Flex>
-      </Box>
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent bg="gray.900">
-          <ModalCloseButton
-            bg="orange"
-            _hover={{ bg: 'orangeHover' }}
-            color="#fff"
-          />
-          <ModalHeader />
-          {!finishShop ? (
-            <ModalBody>
-              {cartFormatted?.length > 0 ? (
-                <>
-                  <Flex flexDir="column">
-                    {cartFormatted?.map(product => {
-                      return (
-                        <Flex key={product.id} w="100%" h="100%" mb="1rem">
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <ModalOverlay />
+      <ModalContent bg="bg">
+        <ModalCloseButton
+          bg="itemColor"
+          _hover={{ bg: 'itemColor' }}
+          color="#fff"
+        />
+        <ModalHeader />
+        {!finishShop ? (
+          <ModalBody>
+            {cartFormatted?.length > 0 ? (
+              <>
+                <Flex flexDir="column">
+                  {cartFormatted?.map(product => {
+                    return (
+                      <Flex key={product.id} w="100%" h="100%" mb="1rem">
+                        <AspectRatio w="100%" ratio={1 / 1}>
                           <Image
-                            w={['9rem']}
-                            h={['10rem']}
                             src={
                               product?.photos[0]
                                 ? product.photos[0].url
                                 : 'placeholder.png'
                             }
                           />
-                          <Flex
-                            ml="1rem"
-                            flexDir="column"
-                            fontFamily="Anek Devanagari"
-                            align="start"
-                          >
-                            <Text w={['7.5rem', '7.5rem', '15rem']}>
-                              Nome: {product.name}
-                            </Text>
-                            <Text w={['7.5rem', '7.5rem', '15rem']}>
-                              Preço Unitário: R$ {product.price}
-                            </Text>
-                            <Text w={['7.5rem', '7.5rem', '15rem']}>
-                              Subtotal:{' '}
-                              {formatPrice(product.amount * product.price)}
-                            </Text>
-                            <Text w={['7.5rem', '7.5rem', '15rem']}>
-                              Descrição:
-                            </Text>
-                            <Text
-                              mt={['0.5rem', '0.5rem', 0]}
-                              maxH="6rem"
-                              css={{
-                                '&::-webkit-scrollbar': {
-                                  width: '4px',
-                                },
-                                '&::-webkit-scrollbar-track': {
-                                  width: '6px',
-                                },
-                                '&::-webkit-scrollbar-thumb': {
-                                  background: '#FF6B00',
-                                  borderRadius: '24px',
-                                },
-                              }}
-                              overflowY="auto"
-                              w={['7.5rem', '7.5rem', '15rem']}
-                            >
-                              {product.description}
-                            </Text>
-                            <Flex
-                              align="center"
-                              as="form"
-                              w="100%"
-                              flexDir={['column', 'column', 'row']}
-                            >
-                              <Button
-                                bg="gray.700"
-                                _hover={{ background: 'gray.900' }}
-                                h="2rem"
-                                onClick={() => handleRemoveProduct(product.id)}
-                              >
-                                <BsFillTrashFill color="#fff" />
-                              </Button>
-                              <Flex
-                                mt="1rem"
-                                mb="1rem"
-                                align="center"
-                                ml={['1rem', '1rem', '2.2rem']}
-                                flexDir="column"
-                              >
-                                <Text>Quantidade</Text>
-                                <Text>{product.amount}</Text>
-                              </Flex>
-                            </Flex>
-                            <HStack
-                              justify={['normal', 'normal', 'center']}
-                              width="100%"
-                            >
-                              <Button
-                                bg="gray.700"
-                                _hover={{ background: 'gray.900' }}
-                                h="2rem"
-                                onClick={() => handleProductDecrement(product)}
-                              >
-                                <AiOutlineMinus color="#fff" />
-                              </Button>
-                              <Button
-                                bg="gray.700"
-                                _hover={{ background: 'gray.900' }}
-                                h="2rem"
-                                onClick={() => handleProductIncrement(product)}
-                              >
-                                <AiOutlinePlus color="#fff" />
-                              </Button>
-                            </HStack>
-                          </Flex>
-                        </Flex>
-                      );
-                    })}
-                  </Flex>
-                  <Text>Valor total dos Produtos: {formatPrice(total)}</Text>
-                  <Text>
-                    Taxa para Geradora do Pix:{' '}
-                    {formatPrice((total * 1.19) / 100)}
-                  </Text>
-                  <Text fontWeight="600">
-                    Total a pagar: {formatPrice(total + (total * 1.19) / 100)}
-                  </Text>
-                  <VStack
-                    mt="1rem"
-                    as="form"
-                    onSubmit={handleSubmit(onSubmit)}
-                    borderColor="red"
-                  >
-                    <RadioGroup defaultValue="pix">
-                      <FormLabel mt="1rem">Forma de Pagamento</FormLabel>
-                      <HStack>
-                        <Radio value="pix" {...register('typeOfPayment')}>
-                          Pix
-                        </Radio>
-                      </HStack>
-                    </RadioGroup>
-                    <FormControl>
-                      <FormLabel>Nome</FormLabel>
-                      <Input {...register('name')} error={errors.name} />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>Cep</FormLabel>
-                      <Input {...register('cep')} error={errors.cep} />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>Endereço</FormLabel>
-                      <Input {...register('address')} error={errors.address} />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>Nº da Residência</FormLabel>
-                      <Input
-                        {...register('numberAddress')}
-                        error={errors.name}
-                      />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>Complemento</FormLabel>
-                      <Input {...register('obs')} error={errors.name} />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>Email</FormLabel>
-                      <Input {...register('email')} error={errors.email} />
-                    </FormControl>
-                    <FormControl>
-                      <FormLabel>Celular</FormLabel>
-                      <MaskedInput
-                        mask={[
-                          '(',
-                          /\d/,
-                          /\d/,
-                          ')',
-                          ' ',
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          '-',
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                          /\d/,
-                        ]}
-                        error={errors.numberPhone}
-                        name="numberPhone"
-                        {...register('numberPhone')}
-                      />
-                    </FormControl>
+                        </AspectRatio>
 
-                    <Button
-                      color="#fff"
-                      bg="orange"
-                      _hover={{ bg: 'orangeHover' }}
-                      type="submit"
-                    >
-                      Finalizar Compra
-                    </Button>
-                  </VStack>
-                </>
-              ) : (
-                <Text align="center">
-                  Nenhum item no carrinho até o momento
-                </Text>
-              )}
-            </ModalBody>
-          ) : (
-            <ModalBody>
-              <VStack justify="center" align="center">
-                {!imagemIsLoading ? (
-                  <VStack>
-                    <Text>Só um instante, estamos gerando a cobrança</Text>
-                    <Spinner />
-                  </VStack>
-                ) : !paid ? (
-                  <VStack>
-                    <Heading size="1xl">Pronto!</Heading>
-                    <Text align="center" w="15rem">
-                      Agora é só efetuar o pagamento que assim que for
-                      finalizado você receberá uma mensagem.
-                    </Text>
-                    <Text>QR Code</Text>
-                    <Image src={qrCode.imagemQrcode} alt="qrcode" />
-                    <Heading p="1rem" size="1xl">
-                      ou
-                    </Heading>
-                    <Text>Pix Copia e Cola</Text>
-                    <VStack align="center" bg="orange" borderRadius="0.5rem">
-                      <Text
-                        align="center"
-                        color="#000"
-                        w={['15rem', '15rem', '25rem']}
-                      >
-                        {qrCode.qrcode}
-                      </Text>
-                      <HStack p="0.5rem" w={['100%']} justify="center">
-                        <Button
-                          _hover={{
-                            bg: '#1a202c',
-                          }}
-                          bg="#181b23"
-                          color="#fff"
-                          onClick={handleCopyClick}
+                        <Flex
+                          ml="1rem"
+                          flexDir="column"
+                          fontFamily="Anek Devanagari"
+                          align="start"
+                          w="40%"
                         >
-                          Copiar
-                        </Button>
-                      </HStack>
-                    </VStack>
-                  </VStack>
-                ) : (
-                  <VStack>
-                    <Text fontSize="2xl" fontWeight="bold">
-                      {dataPaiment.name}, recebemos o seu pagamento!
+                          <Text w={['7.5rem', '7.5rem', '15rem']}>
+                            Nome: {product.name}
+                          </Text>
+                          <Text w={['7.5rem', '7.5rem', '15rem']}>
+                            Preço Unitário: R$ {product.price}
+                          </Text>
+                          <Text w={['7.5rem', '7.5rem', '15rem']}>
+                            Subtotal:{' '}
+                            {formatPrice(product.amount * product.price)}
+                          </Text>
+                          <Flex
+                            align="center"
+                            as="form"
+                            w="100%"
+                            flexDir={['column', 'column', 'row']}
+                          >
+                            <Button
+                              bg="gray.700"
+                              _hover={{ background: 'gray.900' }}
+                              h="2rem"
+                              onClick={() => handleRemoveProduct(product.id)}
+                            >
+                              <BsFillTrashFill color="#fff" />
+                            </Button>
+                            <Flex
+                              mt="1rem"
+                              mb="1rem"
+                              align="center"
+                              ml={['1rem', '1rem', '2.2rem']}
+                              flexDir="column"
+                            >
+                              <Text>Quantidade</Text>
+                              <Text>{product.amount}</Text>
+                            </Flex>
+                          </Flex>
+                          <HStack
+                            justify={['normal', 'normal', 'center']}
+                            width="100%"
+                          >
+                            <Button
+                              bg="gray.700"
+                              _hover={{ background: 'gray.900' }}
+                              h="2rem"
+                              onClick={() => handleProductDecrement(product)}
+                            >
+                              <AiOutlineMinus color="#fff" />
+                            </Button>
+                            <Button
+                              bg="gray.700"
+                              _hover={{ background: 'gray.900' }}
+                              h="2rem"
+                              onClick={() => handleProductIncrement(product)}
+                            >
+                              <AiOutlinePlus color="#fff" />
+                            </Button>
+                          </HStack>
+                        </Flex>
+                      </Flex>
+                    );
+                  })}
+                </Flex>
+                <Text>Valor total dos Produtos: {formatPrice(total)}</Text>
+                <Text>
+                  Taxa para Geradora do Pix: {formatPrice((total * 1.19) / 100)}
+                </Text>
+                <Text fontWeight="600">
+                  Total a pagar: {formatPrice(total + (total * 1.19) / 100)}
+                </Text>
+                <VStack
+                  mt="1rem"
+                  as="form"
+                  onSubmit={handleSubmit(onSubmit)}
+                  borderColor="red"
+                >
+                  <RadioGroup defaultValue="pix">
+                    <FormLabel mt="1rem">Forma de Pagamento</FormLabel>
+                    <HStack>
+                      <Radio value="pix" {...register('typeOfPayment')}>
+                        Pix
+                      </Radio>
+                    </HStack>
+                  </RadioGroup>
+                  <FormControl>
+                    <FormLabel>Nome</FormLabel>
+                    <Input {...register('name')} error={errors.name} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Cep</FormLabel>
+                    <Input {...register('cep')} error={errors.cep} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Endereço</FormLabel>
+                    <Input {...register('address')} error={errors.address} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Nº da Residência</FormLabel>
+                    <Input {...register('numberAddress')} error={errors.name} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Complemento</FormLabel>
+                    <Input {...register('obs')} error={errors.name} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Email</FormLabel>
+                    <Input {...register('email')} error={errors.email} />
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>Celular</FormLabel>
+                    <MaskedInput
+                      mask={[
+                        '(',
+                        /\d/,
+                        /\d/,
+                        ')',
+                        ' ',
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        '-',
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                        /\d/,
+                      ]}
+                      error={errors.numberPhone}
+                      name="numberPhone"
+                      {...register('numberPhone')}
+                    />
+                  </FormControl>
+
+                  <Button
+                    color="#fff"
+                    bg="itemColor"
+                    _hover={{ bg: 'gray.800' }}
+                    type="submit"
+                  >
+                    Finalizar Compra
+                  </Button>
+                </VStack>
+              </>
+            ) : (
+              <Text align="center">Nenhum item no carrinho até o momento</Text>
+            )}
+          </ModalBody>
+        ) : (
+          <ModalBody>
+            <VStack justify="center" align="center">
+              {!imagemIsLoading ? (
+                <VStack>
+                  <Text>Só um instante, estamos gerando a cobrança</Text>
+                  <Spinner />
+                </VStack>
+              ) : !paid ? (
+                <VStack>
+                  <Heading size="1xl">Pronto!</Heading>
+                  <Text align="center" w="15rem">
+                    Agora é só efetuar o pagamento que assim que for finalizado
+                    você receberá uma mensagem.
+                  </Text>
+                  <Text>QR Code</Text>
+                  <Image src={qrCode.imagemQrcode} alt="qrcode" />
+                  <Heading p="1rem" size="1xl">
+                    ou
+                  </Heading>
+                  <Text>Pix Copia e Cola</Text>
+                  <VStack align="center" bg="orange" borderRadius="0.5rem">
+                    <Text
+                      align="center"
+                      color="#000"
+                      w={['15rem', '15rem', '25rem']}
+                    >
+                      {qrCode.qrcode}
                     </Text>
-                    <Text>
-                      Encaminhamos um email com o comprovante de pagamento.
-                      Agora toda nova atualização dos status de suas compras
-                      você receberá um email.
-                    </Text>
-                    <HStack align="center" spacing="1rem">
-                      <Text>Qualquer dúvida, estamos à disposição.</Text>
-                      <Link href="https://api.whatsapp.com/send?phone=5527999147896&text=Olá, gostaria de saber mais sobre os produtos">
-                        <Image
-                          cursor="pointer"
-                          w="2rem"
-                          src="whatsapp.png"
-                          alt="whatsapp"
-                        />
-                      </Link>
+                    <HStack p="0.5rem" w={['100%']} justify="center">
+                      <Button
+                        _hover={{
+                          bg: '#1a202c',
+                        }}
+                        bg="#181b23"
+                        color="#fff"
+                        onClick={handleCopyClick}
+                      >
+                        Copiar
+                      </Button>
                     </HStack>
                   </VStack>
-                )}
-              </VStack>
-            </ModalBody>
-          )}
+                </VStack>
+              ) : (
+                <VStack>
+                  <Text fontSize="2xl" fontWeight="bold">
+                    {dataPaiment.name}, recebemos o seu pagamento!
+                  </Text>
+                  <Text>
+                    Encaminhamos um email com o comprovante de pagamento. Agora
+                    toda nova atualização dos status de suas compras você
+                    receberá um email.
+                  </Text>
+                  <HStack align="center" spacing="1rem">
+                    <Text>Qualquer dúvida, estamos à disposição.</Text>
+                    <Link href="https://api.whatsapp.com/send?phone=5527999147896&text=Olá, gostaria de saber mais sobre os produtos">
+                      <Image
+                        cursor="pointer"
+                        w="2rem"
+                        src="whatsapp.png"
+                        alt="whatsapp"
+                      />
+                    </Link>
+                  </HStack>
+                </VStack>
+              )}
+            </VStack>
+          </ModalBody>
+        )}
 
-          <ModalFooter justifyContent="space-between" />
-        </ModalContent>
-      </Modal>
-    </Flex>
+        <ModalFooter justifyContent="space-between" />
+      </ModalContent>
+    </Modal>
   );
 };
 

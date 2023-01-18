@@ -90,12 +90,10 @@ const SearchInputBase: ForwardRefRenderFunction<
         <ChakraSearchInput
           name={name}
           id={name}
-          focusBorderColor="#fff"
-          bgColor="gray.900"
+          _hover={{ bg: 'inputBg' }}
+          _focus={{ bg: 'inputBg', border: '0.1rem solid #14213D' }}
+          bgColor="inputBg"
           variant="filled"
-          _hover={{
-            bgColor: 'gray.900',
-          }}
           size="lg"
           {...rest}
           {...register('search', {
@@ -104,8 +102,9 @@ const SearchInputBase: ForwardRefRenderFunction<
         />
         <Button
           ml="1rem"
-          bg="gray.800"
-          _hover={{ bg: 'orangeHover' }}
+          bg="itemColor"
+          color="white"
+          _hover={{ bg: 'itemColor' }}
           type="submit"
         >
           Pesquisar
@@ -163,11 +162,11 @@ const SearchInputBase: ForwardRefRenderFunction<
                     onClick={() => addProduct(product.id)}
                     cursor="pointer"
                     align="center"
-                    bg="gray.800"
+                    bg="itemColor"
+                    color="white"
                     _hover={{
-                      background: '#FF6B00',
+                      background: 'itemColor',
                     }}
-                    transition={['background 200ms']}
                   >
                     <Text>Comprar</Text>
                     <FiShoppingCart cursor="pointer" size={30} />

@@ -75,7 +75,7 @@ export const NavBar = () => {
               mb="1rem"
               ml="1rem"
               w="9rem"
-              bg="gray.800"
+              bg="inputBg"
               borderRadius="1rem"
               align="center"
               color="fff"

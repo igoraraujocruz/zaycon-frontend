@@ -30,10 +30,12 @@ const PainelAdm = () => {
       <Head>
         <title>Painel Adm| Zaycon</title>
       </Head>
-      <Flex h="100vh" flexDir="column" align="center">
+      <Flex h="100vh" flexDir="column" align="center" bg="itemColor">
         <HeaderPainel />
 
         <Grid
+          bg="gray.900"
+          color="#fff"
           w="100%"
           justifyItems="center"
           mt="3rem"

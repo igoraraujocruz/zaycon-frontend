@@ -87,7 +87,7 @@ function NewSeller() {
       <Head>
         <title>Novo Vendedor | Snap</title>
       </Head>
-      <Flex flexDir="column" align="center">
+      <Flex flexDir="column" align="center" bg="itemColor" h="100vh">
         {!formSended ? (
           <Flex flexDir="column" align="center" justify="center">
             <Flex
@@ -97,32 +97,36 @@ function NewSeller() {
               flexDir="column"
             >
               <Heading color="white">Zaycon</Heading>
-              <Text>Seja um vendedor</Text>
+              <Text color="white">Seja um vendedor</Text>
             </Flex>
             <Flex
               onSubmit={handleSubmit(handleSignIn)}
               as="form"
               w="100%"
               maxWidth={[270, 270, 360]}
-              bg="gray.800"
+              bg="itemColor"
               p={['4', '4', '8']}
               borderRadius={8}
               flexDir="column"
+              color="white"
             >
               <Stack spacing="4">
                 <Input
+                  color="black"
                   name="name"
                   label="Nome"
                   error={errors.name}
                   {...register('name')}
                 />
                 <Input
+                  color="black"
                   name="username"
                   label="Nome de usuário"
                   error={errors.username}
                   {...register('username')}
                 />
                 <Input
+                  color="black"
                   name="password"
                   type="password"
                   label="Senha"
@@ -130,12 +134,14 @@ function NewSeller() {
                   {...register('password')}
                 />
                 <Input
+                  color="black"
                   name="email"
                   label="Email"
                   error={errors.email}
                   {...register('email')}
                 />
                 <MaskedInput
+                  color="black"
                   label="Celular"
                   mask={[
                     '(',
@@ -159,6 +165,7 @@ function NewSeller() {
                   {...register('numberPhone')}
                 />
                 <Input
+                  color="black"
                   name="birthday"
                   label="Data de nascimento"
                   type="date"
@@ -170,8 +177,8 @@ function NewSeller() {
                 {!formSended ? (
                   <Button
                     type="submit"
-                    bg="orange"
-                    _hover={{ bg: '#953e00' }}
+                    bg="#04070D"
+                    _hover={{ bg: '#04070D' }}
                     color="white"
                     size="lg"
                   >
@@ -191,10 +198,10 @@ function NewSeller() {
           </Flex>
         ) : (
           <Flex w="30rem" mt="5rem" justify="center" flexDir="column">
-            <Heading size="md" color="green">
+            <Heading size="md" color="white">
               Conta criada com sucesso!
             </Heading>
-            <Text>
+            <Text color="white">
               Agora precisamos que você confirme seu email. Clique no link que
               te encaminhamos por email.
             </Text>
