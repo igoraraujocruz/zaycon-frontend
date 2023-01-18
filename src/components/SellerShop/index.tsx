@@ -48,7 +48,9 @@ export const SellerShop = () => {
   return (
     <Flex flexDir="column" align="flex-start" mb={['1rem', '1rem', 0]}>
       <DetailsShopModal shop={shop} ref={modalDetailsShop} />
-      <Heading size="md">Minhas Vendas</Heading>
+      <Heading size="md" color="#fff">
+        Minhas Vendas
+      </Heading>
       <Flex
         maxH={['15rem', '15rem', '20rem']}
         flexDir="column"

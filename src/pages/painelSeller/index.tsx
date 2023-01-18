@@ -12,16 +12,16 @@ const PainelSeller = () => {
       <Head>
         <title>Painel | Zaycon</title>
       </Head>
-      <Flex h="100vh" flexDir="column" justify="flex-start" align="center">
+      <Flex
+        h="100vh"
+        flexDir="column"
+        justify="flex-start"
+        align="center"
+        bg="gray.900"
+      >
         <HeaderPainel />
         <Flex flexDir="column" mt="2rem" align="center">
-          <Flex
-            flexDir={['column', 'column', 'row']}
-            align="center"
-            justify="center"
-            w="100%"
-            m={0}
-          >
+          <Flex flexDir={['column', 'column', 'row']} p="2rem">
             <SellerShop />
           </Flex>
         </Flex>

@@ -76,10 +76,10 @@ export default function Home() {
           align="center"
           p="0.5rem"
         >
-          <HStack color="itemColor" spacing="0.5rem">
+          <HStack color="itemColor">
             <Heading color="itemColor">Zaycon</Heading>
             <Link href="https://www.instagram.com/zaycon.connect" isExternal>
-              <Flex cursor="pointer" mt="-0.2rem">
+              <Flex cursor="pointer">
                 <GrInstagram color="#14213D" size={28} />
               </Flex>
             </Link>
@@ -94,14 +94,14 @@ export default function Home() {
                 alt="whatsapp"
               />
             </Link>
-            <HStack>
-              <Link href="/newSeller">
-                <Text cursor="pointer">Quero ser um vendedor</Text>
-              </Link>
-              <Link href="/admin">
-                <Text cursor="pointer">Acessar</Text>
-              </Link>
-            </HStack>
+          </HStack>
+          <HStack ml={[0, 0, '1rem']}>
+            <Link href="/newSeller">
+              <Text cursor="pointer">Quero ser um vendedor</Text>
+            </Link>
+            <Link href="/admin">
+              <Text cursor="pointer">Acessar</Text>
+            </Link>
           </HStack>
         </Flex>
 
