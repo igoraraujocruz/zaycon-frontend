@@ -7,19 +7,22 @@ import { queryClient } from '../services/queryClient';
 import { AuthProvider } from '../services/hooks/useAuth';
 import { CartProvider } from '../services/hooks/useCart';
 import { SocketProvider } from '../services/hooks/useSocket';
+import { FinishShopProvider } from '../services/hooks/useFinishShop';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SocketProvider>
       <QueryClientProvider client={queryClient}>
-        <CartProvider>
-          <ChakraProvider theme={theme}>
-            <AuthProvider>
-              <Component {...pageProps} />
-            </AuthProvider>
-            <ReactQueryDevtools />
-          </ChakraProvider>
-        </CartProvider>
+        <FinishShopProvider>
+          <CartProvider>
+            <ChakraProvider theme={theme}>
+              <AuthProvider>
+                <Component {...pageProps} />
+              </AuthProvider>
+              <ReactQueryDevtools />
+            </ChakraProvider>
+          </CartProvider>
+        </FinishShopProvider>
       </QueryClientProvider>
     </SocketProvider>
   );

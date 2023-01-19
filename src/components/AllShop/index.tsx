@@ -66,7 +66,7 @@ export const AllShop = () => {
                   >
                     {shop.status === 'Preparando' && <BsBoxSeam size={28} />}
                     {shop.status === 'Enviado' && <TbTruckDelivery size={28} />}
-                    {shop.status === 'Aguardando Pagamento' && (
+                    {shop.status === 'Aguardando Confirmação' && (
                       <Spinner size="md" />
                     )}
                     <Text color={shop.status === 'Entregue' && '#A9A9A9'}>

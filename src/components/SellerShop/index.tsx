@@ -26,6 +26,7 @@ interface Shop {
 
 export const SellerShop = () => {
   const modalDetailsShop = useRef<DetailsShopModalHandle>(null);
+
   const [shop, setShop] = useState({} as Shop);
 
   const handleModal = shop => {

@@ -198,7 +198,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
       cep: values.cep,
       email: values.email,
       numberPhone: values.numberPhone,
-      address: values.address,
+      address: `${values.address} nº${values.numberAddress} - ${values.obs}`,
     });
 
     const shop = await api.post('/shop', {
@@ -277,10 +277,10 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                           w="40%"
                         >
                           <Text w={['7.5rem', '7.5rem', '15rem']}>
-                            Nome: {product.name}
+                            {product.name}
                           </Text>
                           <Text w={['7.5rem', '7.5rem', '15rem']}>
-                            Preço Unitário: R$ {product.price}
+                            Preço unitário: {formatPrice(product.price)}
                           </Text>
                           <Text w={['7.5rem', '7.5rem', '15rem']}>
                             Subtotal:{' '}
@@ -471,8 +471,24 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                     {dataPaiment.name}, recebemos o seu pagamento!
                   </Text>
                   <Text>
-                    Encaminhamos um email com o comprovante de pagamento. Agora
-                    toda nova atualização dos status de suas compras você
+                    Encaminhamos um email com o comprovante de pagamento.
+                  </Text>
+                  <Text>Para acompanhar sua encomanda é só clicar em:</Text>
+                  <VStack
+                    bg="itemColor"
+                    p="1rem"
+                    borderRadius="1rem"
+                    color="white"
+                  >
+                    <Image
+                      w="2rem"
+                      src="minhas-compras.png"
+                      alt="Minhas Compras"
+                    />
+                    <Text>Minhas Compras</Text>
+                  </VStack>
+                  <Text>
+                    Além disso, sempre que o status da compra for alterada, você
                     receberá um email.
                   </Text>
                   <HStack align="center" spacing="1rem">
