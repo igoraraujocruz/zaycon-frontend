@@ -84,7 +84,7 @@ const DetailsAllShop: ForwardRefRenderFunction<
     } catch (err) {
       toast({
         position: 'top',
-        title: `Conexão do Whatsapp`,
+        title: 'Ocorreu um erro!',
         description: err.response.data.message,
         status: 'error',
         duration: 4000,

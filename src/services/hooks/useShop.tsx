@@ -60,6 +60,7 @@ export function useShop() {
 }
 
 export async function updateStatus(shopId: string, status: string) {
+  console.log(shopId, status);
   await api.patch('/shop', {
     shopId,
     status,
