@@ -171,7 +171,14 @@ export default function Home() {
                     justify="center"
                     alignItems="center"
                   >
-                    <Text w="15rem" fontWeight="600" cursor="pointer">
+                    <Text
+                      w="15rem"
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap"
+                      fontWeight="600"
+                      cursor="pointer"
+                    >
                       {product.name}
                     </Text>
 

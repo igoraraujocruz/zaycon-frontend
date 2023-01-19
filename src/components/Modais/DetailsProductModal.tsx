@@ -93,7 +93,10 @@ const DetailsProductModal: ForwardRefRenderFunction<
                   ) : (
                     <VStack align="flex-start">
                       <HStack>
-                        <Text fontSize={['1.2rem', '1.2rem', '3xl']}>
+                        <Text
+                          fontSize={['1.2rem', '1.2rem', '3xl']}
+                          maxW="15rem"
+                        >
                           {product.name}
                         </Text>
                         <Text
@@ -131,8 +134,8 @@ const DetailsProductModal: ForwardRefRenderFunction<
 
                       <VStack spacing={2}>
                         <AspectRatio
-                          w={['18rem', '18rem', '40rem']}
-                          ratio={[16 / 9]}
+                          w={['18rem', '18rem', '30rem']}
+                          ratio={[1 / 1]}
                         >
                           <Img
                             src={
@@ -156,7 +159,12 @@ const DetailsProductModal: ForwardRefRenderFunction<
                             w={['5rem', '5rem', '7rem']}
                             ratio={1 / 1}
                           >
-                            <Img src={photo.url} objectFit="cover" />
+                            <Img
+                              src={photo.url}
+                              cursor="pointer"
+                              objectFit="cover"
+                              onClick={() => setShowImage(photo.url)}
+                            />
                           </AspectRatio>
                         ))}
                       </Flex>
