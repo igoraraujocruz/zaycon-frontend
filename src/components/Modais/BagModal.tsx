@@ -245,7 +245,11 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
       <ModalContent bg="bg">
-        <ModalCloseButton color="itemColor" />
+        <ModalCloseButton
+          bg="itemColor"
+          _hover={{ bg: 'itemColor' }}
+          color="#fff"
+        />
         <ModalHeader />
         {!finishShop ? (
           <ModalBody>
@@ -272,63 +276,22 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                           align="start"
                           w="40%"
                         >
-                          <Text
-                            fontWeight="bold"
-                            w={['7.5rem', '7.5rem', '11rem']}
-                          >
+                          <Text w={['7.5rem', '7.5rem', '15rem']}>
                             {product.name}
                           </Text>
-                          <Text w={['7.5rem', '7.5rem', '11rem']}>
+                          <Text w={['7.5rem', '7.5rem', '15rem']}>
                             Preço unitário: {formatPrice(product.price)}
                           </Text>
-                          <Text w={['7.5rem', '7.5rem', '11rem']}>
+                          <Text w={['7.5rem', '7.5rem', '15rem']}>
                             Subtotal:{' '}
                             {formatPrice(product.amount * product.price)}
                           </Text>
-
                           <Flex
                             align="center"
                             as="form"
                             w="100%"
-                            justify="center"
                             flexDir={['column', 'column', 'row']}
                           >
-                            <Flex
-                              mt="1rem"
-                              mb="1rem"
-                              align="center"
-                              flexDir="column"
-                            >
-                              <Text>Quantidade</Text>
-                              <Text>{product.amount}</Text>
-                              <HStack
-                                justify={['normal', 'normal', 'center']}
-                                width="100%"
-                              >
-                                <Button
-                                  bg="gray.700"
-                                  _hover={{ background: 'gray.900' }}
-                                  h="2rem"
-                                  onClick={() =>
-                                    handleProductDecrement(product)
-                                  }
-                                >
-                                  <AiOutlineMinus color="#fff" />
-                                </Button>
-                                <Button
-                                  bg="gray.700"
-                                  _hover={{ background: 'gray.900' }}
-                                  h="2rem"
-                                  onClick={() =>
-                                    handleProductIncrement(product)
-                                  }
-                                >
-                                  <AiOutlinePlus color="#fff" />
-                                </Button>
-                              </HStack>
-                            </Flex>
-                          </Flex>
-                          <Flex w="100%" justify="center">
                             <Button
                               bg="gray.700"
                               _hover={{ background: 'gray.900' }}
@@ -337,19 +300,48 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                             >
                               <BsFillTrashFill color="#fff" />
                             </Button>
+                            <Flex
+                              mt="1rem"
+                              mb="1rem"
+                              align="center"
+                              ml={['1rem', '1rem', '2.2rem']}
+                              flexDir="column"
+                            >
+                              <Text>Quantidade</Text>
+                              <Text>{product.amount}</Text>
+                            </Flex>
                           </Flex>
+                          <HStack
+                            justify={['normal', 'normal', 'center']}
+                            width="100%"
+                          >
+                            <Button
+                              bg="gray.700"
+                              _hover={{ background: 'gray.900' }}
+                              h="2rem"
+                              onClick={() => handleProductDecrement(product)}
+                            >
+                              <AiOutlineMinus color="#fff" />
+                            </Button>
+                            <Button
+                              bg="gray.700"
+                              _hover={{ background: 'gray.900' }}
+                              h="2rem"
+                              onClick={() => handleProductIncrement(product)}
+                            >
+                              <AiOutlinePlus color="#fff" />
+                            </Button>
+                          </HStack>
                         </Flex>
                       </Flex>
                     );
                   })}
                 </Flex>
-                <Text w="25.5rem">
-                  Valor total dos Produtos: {formatPrice(total)}
-                </Text>
-                <Text w="25.5rem">
+                <Text>Valor total dos Produtos: {formatPrice(total)}</Text>
+                <Text>
                   Taxa para Geradora do Pix: {formatPrice((total * 1.19) / 100)}
                 </Text>
-                <Text w="25.5rem" fontWeight="600">
+                <Text fontWeight="600">
                   Total a pagar: {formatPrice(total + (total * 1.19) / 100)}
                 </Text>
                 <VStack
