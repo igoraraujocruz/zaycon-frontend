@@ -30,38 +30,22 @@ const PainelAdm = () => {
       <Head>
         <title>Painel Adm| Zaycon</title>
       </Head>
-      <Flex h="100vh" flexDir="column" align="center" bg="itemColor">
+      <Flex flexDir="column" align="center" bg="gray.900" h="100vw">
         <HeaderPainel />
-
-        <Grid
-          bg="gray.900"
-          color="#fff"
-          w="100%"
-          justifyItems="center"
-          mt="3rem"
-          templateColumns={[
-            '1fr',
-            '1fr',
-            '1fr 1fr',
-            '1fr 1fr',
-            '1fr 1fr 1fr',
-            '1fr 1fr 1fr 1fr',
-          ]}
-        >
-          <PossibleShop />
-          <AllShop />
-          <FinishShop />
-          <SellerShop />
-        </Grid>
-
         <Stack
-          mt={['1rem', '1rem', '3rem']}
+          mt="1rem"
+          borderRadius="2rem"
+          bg="gray.800"
           flexDir={['column', 'column', 'row']}
-          justify="flex-start"
-          w="95%"
-          h="70%"
+          p="2rem"
         >
           <Products />
+          <Flex flexDir={['column', 'column', 'row']} w="100%">
+            <PossibleShop />
+            <AllShop />
+            <FinishShop />
+            <SellerShop />
+          </Flex>
         </Stack>
       </Flex>
     </Admin>

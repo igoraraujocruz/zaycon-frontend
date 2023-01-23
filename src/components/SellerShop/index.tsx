@@ -47,7 +47,14 @@ export const SellerShop = () => {
   });
 
   return (
-    <Flex flexDir="column" align="flex-start" mb={['1rem', '1rem', 0]}>
+    <Flex
+      mt={['1rem', '1rem', 0]}
+      pb={['1rem', '1rem', 0]}
+      h={['15rem', '15rem', '100%']}
+      flexDir="column"
+      align="center"
+      borderBottom={['6px solid #181b23', '6px solid #181b23', 0]}
+    >
       <DetailsShopModal shop={shop} ref={modalDetailsShop} />
       <Heading size="md" color="#fff">
         Minhas Vendas
@@ -55,7 +62,7 @@ export const SellerShop = () => {
       <Flex
         maxH={['15rem', '15rem', '20rem']}
         flexDir="column"
-        w={['18rem', '18rem', '25rem']}
+        w={['18rem', '18rem', '15rem']}
         overflow="scroll"
         sx={{
           '::-webkit-scrollbar': {
@@ -63,7 +70,7 @@ export const SellerShop = () => {
           },
         }}
       >
-        <VStack align="flex-start">
+        <VStack align={['center', 'center', 'flex-start']}>
           {data?.shop.map(shop => (
             <Flex key={shop.id}>
               <HStack
@@ -78,7 +85,14 @@ export const SellerShop = () => {
                     year: '2-digit',
                   })}
                 </Text>
-                <Text>{shop.client.name.toUpperCase()}</Text>
+                <Text
+                  w="5rem"
+                  overflow="hidden"
+                  textOverflow="ellipsis"
+                  whiteSpace="nowrap"
+                >
+                  {shop.client.name.toUpperCase()}
+                </Text>
               </HStack>
             </Flex>
           ))}

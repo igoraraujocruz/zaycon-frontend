@@ -77,7 +77,7 @@ const DetailsShop: ForwardRefRenderFunction<DetailsShopModalHandle, any> = (
             color="#fff"
           />
           <ModalHeader />
-          <ModalBody>
+          <ModalBody color="#fff">
             <Flex justify="center" flexDir="column">
               <Heading>{shop.client?.name}</Heading>
               {shop.order?.map(clientOrder => (

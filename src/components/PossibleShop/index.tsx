@@ -36,14 +36,24 @@ export const PossibleShop = () => {
   }, []);
 
   return (
-    <Flex flexDir="column" align="flex-start" mb={['1rem', '1rem', 0]}>
+    <Flex
+      mt={['1rem', '1rem', 0]}
+      flexDir="column"
+      w="100%"
+      h={['15rem', '15rem', '100%']}
+      borderBottom={['6px solid #181b23', '6px solid #181b23', 0]}
+    >
       <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
 
-      <Heading size="md">Possíveis Vendas</Heading>
+      <Flex justify="center">
+        <Heading color="white" size="md">
+          Possíveis Vendas
+        </Heading>
+      </Flex>
+
       <Flex
         maxH={['15rem', '15rem', '20rem']}
         flexDir="column"
-        w={['18rem', '18rem', '25rem']}
         overflow="scroll"
         sx={{
           '::-webkit-scrollbar': {
@@ -51,18 +61,25 @@ export const PossibleShop = () => {
           },
         }}
       >
-        <VStack align="flex-start">
+        <VStack align={['center', 'center', 'flex-start']}>
           {data?.map(
             shop =>
               !shop.paid && (
-                <Flex key={shop.id} mt="1rem">
+                <Flex key={shop.id}>
                   <HStack
                     color={shop.paid ? '#00FF00' : '#A9A9A9'}
                     cursor="pointer"
                     onClick={() => handleModal(shop)}
                   >
                     <Text>{shop.createdAt}</Text>
-                    <Text>{shop.client.name.toUpperCase()}</Text>
+                    <Text
+                      w="5rem"
+                      overflow="hidden"
+                      textOverflow="ellipsis"
+                      whiteSpace="nowrap"
+                    >
+                      {shop.client.name.toUpperCase()}
+                    </Text>
                   </HStack>
                 </Flex>
               ),

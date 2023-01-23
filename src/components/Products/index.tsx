@@ -7,6 +7,7 @@ import {
   Th,
   Thead,
   Tr,
+  Input,
 } from '@chakra-ui/react';
 import { useCallback, useRef, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -21,7 +22,6 @@ import CreateProductModal, {
 } from '../Modais/CreateProductModal';
 
 import { useProducts } from '../../services/hooks/useProducts';
-import { Input } from '../Form/Input';
 
 interface ProductProps {
   id: string;
@@ -69,6 +69,7 @@ export const Products = () => {
       color="#fff"
       borderRadius="2rem"
       p="2rem"
+      h="40rem"
     >
       <EditProductModal product={product} ref={modalEditProduct} />
       <CreateProductModal ref={modalCreateProduct} />
@@ -93,7 +94,9 @@ export const Products = () => {
           Produtos
         </Heading>
         <Input
-          color="itemColor"
+          bg="gray.700"
+          border="none"
+          color="#fff"
           name="productFilterName"
           onChange={e => setFilterProductName(e.target.value)}
         />
@@ -102,7 +105,7 @@ export const Products = () => {
         align="flex-end"
         maxH={['30rem', '30rem', '40rem']}
         flexDir="column"
-        w={['18rem', '18rem', '25rem']}
+        w={['25rem']}
         overflow="scroll"
         sx={{
           '::-webkit-scrollbar': {

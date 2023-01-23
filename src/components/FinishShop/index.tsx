@@ -39,13 +39,23 @@ export const FinishShop = () => {
   }, []);
 
   return (
-    <Flex flexDir="column" align="flex-start" mb={['1rem', '1rem', 0]}>
+    <Flex
+      mt={['1rem', '1rem', 0]}
+      pb={['1rem', '1rem', 0]}
+      h={['15rem', '15rem', '100%']}
+      flexDir="column"
+      align="center"
+      borderBottom={['6px solid #181b23', '6px solid #181b23', 0]}
+      borderRight={[0, 0, '4px solid #181b23']}
+    >
       <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
-      <Heading size="md">Vendas Concluidas</Heading>
+      <Heading color="#fff" size="md">
+        Vendas Concluidas
+      </Heading>
       <Flex
         flexDir="column"
         maxH={['15rem', '15rem', '20rem']}
-        w={['18rem', '18rem', '25rem']}
+        w={['18rem', '18rem', '15rem']}
         overflow="scroll"
         sx={{
           '::-webkit-scrollbar': {
@@ -53,7 +63,7 @@ export const FinishShop = () => {
           },
         }}
       >
-        <VStack align="flex-start">
+        <VStack align={['center', 'center', 'flex-start']}>
           {data?.map(
             shop =>
               shop.paid &&
@@ -68,7 +78,13 @@ export const FinishShop = () => {
                   <Text color={shop.status === 'Entregue' && '#A9A9A9'}>
                     {shop.createdAt}
                   </Text>
-                  <Text color={shop.status === 'Entregue' && '#A9A9A9'}>
+                  <Text
+                    w="5rem"
+                    overflow="hidden"
+                    textOverflow="ellipsis"
+                    whiteSpace="nowrap"
+                    color={shop.status === 'Entregue' && '#A9A9A9'}
+                  >
                     {shop.client.name.toUpperCase()}
                   </Text>
                 </HStack>
