@@ -276,13 +276,13 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                           align="start"
                           w="40%"
                         >
-                          <Text w={['7.5rem', '7.5rem', '15rem']}>
+                          <Text w={['7.5rem', '7.5rem', '11rem']}>
                             {product.name}
                           </Text>
-                          <Text w={['7.5rem', '7.5rem', '15rem']}>
+                          <Text w={['7.5rem', '7.5rem', '11rem']}>
                             Preço unitário: {formatPrice(product.price)}
                           </Text>
-                          <Text w={['7.5rem', '7.5rem', '15rem']}>
+                          <Text w={['7.5rem', '7.5rem', '11rem']}>
                             Subtotal:{' '}
                             {formatPrice(product.amount * product.price)}
                           </Text>
@@ -292,19 +292,10 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                             w="100%"
                             flexDir={['column', 'column', 'row']}
                           >
-                            <Button
-                              bg="gray.700"
-                              _hover={{ background: 'gray.900' }}
-                              h="2rem"
-                              onClick={() => handleRemoveProduct(product.id)}
-                            >
-                              <BsFillTrashFill color="#fff" />
-                            </Button>
                             <Flex
                               mt="1rem"
-                              mb="1rem"
                               align="center"
-                              ml={['1rem', '1rem', '2.2rem']}
+                              w="100%"
                               flexDir="column"
                             >
                               <Text>Quantidade</Text>
@@ -332,6 +323,16 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                               <AiOutlinePlus color="#fff" />
                             </Button>
                           </HStack>
+                          <Flex mt="1rem" w="100%" justify="center">
+                            <Button
+                              bg="gray.700"
+                              _hover={{ background: 'gray.900' }}
+                              h="2rem"
+                              onClick={() => handleRemoveProduct(product.id)}
+                            >
+                              <BsFillTrashFill color="#fff" />
+                            </Button>
+                          </Flex>
                         </Flex>
                       </Flex>
                     );
