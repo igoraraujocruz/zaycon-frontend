@@ -12,6 +12,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { AiOutlineCheck } from 'react-icons/ai';
+import { VscError } from 'react-icons/vsc';
 import { api } from '../../services/apiClient';
 
 interface Seller {
@@ -22,6 +24,7 @@ interface Seller {
   numberPhone: string;
   birthday: string;
   createdAt: string;
+  emailConfirm: boolean;
 }
 
 export const Sellers = () => {
@@ -63,6 +66,7 @@ export const Sellers = () => {
             <Th>Celular</Th>
             <Th>Aniversário</Th>
             <Th>Data de Registro</Th>
+            <Th>Email Confirmado</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -89,6 +93,13 @@ export const Sellers = () => {
                   hour: '2-digit',
                   minute: '2-digit',
                 })}
+              </Td>
+              <Td>
+                {seller.emailConfirm ? (
+                  <AiOutlineCheck size={20} color="green" />
+                ) : (
+                  <VscError size={20} color="red" />
+                )}
               </Td>
             </Tr>
           ))}
