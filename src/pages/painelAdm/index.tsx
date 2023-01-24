@@ -1,4 +1,4 @@
-import { Flex, Grid, Stack } from '@chakra-ui/react';
+import { Flex, Grid, Stack, useMediaQuery } from '@chakra-ui/react';
 import Head from 'next/head';
 import nookies from 'nookies';
 import { useContext } from 'react';
@@ -13,8 +13,10 @@ import { queryClient } from '../../services/queryClient';
 import { PossibleShop } from '../../components/PossibleShop';
 import { Products } from '../../components/Products';
 import { FinishShop } from '../../components/FinishShop';
+import { Sellers } from '../../components/Sellers';
 
 const PainelAdm = () => {
+  const [isMinThan1440] = useMediaQuery('(max-width: 1440px)');
   const socket = useContext(SocketContext);
 
   socket.on('createShop', async () => {
@@ -30,7 +32,7 @@ const PainelAdm = () => {
       <Head>
         <title>Painel Adm| Zaycon</title>
       </Head>
-      <Flex flexDir="column" align="center" bg="gray.900" h="100vw">
+      <Flex flexDir="column" align="center" bg="gray.900" h="100%">
         <HeaderPainel />
         <Stack
           mt="1rem"
@@ -40,13 +42,34 @@ const PainelAdm = () => {
           p="2rem"
         >
           <Products />
-          <Flex flexDir={['column', 'column', 'row']} w="100%">
+
+          {!isMinThan1440 && (
+            <Flex flexDir={['column', 'column', 'row']}>
+              <PossibleShop />
+              <AllShop />
+              <FinishShop />
+              <SellerShop />
+            </Flex>
+          )}
+        </Stack>
+
+        {isMinThan1440 && (
+          <Flex
+            mt="2rem"
+            bg="gray.800"
+            p="2rem"
+            flexDir={['column', 'column', 'row']}
+          >
             <PossibleShop />
             <AllShop />
             <FinishShop />
             <SellerShop />
           </Flex>
-        </Stack>
+        )}
+
+        <Flex mt="2rem">
+          <Sellers />
+        </Flex>
       </Flex>
     </Admin>
   );

@@ -69,7 +69,7 @@ export const Products = () => {
       color="#fff"
       borderRadius="2rem"
       p="2rem"
-      h="40rem"
+      h="37rem"
     >
       <EditProductModal product={product} ref={modalEditProduct} />
       <CreateProductModal ref={modalCreateProduct} />
