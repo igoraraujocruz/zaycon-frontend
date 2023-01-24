@@ -70,7 +70,7 @@ export const SellerShop = () => {
           },
         }}
       >
-        <VStack align={['center', 'center', 'flex-start']}>
+        <VStack ml="1rem" align={['center', 'center', 'flex-start']}>
           {data?.shop.map(shop => (
             <Flex key={shop.id}>
               <HStack

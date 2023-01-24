@@ -42,6 +42,7 @@ export const PossibleShop = () => {
       w="100%"
       h={['15rem', '15rem', '100%']}
       borderBottom={['6px solid #181b23', '6px solid #181b23', 0]}
+      mr="1rem"
     >
       <DetailsAllShop shop={shop} ref={modalDetailsAllShop} />
 

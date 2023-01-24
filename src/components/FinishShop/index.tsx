@@ -63,7 +63,7 @@ export const FinishShop = () => {
           },
         }}
       >
-        <VStack align={['center', 'center', 'flex-start']}>
+        <VStack ml="1rem" align={['center', 'center', 'flex-start']}>
           {data?.map(
             shop =>
               shop.paid &&

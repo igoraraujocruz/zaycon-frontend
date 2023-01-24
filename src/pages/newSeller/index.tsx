@@ -7,6 +7,8 @@ import {
   Text,
   Link,
   Spinner,
+  Image,
+  Box,
 } from '@chakra-ui/react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
@@ -62,7 +64,7 @@ function NewSeller() {
   const handleSignIn: SubmitHandler<SignInFormData> = async (
     values: SignInFormData,
   ) => {
-    setFormSended(!formSended);
+    setFormSended(true);
     try {
       await createSeller({
         name: values.name,
@@ -74,130 +76,163 @@ function NewSeller() {
       });
     } catch (err) {
       toast({
-        title: 'Não foi possível acessar a plataforma',
+        title: 'Não foi possível registrar-se',
         description: err.response?.data.message,
         status: 'error',
         duration: 4000,
         isClosable: true,
       });
+      setFormSended(false);
     }
   };
   return (
-    <>
+    <Flex>
       <Head>
         <title>Novo Vendedor | Snap</title>
       </Head>
-      <Flex flexDir="column" align="center" bg="itemColor" h="100vh">
+      <Flex
+        w="100vw"
+        flexDir={['column', 'column', 'row']}
+        bg="gray.600"
+        bgImage="vendedor.jpg"
+        h={['100%', '100%', '100vh']}
+        bgSize={['contain', 'contain', 'contain', 'cover']}
+        bgRepeat="no-repeat"
+        justify="space-between"
+        align="center"
+      >
+        <Flex
+          flexDir="column"
+          color={['#fff', '#fff', 'gray.800']}
+          w={['20rem', '20rem', '45rem']}
+          mt={['18rem', '18rem', 0]}
+          ml={[0, 0, '5rem']}
+          align="center"
+        >
+          <Heading fontSize={['2rem', '2rem', '2rem', '8rem']}>
+            Seja um vendedor
+          </Heading>
+          <Text
+            fontSize={['1.5rem', '1.5rem', '1.5rem', '3rem']}
+            fontWeight="600"
+          >
+            Trabalhe como e onde quiser...
+          </Text>
+          <Text
+            fontSize={['1.5rem', '1.5rem', '1.5rem', '2rem']}
+            w={['15rem', '15rem', '30rem']}
+            fontWeight="600"
+          >
+            Você acumula pontos que podem ser trocados por dinheiro ou produtos.
+          </Text>
+        </Flex>
         {!formSended ? (
-          <Flex flexDir="column" align="center" justify="center">
-            <Flex
-              alignItems="center"
-              mt="1rem"
-              justify="center"
-              flexDir="column"
-            >
-              <Heading color="white">Zaycon</Heading>
-              <Text color="white">Seja um vendedor</Text>
+          <Stack
+            onSubmit={handleSubmit(handleSignIn)}
+            as="form"
+            color="#fff"
+            bg="gray.700"
+            borderRadius={8}
+            p="2rem"
+            mr={[0, 0, 0, '15rem']}
+            w={['19rem', '19rem', '25rem']}
+            mb={['2rem', '2rem', 0]}
+          >
+            <Heading>Registre-se aqui 👇</Heading>
+            <Input
+              color="black"
+              name="name"
+              label="Nome"
+              error={errors.name}
+              {...register('name')}
+            />
+            <Input
+              color="black"
+              name="username"
+              label="Nome de usuário"
+              error={errors.username}
+              {...register('username')}
+            />
+            <Input
+              color="black"
+              name="password"
+              type="password"
+              label="Senha"
+              error={errors.password}
+              {...register('password')}
+            />
+            <Input
+              color="black"
+              name="email"
+              label="Email"
+              error={errors.email}
+              {...register('email')}
+            />
+            <MaskedInput
+              color="black"
+              label="Celular"
+              mask={[
+                '(',
+                /\d/,
+                /\d/,
+                ')',
+                ' ',
+                /\d/,
+                /\d/,
+                /\d/,
+                /\d/,
+                /\d/,
+                '-',
+                /\d/,
+                /\d/,
+                /\d/,
+                /\d/,
+              ]}
+              error={errors.numberPhone}
+              name="numberPhone"
+              {...register('numberPhone')}
+            />
+            <Input
+              color="black"
+              name="birthday"
+              label="Data de nascimento"
+              type="date"
+              error={errors.birthday}
+              {...register('birthday')}
+            />
+            <Flex justify="center" mt={['4', '4', '6']} h="2rem">
+              {!formSended ? (
+                <Button
+                  mt="1rem"
+                  type="submit"
+                  bg="#04070D"
+                  _hover={{ bg: '#04070D' }}
+                  color="white"
+                  size="lg"
+                >
+                  Cadastrar
+                </Button>
+              ) : (
+                <Spinner size="lg" />
+              )}
             </Flex>
-            <Flex
-              onSubmit={handleSubmit(handleSignIn)}
-              as="form"
-              w="100%"
-              maxWidth={[270, 270, 360]}
-              bg="itemColor"
-              p={['4', '4', '8']}
-              borderRadius={8}
-              flexDir="column"
-              color="white"
-            >
-              <Stack spacing="4">
-                <Input
-                  color="black"
-                  name="name"
-                  label="Nome"
-                  error={errors.name}
-                  {...register('name')}
-                />
-                <Input
-                  color="black"
-                  name="username"
-                  label="Nome de usuário"
-                  error={errors.username}
-                  {...register('username')}
-                />
-                <Input
-                  color="black"
-                  name="password"
-                  type="password"
-                  label="Senha"
-                  error={errors.password}
-                  {...register('password')}
-                />
-                <Input
-                  color="black"
-                  name="email"
-                  label="Email"
-                  error={errors.email}
-                  {...register('email')}
-                />
-                <MaskedInput
-                  color="black"
-                  label="Celular"
-                  mask={[
-                    '(',
-                    /\d/,
-                    /\d/,
-                    ')',
-                    ' ',
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    '-',
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                    /\d/,
-                  ]}
-                  error={errors.numberPhone}
-                  name="numberPhone"
-                  {...register('numberPhone')}
-                />
-                <Input
-                  color="black"
-                  name="birthday"
-                  label="Data de nascimento"
-                  type="date"
-                  error={errors.birthday}
-                  {...register('birthday')}
-                />
-              </Stack>
-              <Flex justify="center" mt={['4', '4', '6']} h="2rem">
-                {!formSended ? (
-                  <Button
-                    type="submit"
-                    bg="#04070D"
-                    _hover={{ bg: '#04070D' }}
-                    color="white"
-                    size="lg"
-                  >
-                    Cadastrar
-                  </Button>
-                ) : (
-                  <Spinner size="lg" />
-                )}
-              </Flex>
-
-              <Link href="/admin">
-                <Text cursor="pointer" mt="2rem" textAlign="center">
-                  Já possuo uma conta
-                </Text>
-              </Link>
-            </Flex>
-          </Flex>
+            <Link href="/admin">
+              <Text cursor="pointer" mt="3rem" textAlign="center">
+                Já possuo uma conta
+              </Text>
+            </Link>
+          </Stack>
         ) : (
-          <Flex w="30rem" mt="5rem" justify="center" flexDir="column">
+          <Flex
+            bg="gray.700"
+            borderRadius={8}
+            p="2rem"
+            mr="15rem"
+            w="30rem"
+            mt="5rem"
+            justify="center"
+            flexDir="column"
+          >
             <Heading size="md" color="white">
               Conta criada com sucesso!
             </Heading>
@@ -208,7 +243,7 @@ function NewSeller() {
           </Flex>
         )}
       </Flex>
-    </>
+    </Flex>
   );
 }
 
