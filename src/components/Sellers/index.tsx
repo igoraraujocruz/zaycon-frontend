@@ -40,71 +40,85 @@ export const Sellers = () => {
     getSellers();
   }, []);
   return (
-    <Flex
-      flexDir="column"
-      color="#fff"
-      p="2rem"
-      bg="gray.800"
-      align="flex-center"
-      h="30rem"
-      mb="2rem"
-    >
-      <Flex justify="space-between">
+    <VStack mb="2rem">
+      <Flex justify="space-between" color="#fff" w="100%">
         <Heading>Vendedores</Heading>
         <HStack>
           <Text>Total:</Text>
           <Text>{sellers.length}</Text>
         </HStack>
       </Flex>
-
-      <Table colorScheme="whiteAlpha">
-        <Thead>
-          <Tr>
-            <Th>Nome</Th>
-            <Th>Pontos</Th>
-            <Th>Email</Th>
-            <Th>Celular</Th>
-            <Th>Aniversário</Th>
-            <Th>Data de Registro</Th>
-            <Th>Email Confirmado</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {sellers.map(seller => (
-            <Tr key={seller.id} cursor="pointer">
-              <Td>{seller.name}</Td>
-              <Td>{seller.points}</Td>
-              <Td>{seller.email}</Td>
-              <Td>{seller.numberPhone}</Td>
-              <Td>
-                {new Date(seller.birthday).toLocaleDateString('pt-BR', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </Td>
-              <Td>
-                {new Date(seller.createdAt).toLocaleDateString('pt-BR', {
-                  day: '2-digit',
-                  month: '2-digit',
-                  year: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-              </Td>
-              <Td>
-                {seller.emailConfirm ? (
-                  <AiOutlineCheck size={20} color="green" />
-                ) : (
-                  <VscError size={20} color="red" />
-                )}
-              </Td>
+      <Flex
+        flexDir="column"
+        color="#fff"
+        p="2rem"
+        bg="gray.800"
+        align="flex-center"
+        h="30rem"
+        css={{
+          '&::-webkit-scrollbar': {
+            width: '4px',
+          },
+          '&::-webkit-scrollbar-track': {
+            width: '6px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            background: '#E5E5E5',
+            borderRadius: '24px',
+          },
+        }}
+        overflowY="auto"
+        mb="2rem"
+      >
+        <Table colorScheme="whiteAlpha">
+          <Thead>
+            <Tr>
+              <Th>Nome</Th>
+              <Th>Pontos</Th>
+              <Th>Email</Th>
+              <Th>Celular</Th>
+              <Th>Aniversário</Th>
+              <Th>Data de Registro</Th>
+              <Th>Email Confirmado</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
-    </Flex>
+          </Thead>
+          <Tbody>
+            {sellers.map(seller => (
+              <Tr key={seller.id} cursor="pointer">
+                <Td>{seller.name}</Td>
+                <Td>{seller.points}</Td>
+                <Td>{seller.email}</Td>
+                <Td>{seller.numberPhone}</Td>
+                <Td>
+                  {new Date(seller.birthday).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </Td>
+                <Td>
+                  {new Date(seller.createdAt).toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                </Td>
+                <Td>
+                  {seller.emailConfirm ? (
+                    <AiOutlineCheck size={20} color="green" />
+                  ) : (
+                    <VscError size={20} color="red" />
+                  )}
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Flex>
+    </VStack>
   );
 };
