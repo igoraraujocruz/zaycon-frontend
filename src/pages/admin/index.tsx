@@ -79,7 +79,7 @@ function Login() {
           flexDir="column"
           bg="#E5E5E5"
         >
-          <Stack spacing="4" color="itemColor">
+          <Stack color="itemColor">
             <Input
               color="itemColor"
               icon={AiOutlineUser}

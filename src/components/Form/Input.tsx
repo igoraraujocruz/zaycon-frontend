@@ -46,7 +46,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
         bgColor="inputBg"
       >
         {Icon && (
-          <Flex ml="1rem">
+          <Flex mr="1rem">
             <Icon size={20} />
           </Flex>
         )}
