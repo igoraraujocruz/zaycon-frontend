@@ -22,6 +22,7 @@ import {
   Heading,
   useToast,
   AspectRatio,
+  ScaleFade,
 } from '@chakra-ui/react';
 import {
   forwardRef,
@@ -40,6 +41,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { Howl, Howler } from 'howler';
+import axios from 'axios';
 import { api } from '../../services/apiClient';
 import { useCart } from '../../services/hooks/useCart';
 import { Input } from '../Form/Input';
@@ -73,15 +75,39 @@ interface Product {
   slug: string;
 }
 
+interface Address {
+  cep: string;
+  logradouro: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+}
+
 const createFormSchema = yup.object().shape({
   typeOfPayment: yup.string().required('O tipo de pagamento é necessário'),
   name: yup.string().required('O nome é necessário'),
   seller: yup.string(),
   cep: yup.string().required('O CEP é obrigatório'),
-  address: yup.string().required('O endereço é necessário'),
   email: yup.string().required('Email é obrigatório').email(),
-  numberAddress: yup.number().required('O número da residência é necessário'),
+  numberAddress: yup
+    .string()
+    .required('O número da residência é necessário')
+    .matches(/^[0-9]+$/),
   obs: yup.string().required('Complemento é necessário'),
+  numberPhone: yup
+    .string()
+    .required('Nº de Celular é obrigatório')
+    .matches(
+      /^\([1-9]{2}\) (?:[2-8]|9[1-9])[0-9]{3}\-[0-9]{4}$/,
+      'Número de telefone inválido',
+    ),
+});
+
+const schemaNotDelivery = yup.object().shape({
+  typeOfPayment: yup.string().required('O tipo de pagamento é necessário'),
+  name: yup.string().required('O nome é necessário'),
+  seller: yup.string(),
+  email: yup.string().required('Email é obrigatório').email(),
   numberPhone: yup
     .string()
     .required('Nº de Celular é obrigatório')
@@ -99,6 +125,11 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const [dataPaiment, setdataPaiment] = useState({} as any);
   const [mySocketId, setMySocketId] = useState('');
   const [seller, setSeller] = useState({} as any);
+  const [delivery, setDelivery] = useState(false);
+  const [address, setAddress] = useState({} as Address);
+  const [valueFrete, setFreteValue] = useState(0);
+  const [calculateDeliveryLoading, setCalculateDeliveryLoading] =
+    useState(false);
 
   const socket = useContext(SocketContext);
 
@@ -179,13 +210,46 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
+  const handleSearchAddress = async (cep: string) => {
+    try {
+      const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+
+      setAddress(response.data);
+    } catch (err) {
+      //
+    }
+  };
+
+  const handleCalculateDelivery = async (residenceNumber: string) => {
+    setCalculateDeliveryLoading(true);
+    try {
+      const response = await api.post('/clients/address', {
+        address: {
+          cep: address.cep,
+          logradouro: address.logradouro,
+          bairro: address.bairro,
+          localidade: address.localidade,
+          uf: address.uf,
+          residenceNumber,
+        },
+      });
+
+      setFreteValue(response.data);
+      setCalculateDeliveryLoading(false);
+    } catch (err) {
+      //
+    }
+  };
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
   } = useForm<CreateFormData>({
-    resolver: yupResolver(createFormSchema),
+    resolver: delivery
+      ? yupResolver(createFormSchema)
+      : yupResolver(schemaNotDelivery),
   });
 
   const onSubmit: SubmitHandler<CreateFormData> = async (
@@ -195,10 +259,14 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
 
     const client = await api.post('/clients', {
       name: values.name,
-      cep: values.cep,
       email: values.email,
       numberPhone: values.numberPhone,
-      address: `${values.address} nº${values.numberAddress} - ${values.obs}`,
+      cep: values.cep,
+      logradouro: address.logradouro,
+      bairro: address.bairro,
+      localidade: address.localidade,
+      uf: address.uf,
+      residenceNumber: values.numberAddress,
     });
 
     const shop = await api.post('/shop', {
@@ -338,78 +406,179 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                     );
                   })}
                 </Flex>
-                <Text>Valor total dos Produtos: {formatPrice(total)}</Text>
-                <Text>
-                  Taxa para Geradora do Pix: {formatPrice((total * 1.19) / 100)}
-                </Text>
-                <Text fontWeight="600">
-                  Total a pagar: {formatPrice(total + (total * 1.19) / 100)}
-                </Text>
-                <VStack
-                  mt="1rem"
-                  as="form"
-                  onSubmit={handleSubmit(onSubmit)}
-                  borderColor="red"
-                >
-                  <RadioGroup defaultValue="pix">
-                    <FormLabel mt="1rem">Forma de Pagamento</FormLabel>
-                    <HStack>
-                      <Radio value="pix" {...register('typeOfPayment')}>
-                        Pix
+                <Flex>
+                  <RadioGroup defaultValue="noDelivery">
+                    <FormLabel>Forma de envio</FormLabel>
+                    <HStack color="#fff" bg="gray.700" p="1rem">
+                      <Radio
+                        value="noDelivery"
+                        onChange={() => setDelivery(false)}
+                      >
+                        Vou retirar o produto na Loja
+                      </Radio>
+                      <Radio
+                        value="delivery"
+                        onChange={() => setDelivery(true)}
+                      >
+                        Quero que entregue
                       </Radio>
                     </HStack>
                   </RadioGroup>
-                  <FormControl>
-                    <FormLabel>Nome</FormLabel>
-                    <Input {...register('name')} error={errors.name} />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Cep</FormLabel>
-                    <Input {...register('cep')} error={errors.cep} />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Endereço</FormLabel>
-                    <Input {...register('address')} error={errors.address} />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Nº da Residência</FormLabel>
-                    <Input {...register('numberAddress')} error={errors.name} />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Complemento</FormLabel>
-                    <Input {...register('obs')} error={errors.name} />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Email</FormLabel>
-                    <Input {...register('email')} error={errors.email} />
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>Celular</FormLabel>
-                    <MaskedInput
-                      mask={[
-                        '(',
-                        /\d/,
-                        /\d/,
-                        ')',
-                        ' ',
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        '-',
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                        /\d/,
-                      ]}
-                      error={errors.numberPhone}
-                      name="numberPhone"
-                      {...register('numberPhone')}
-                    />
-                  </FormControl>
+                </Flex>
+                <Flex mt="1rem" mb="1rem">
+                  {delivery && (
+                    <ScaleFade initialScale={0.9} in>
+                      <VStack>
+                        <HStack>
+                          <FormControl>
+                            <FormLabel>Cep</FormLabel>
+                            <MaskedInput
+                              mask={[
+                                /\d/,
+                                /\d/,
+                                /\d/,
+                                /\d/,
+                                /\d/,
+                                '-',
+                                /\d/,
+                                /\d/,
+                                /\d/,
+                              ]}
+                              name="cep"
+                              {...register('cep', {
+                                onChange: e =>
+                                  handleSearchAddress(e.target.value),
+                              })}
+                            />
+                          </FormControl>
+                          <FormControl>
+                            <FormLabel>Nº da Residência</FormLabel>
+                            <Input
+                              {...register('numberAddress', {
+                                onChange: e =>
+                                  handleCalculateDelivery(e.target.value),
+                              })}
+                              error={errors.numberAddress}
+                            />
+                          </FormControl>
+                        </HStack>
 
+                        <VStack
+                          bg="gray.300"
+                          p="2rem"
+                          w="100%"
+                          borderRadius="1rem"
+                        >
+                          {address.bairro?.length > 0 && (
+                            <Text>
+                              {address.logradouro} - {address.bairro},{' '}
+                              {address.localidade} - {address.uf}
+                            </Text>
+                          )}
+                        </VStack>
+
+                        <FormControl>
+                          <FormLabel>Ponto de Referência/Complemento</FormLabel>
+                          <Input {...register('obs')} error={errors.obs} />
+                        </FormControl>
+                      </VStack>
+                    </ScaleFade>
+                  )}
+                </Flex>
+                <Text mt="1rem">
+                  Valor total dos Produtos: {formatPrice(total)}
+                </Text>
+                <Flex
+                  flexDir="column"
+                  as="form"
+                  onSubmit={handleSubmit(onSubmit)}
+                >
+                  {delivery ? (
+                    <VStack align="flex-start" spacing={0}>
+                      <Text>
+                        Valor do Frete:{' '}
+                        {calculateDeliveryLoading ? (
+                          <Spinner size="sm" />
+                        ) : (
+                          formatPrice(valueFrete)
+                        )}
+                      </Text>
+                      <Text>
+                        Taxa para Geradora do Pix:
+                        {formatPrice(
+                          ((Number(total) + Number(valueFrete)) * 1.19) / 100,
+                        )}
+                      </Text>
+                      <Text fontWeight="600">
+                        Total a pagar:{' '}
+                        {formatPrice(
+                          total +
+                            Number(valueFrete) +
+                            ((total + Number(valueFrete)) * 1.19) / 100,
+                        )}
+                      </Text>
+                    </VStack>
+                  ) : (
+                    <VStack align="flex-start">
+                      <Text>
+                        Taxa para Geradora do Pix:{' '}
+                        {formatPrice((total * 1.19) / 100)}
+                      </Text>
+                      <Text fontWeight="600">
+                        Total a pagar:{' '}
+                        {formatPrice(total + (total * 1.19) / 100)}
+                      </Text>
+                    </VStack>
+                  )}
+
+                  <VStack mt="1rem" borderColor="red">
+                    <RadioGroup defaultValue="pix">
+                      <FormLabel mt="1rem">Forma de Pagamento</FormLabel>
+                      <HStack>
+                        <Radio value="pix" {...register('typeOfPayment')}>
+                          Pix
+                        </Radio>
+                      </HStack>
+                    </RadioGroup>
+                    <HStack>
+                      <FormControl>
+                        <FormLabel>Nome</FormLabel>
+                        <Input {...register('name')} error={errors.name} />
+                      </FormControl>
+                      <FormControl>
+                        <FormLabel>Celular</FormLabel>
+                        <MaskedInput
+                          mask={[
+                            '(',
+                            /\d/,
+                            /\d/,
+                            ')',
+                            ' ',
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            '-',
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                            /\d/,
+                          ]}
+                          name="numberPhone"
+                          {...register('numberPhone')}
+                          error={errors.numberPhone}
+                        />
+                      </FormControl>
+                    </HStack>
+
+                    <FormControl>
+                      <FormLabel>Email</FormLabel>
+                      <Input {...register('email')} error={errors.email} />
+                    </FormControl>
+                  </VStack>
                   <Button
+                    mt="2rem"
                     color="#fff"
                     bg="itemColor"
                     _hover={{ bg: 'gray.800' }}
@@ -417,7 +586,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                   >
                     Finalizar Compra
                   </Button>
-                </VStack>
+                </Flex>
               </>
             ) : (
               <Text align="center">Nenhum item no carrinho até o momento</Text>
