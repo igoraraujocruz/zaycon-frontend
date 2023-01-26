@@ -78,15 +78,31 @@ export const MyCarousel = () => {
                 <Img src={product.photos[0]?.url} objectFit="fill" />
               </AspectRatio>
 
-              <Heading mt="1rem">{product.name}</Heading>
+              <Heading
+                overflow="hidden"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                w="25rem"
+                mt="1rem"
+              >
+                {product.name}
+              </Heading>
               <Text
                 overflow="hidden"
                 textOverflow="ellipsis"
                 whiteSpace="nowrap"
+                w="25rem"
               >
                 {product.description}
               </Text>
-              <Heading>R$ {product.price}</Heading>
+              <Heading
+                overflow="hidden"
+                textOverflow="ellipsis"
+                whiteSpace="nowrap"
+                w="25rem"
+              >
+                R$ {product.price}
+              </Heading>
             </Flex>
           ))}
       </Carousel>
