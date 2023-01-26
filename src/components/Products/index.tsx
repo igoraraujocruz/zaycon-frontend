@@ -8,6 +8,7 @@ import {
   Thead,
   Tr,
   Input,
+  Box,
 } from '@chakra-ui/react';
 import { useCallback, useRef, useState } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -116,10 +117,18 @@ export const Products = () => {
         <Table colorScheme="whiteAlpha">
           <Thead>
             <Tr>
-              <Th>Nome do Produto</Th>
-              <Th>Preço</Th>
-              <Th>Estoque</Th>
-              <Th>Pontos</Th>
+              <Th pl="4px" pr="4px">
+                Nome do Produto
+              </Th>
+              <Th pl="4px" pr="4px">
+                Preço
+              </Th>
+              <Th pl="4px" pr="4px">
+                Estoque
+              </Th>
+              <Th pl="4px" pr="4px">
+                Pontos
+              </Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -144,10 +153,18 @@ export const Products = () => {
                     cursor="pointer"
                     onClick={() => handleModal(product)}
                   >
-                    <Td>{product.name}</Td>
-                    <Td>R$ {product.price}</Td>
-                    <Td>{product.amount}</Td>
-                    <Td>{product.points}</Td>
+                    <Td pl="4px" pr="4px">
+                      {product.name}
+                    </Td>
+                    <Td pl="4px" pr="4px">
+                      R$ {product.price}
+                    </Td>
+                    <Td pl="4px" pr="4px">
+                      {product.amount}
+                    </Td>
+                    <Td pl="4px" pr="4px">
+                      {product.points}
+                    </Td>
                   </Tr>
                 ))}
           </Tbody>
