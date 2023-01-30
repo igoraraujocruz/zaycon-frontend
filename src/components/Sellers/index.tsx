@@ -87,15 +87,7 @@ export const Sellers = () => {
                 <Td>{seller.email}</Td>
                 <Td>{seller.numberPhone}</Td>
                 <Td>{seller.birthday}</Td>
-                <Td>
-                  {new Date(seller.createdAt).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </Td>
+                <Td>{seller.createdAt}</Td>
                 <Td>
                   {seller.emailConfirm ? (
                     <AiOutlineCheck size={20} color="green" />
