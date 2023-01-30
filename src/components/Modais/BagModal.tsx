@@ -128,6 +128,7 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   const [delivery, setDelivery] = useState(false);
   const [address, setAddress] = useState({} as Address);
   const [valueFrete, setFreteValue] = useState(0);
+
   const [calculateDeliveryLoading, setCalculateDeliveryLoading] =
     useState(false);
 
@@ -257,51 +258,61 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
   ) => {
     setFinishShop(!finishShop);
 
-    const client = await api.post('/clients', {
-      name: values.name,
-      email: values.email,
-      numberPhone: values.numberPhone,
-      cep: values.cep,
-      logradouro: address.logradouro,
-      bairro: address.bairro,
-      localidade: address.localidade,
-      uf: address.uf,
-      residenceNumber: values.numberAddress,
-    });
-
-    const shop = await api.post('/shop', {
-      clientId: client.data.id,
-      socketId: mySocketId,
-      typeOfPayment: 'pix',
-      sellerId: seller.id,
-    });
-
-    cartFormatted.map(async product => {
-      await api.post('/orders', {
-        productId: product.id,
-        shopId: shop.data.id,
-        quantity: product.amount,
+    try {
+      const client = await api.post('/clients', {
+        name: values.name,
+        email: values.email,
+        numberPhone: values.numberPhone,
+        cep: values.cep,
+        logradouro: address.logradouro,
+        bairro: address.bairro,
+        localidade: address.localidade,
+        uf: address.uf,
+        residenceNumber: values.numberAddress,
       });
-    });
 
-    const charge = await api.post('/shop/gerencianet', {
-      shopId: shop.data.id,
-    });
+      const shop = await api.post('/shop', {
+        clientId: client.data.id,
+        socketId: mySocketId,
+        typeOfPayment: 'pix',
+        sellerId: seller.id,
+      });
 
-    setQrCode(charge.data);
+      cartFormatted.map(async product => {
+        await api.post('/orders', {
+          productId: product.id,
+          shopId: shop.data.id,
+          quantity: product.amount,
+        });
+      });
 
-    setImagemIsLoading(!imagemIsLoading);
+      const charge = await api.post('/shop/gerencianet', {
+        shopId: shop.data.id,
+      });
 
-    toast({
-      position: 'bottom',
-      title: `Tudo Certo!`,
-      description: `Compra efetuada com sucesso.`,
-      status: 'success',
-      duration: 2000,
-      isClosable: true,
-    });
-    removeAllProductsInBag();
-    reset();
+      setQrCode(charge.data);
+
+      setImagemIsLoading(!imagemIsLoading);
+
+      toast({
+        position: 'bottom',
+        title: `Tudo Certo!`,
+        description: `Compra efetuada com sucesso.`,
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+      removeAllProductsInBag();
+      reset();
+    } catch (err) {
+      toast({
+        position: 'bottom',
+        title: err.response.data.message,
+        status: 'error',
+        duration: 2000,
+        isClosable: true,
+      });
+    }
   };
 
   useImperativeHandle(ref, () => ({
@@ -476,7 +487,6 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                             </Text>
                           )}
                         </VStack>
-
                         <FormControl>
                           <FormLabel>Ponto de Referência/Complemento</FormLabel>
                           <Input {...register('obs')} error={errors.obs} />
@@ -499,8 +509,13 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                         Valor do Frete:{' '}
                         {calculateDeliveryLoading ? (
                           <Spinner size="sm" />
-                        ) : (
+                        ) : valueFrete !== -1 ? (
                           formatPrice(valueFrete)
+                        ) : (
+                          <Text color="#e61919">
+                            Infelizmente, entregamos apenas em: Vitória, Vila
+                            Velha, Serra e Cariacica.
+                          </Text>
                         )}
                       </Text>
                       <Text>
@@ -577,15 +592,30 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                       <Input {...register('email')} error={errors.email} />
                     </FormControl>
                   </VStack>
-                  <Button
-                    mt="2rem"
-                    color="#fff"
-                    bg="itemColor"
-                    _hover={{ bg: 'gray.800' }}
-                    type="submit"
-                  >
-                    Finalizar Compra
-                  </Button>
+
+                  {delivery && valueFrete !== -1 && (
+                    <Button
+                      mt="2rem"
+                      color="#fff"
+                      bg="itemColor"
+                      _hover={{ bg: 'gray.800' }}
+                      type="submit"
+                    >
+                      Finalizar Compra
+                    </Button>
+                  )}
+
+                  {!delivery && (
+                    <Button
+                      mt="2rem"
+                      color="#fff"
+                      bg="itemColor"
+                      _hover={{ bg: 'gray.800' }}
+                      type="submit"
+                    >
+                      Finalizar Compra
+                    </Button>
+                  )}
                 </Flex>
               </>
             ) : (
