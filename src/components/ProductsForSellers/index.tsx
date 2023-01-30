@@ -120,7 +120,7 @@ export const ProductsForSellers = () => {
                 .map(product => (
                   <Tr key={product.id}>
                     <Image
-                      src={product.photos[0].url}
+                      src={product.photos[0]?.url}
                       maxW="10rem"
                       minW="10rem"
                     />
