@@ -42,7 +42,6 @@ export const Sellers = () => {
         color="#fff"
         p="2rem"
         bg="gray.800"
-        w="61rem"
         align="flex-center"
         h="30rem"
         css={{
