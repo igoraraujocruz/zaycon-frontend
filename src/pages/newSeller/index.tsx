@@ -16,7 +16,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Head from 'next/head';
 import { useState } from 'react';
 import { Input } from '../../components/Form/Input';
-import { createSeller } from '../../services/hooks/useUsers';
+import { createSeller } from '../../services/hooks/useSellers';
 import { MaskedInput } from '../../components/Form/MaskedInput';
 
 type SignInFormData = {

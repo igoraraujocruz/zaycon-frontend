@@ -11,41 +11,30 @@ import {
   Tr,
   VStack,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import { AiOutlineCheck } from 'react-icons/ai';
 import { VscError } from 'react-icons/vsc';
-import { api } from '../../services/apiClient';
-
-interface Seller {
-  id: string;
-  name: string;
-  points: number;
-  email: string;
-  numberPhone: string;
-  birthday: string;
-  createdAt: string;
-  emailConfirm: boolean;
-}
+import { Seller, useSellers } from '../../services/hooks/useSellers';
+import AnswerSeller, { ModalExchangeForHandle } from '../Modais/AnswerSeller';
 
 export const Sellers = () => {
-  const [sellers, setSellers] = useState<Seller[]>([]);
+  const { data } = useSellers();
+  const [sellerId, setSellerId] = useState('');
 
-  useEffect(() => {
-    const getSellers = async () => {
-      const response = await api.get('/sellers');
+  const answerSeller = useRef<ModalExchangeForHandle>(null);
 
-      setSellers(response.data);
-    };
-
-    getSellers();
-  }, []);
+  const handleAnswerSeller = (sellerId: string) => {
+    setSellerId(sellerId);
+    answerSeller.current.onOpen();
+  };
   return (
     <VStack mb="2rem">
+      <AnswerSeller ref={answerSeller} sellerId={sellerId} />
       <Flex justify="space-between" color="#fff" w="100%">
         <Heading>Vendedores</Heading>
         <HStack>
           <Text>Total:</Text>
-          <Text>{sellers.length}</Text>
+          <Text>{data?.length}</Text>
         </HStack>
       </Flex>
       <Flex
@@ -53,6 +42,7 @@ export const Sellers = () => {
         color="#fff"
         p="2rem"
         bg="gray.800"
+        w="61rem"
         align="flex-center"
         h="30rem"
         css={{
@@ -83,8 +73,16 @@ export const Sellers = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {sellers.map(seller => (
-              <Tr key={seller.id} cursor="pointer">
+            {data?.map(seller => (
+              <Tr
+                key={seller.id}
+                cursor="pointer"
+                color={
+                  seller.sellerOrders.some(order => order.answered === false) &&
+                  'red'
+                }
+                onClick={() => handleAnswerSeller(seller.id)}
+              >
                 <Td>{seller.name}</Td>
                 <Td>{seller.points}</Td>
                 <Td>{seller.email}</Td>

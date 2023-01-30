@@ -1,7 +1,7 @@
 import { Flex, Heading, HStack, Text, VStack } from '@chakra-ui/react';
 import { useContext, useRef, useState } from 'react';
 import { SocketContext } from '../../services/hooks/useSocket';
-import { useSeller } from '../../services/hooks/useUsers';
+import { useSeller } from '../../services/hooks/useSellers';
 import { queryClient } from '../../services/queryClient';
 import DetailsShopModal, {
   DetailsShopModalHandle,
@@ -48,19 +48,16 @@ export const SellerShop = () => {
 
   return (
     <Flex
-      mt={['1rem', '1rem', 0]}
-      pb={['1rem', '1rem', 0]}
-      h={['15rem', '15rem', '100%']}
+      h="37rem"
       flexDir="column"
       align="center"
       borderBottom={['6px solid #181b23', '6px solid #181b23', 0]}
     >
       <DetailsShopModal shop={shop} ref={modalDetailsShop} />
-      <Heading size="md" color="#fff">
+      <Heading size="md" color="#fff" mt="1rem">
         Minhas Vendas
       </Heading>
       <Flex
-        maxH={['15rem', '15rem', '20rem']}
         flexDir="column"
         w={['18rem', '18rem', '15rem']}
         overflow="scroll"
@@ -70,9 +67,9 @@ export const SellerShop = () => {
           },
         }}
       >
-        <VStack ml="1rem" align={['center', 'center', 'flex-start']}>
+        <VStack align={['center', 'center', 'flex-start']}>
           {data?.shop.map(shop => (
-            <Flex key={shop.id}>
+            <Flex ml="2rem" key={shop.id}>
               <HStack
                 color={shop.paid ? '#00FF00' : '#A9A9A9'}
                 cursor="pointer"
