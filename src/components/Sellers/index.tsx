@@ -86,15 +86,7 @@ export const Sellers = () => {
                 <Td>{seller.points}</Td>
                 <Td>{seller.email}</Td>
                 <Td>{seller.numberPhone}</Td>
-                <Td>
-                  {new Date(seller.birthday).toLocaleDateString('pt-BR', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                </Td>
+                <Td>{seller.birthday}</Td>
                 <Td>
                   {new Date(seller.createdAt).toLocaleDateString('pt-BR', {
                     day: '2-digit',
