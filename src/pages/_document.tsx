@@ -5,6 +5,10 @@ export default class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta
+            name="facebook-domain-verification"
+            content="1jl6lr7qsijhj050lymn8nlfgcvfc7"
+          />
           <link rel="shortcut icon" href="/favicon/favicon.ico" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
