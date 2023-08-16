@@ -15,7 +15,7 @@ export function setupAPIClient(ctx = undefined) {
     baseURL:
       process.env.NODE_ENV === 'development'
         ? 'http://localhost:3333'
-        : process.env.NEXT_PUBLIC_API_URL,
+        : 'https://playground-api-zaycon.1g0r.tech',
     headers: {
       Authorization: `Bearer ${cookies['snap.token']}`,
     },
