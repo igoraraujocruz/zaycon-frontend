@@ -4,7 +4,7 @@ import { io, Socket } from 'socket.io-client';
 const baseUrl =
   process.env.NODE_ENV === 'development'
     ? 'http://localhost:3333'
-    : 'https://api.zaycon.shop';
+    : 'https://playground-api-zaycon.1g0r.tech';
 
 const socket = io(baseUrl);
 const SocketContext = createContext<Socket>(socket);
