@@ -15,7 +15,7 @@ export function setupAPIClient(ctx = undefined) {
     baseURL:
       process.env.NODE_ENV === 'development'
         ? 'http://localhost:3333'
-        : 'https://api.zaycon.shop',
+        : process.env.NEXT_PUBLIC_API_URL,
     headers: {
       Authorization: `Bearer ${cookies['snap.token']}`,
     },
