@@ -112,7 +112,7 @@ export default function Home() {
           name="search"
           {...register('search')}
         />
-        <Flex justify="center" mt="-2rem">
+        <Flex justify="center" mt="-3.5rem">
           <Select
             mt="1rem"
             mb={['1rem', '1rem', 0]}
@@ -149,7 +149,7 @@ export default function Home() {
             </Flex>
           ) : (
             <Grid
-              mt="2rem"
+              mt="1rem"
               templateColumns={[
                 '1fr',
                 '1fr',
@@ -182,7 +182,7 @@ export default function Home() {
                       {product.name}
                     </Text>
 
-                    <AspectRatio w={['19rem']} ratio={1 / 1}>
+                    <AspectRatio w="100%" minH={0} flex={1}>
                       <Img src={product.photos[0]?.url} objectFit="cover" />
                     </AspectRatio>
                     <Text

@@ -92,15 +92,20 @@ const DetailsProductModal: ForwardRefRenderFunction<
                     </VStack>
                   ) : (
                     <VStack align="flex-start">
-                      <HStack>
+                      <VStack>
                         <Text
                           fontSize={['1.2rem', '1.2rem', '3xl']}
-                          maxW="15rem"
+                          w={['18rem', '18rem', '30rem']}
+                          overflow="hidden"
+                          align="center"
+                          textOverflow="ellipsis"
+                          whiteSpace="nowrap"
                         >
                           {product.name}
                         </Text>
                         <Text
-                          w={['15rem', '15rem', '26rem']}
+                          align="center"
+                          w={['18rem', '18rem', '30rem']}
                           maxH="5rem"
                           fontWeight={400}
                           overflow="scroll"
@@ -112,9 +117,9 @@ const DetailsProductModal: ForwardRefRenderFunction<
                         >
                           {product.description}
                         </Text>
-                      </HStack>
+                      </VStack>
 
-                      <HStack>
+                      <HStack justify="center" align="center" w="100%">
                         <Text fontSize="1.5rem">
                           R${Number(product.price).toFixed(2).replace('.', ',')}
                         </Text>
