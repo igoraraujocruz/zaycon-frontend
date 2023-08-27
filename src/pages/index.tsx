@@ -22,6 +22,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FiShoppingCart } from 'react-icons/fi';
 import { GrInstagram } from 'react-icons/gr';
+import { GetStaticProps } from 'next';
 import { SearchInput } from '../components/Form/SearchInput';
 import { api } from '../services/apiClient';
 import { Product, useProducts } from '../services/hooks/useProducts';
@@ -32,7 +33,17 @@ import { useCart } from '../services/hooks/useCart';
 import { MyCarousel } from '../components/Carousel';
 import { Footer } from '../components/Footer';
 
-export default function Home() {
+export type BannerProps = {
+  banners: [
+    {
+      id: string;
+      productOrTagUrl: string;
+      url: string;
+    },
+  ];
+};
+
+export default function Home({ banners }: BannerProps) {
   const { addProduct } = useCart();
   const { isLoading, error, isFetching } = useProducts();
   const { register } = useForm();
@@ -105,7 +116,7 @@ export default function Home() {
           </HStack>
         </Flex>
 
-        <MyCarousel />
+        <MyCarousel banners={banners} />
         <SearchInput
           w={['11rem', '11rem', '15rem', '18rem']}
           border="itemColor"
@@ -228,3 +239,16 @@ export default function Home() {
     </>
   );
 }
+
+export const getStaticProps: GetStaticProps = async () => {
+  const response = await api.get('/banners');
+
+  const banners = response.data;
+
+  return {
+    props: {
+      banners,
+    },
+    revalidate: 60 * 60 * 24, // 24 hours
+  };
+};
