@@ -240,15 +240,15 @@ export default function Home({ banners }: BannerProps) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const response = await api.get('/banners');
+// export const getStaticProps: GetStaticProps = async () => {
+//   const response = await api.get('/banners');
 
-  const banners = response.data;
+//   const banners = response.data;
 
-  return {
-    props: {
-      banners,
-    },
-    revalidate: 60 * 60 * 24, // 24 hours
-  };
-};
+//   return {
+//     props: {
+//       banners,
+//     },
+//     revalidate: 60 * 60 * 24, // 24 hours
+//   };
+// };
