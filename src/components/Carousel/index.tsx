@@ -7,7 +7,7 @@ export const MyCarousel = ({ banners }: BannerProps) => {
   const imgs = [
     {
       key: 1,
-      url: 'teste/10.svg',
+      url: 'celular.jpg',
     },
     {
       key: 2,
@@ -21,12 +21,14 @@ export const MyCarousel = ({ banners }: BannerProps) => {
   return (
     <Carousel autoPlay infiniteLoop showStatus={false}>
       {imgs.map(imag => (
-        <Img
-          src={imag.url}
-          objectFit="cover"
-          h="60vh"
-          borderRadius="0 0 2rem 2rem"
-        />
+        <AspectRatio mt="0.05rem" ratio={[3 / 1, 3 / 1, 4 / 1]}>
+          <Img
+            src={imag.url}
+            objectFit="cover"
+            h="70vh"
+            borderRadius="0 0 2rem 2rem"
+          />
+        </AspectRatio>
       ))}
     </Carousel>
   );
