@@ -21,11 +21,12 @@ export const MyCarousel = ({ banners }: BannerProps) => {
   return (
     <Carousel autoPlay infiniteLoop showStatus={false}>
       {imgs.map(imag => (
-        <Flex key={imag.key} flexDir="column" align="center">
-          <AspectRatio w="100%" minH={0} flex={['50vw', '50vw', '25vw']}>
-            <Img src={imag.url} objectFit="cover" />
-          </AspectRatio>
-        </Flex>
+        <Img
+          src={imag.url}
+          objectFit="cover"
+          h="60vh"
+          borderRadius="0 0 2rem 2rem"
+        />
       ))}
     </Carousel>
   );
