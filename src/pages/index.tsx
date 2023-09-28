@@ -32,6 +32,7 @@ import DetailsProductModal, {
 import { useCart } from '../services/hooks/useCart';
 import { MyCarousel } from '../components/Carousel';
 import { Footer } from '../components/Footer';
+import { Header } from '../components/Header';
 
 export type BannerProps = {
   banners: [
@@ -80,41 +81,7 @@ export default function Home({ banners }: BannerProps) {
       </Head>
       <Flex flexDir="column" w="100%">
         <DetailsProductModal product={product} ref={modalDetails} />
-
-        <Flex
-          justify="center"
-          flexDir={['column', 'column', 'row']}
-          align="center"
-          p="0.5rem"
-        >
-          <HStack color="itemColor">
-            <Heading color="itemColor">Zaycon</Heading>
-            <Link href="https://www.instagram.com/zaycon.connect" isExternal>
-              <Flex cursor="pointer">
-                <GrInstagram color="#14213D" size={28} />
-              </Flex>
-            </Link>
-            <Link
-              isExternal
-              href="https://api.whatsapp.com/send?phone=5527999147896&text=Olá, gostaria de saber mais sobre os produtos"
-            >
-              <Image
-                cursor="pointer"
-                w="2.2rem"
-                src="whatsapp2.svg"
-                alt="whatsapp"
-              />
-            </Link>
-          </HStack>
-          <HStack ml={[0, 0, '1rem']}>
-            <Link href="/newSeller">
-              <Text cursor="pointer">Quero ser um vendedor</Text>
-            </Link>
-            <Link href="/admin">
-              <Text cursor="pointer">Acessar</Text>
-            </Link>
-          </HStack>
-        </Flex>
+        <Header />
 
         <MyCarousel banners={banners} />
         <SearchInput
@@ -234,7 +201,7 @@ export default function Home({ banners }: BannerProps) {
           )}
         </Flex>
         <Flex h="10rem" />
-        <Footer />
+        {/* <Footer /> */}
       </Flex>
     </>
   );
