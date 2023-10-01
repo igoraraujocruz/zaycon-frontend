@@ -21,7 +21,7 @@ export const MyCarousel = ({ banners }: BannerProps) => {
   return (
     <Carousel autoPlay infiniteLoop showStatus={false}>
       {imgs.map(imag => (
-        <AspectRatio mt="0.05rem" ratio={[3 / 1, 3 / 1, 4 / 1]}>
+        <AspectRatio ratio={[3 / 1, 3 / 1, 4 / 1]}>
           <Img
             src={imag.url}
             objectFit="cover"

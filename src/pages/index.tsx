@@ -21,6 +21,8 @@ import Head from 'next/head';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FiShoppingCart } from 'react-icons/fi';
+import { AiOutlineShoppingCart } from 'react-icons/ai';
+
 import { GrInstagram } from 'react-icons/gr';
 import { GetStaticProps } from 'next';
 import { SearchInput } from '../components/Form/SearchInput';
@@ -95,6 +97,7 @@ export default function Home({ banners }: BannerProps) {
             mt="1rem"
             mb={['1rem', '1rem', 0]}
             w="12rem"
+            borderColor="itemColor"
             focusBorderColor="none"
             onChange={e => getProductByCategory(e.target.value)}
           >
@@ -140,7 +143,13 @@ export default function Home({ banners }: BannerProps) {
               gap="2rem"
             >
               {category.map(product => (
-                <Flex key={product.id} flexDir="column" alignItems="center">
+                <Flex
+                  key={product.id}
+                  flexDir="column"
+                  alignItems="center"
+                  bg="#fff"
+                  borderRadius={5}
+                >
                   <Flex
                     cursor="pointer"
                     onClick={() => openUploadModal(product)}
@@ -151,11 +160,16 @@ export default function Home({ banners }: BannerProps) {
                   >
                     <Text
                       w="15rem"
+                      color="#000"
+                      align="center"
                       overflow="hidden"
                       textOverflow="ellipsis"
                       whiteSpace="nowrap"
                       fontWeight="600"
                       cursor="pointer"
+                      fontSize="1.5rem"
+                      mb="1rem"
+                      mt="1rem"
                     >
                       {product.name}
                     </Text>
@@ -164,35 +178,61 @@ export default function Home({ banners }: BannerProps) {
                       <Img src={product.photos[0]?.url} objectFit="cover" />
                     </AspectRatio>
                     <Text
-                      overflow="hidden"
+                      overflow="auto"
+                      css={{
+                        '&::-webkit-scrollbar': {
+                          width: '4px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                          width: '6px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          background: '#14213D',
+                          borderRadius: '0px',
+                        },
+                      }}
+                      align="center"
                       textOverflow="ellipsis"
-                      whiteSpace="nowrap"
-                      mt="0.5rem"
+                      whiteSpace="normal"
                       w={['15.7rem', '15.7rem', '18.8rem']}
-                      maxH="5rem"
+                      h="9.2rem"
+                      color="#000"
                     >
                       {product.description}
                     </Text>
                   </Flex>
 
-                  <HStack mb="1rem" mt="0.5rem" spacing="0.5rem" align="center">
-                    <Text align="center" fontSize="1.5rem">
+                  <HStack
+                    spacing="0.5rem"
+                    align="center"
+                    bg="#080C26"
+                    w="100%"
+                    h="100%"
+                    justify="center"
+                  >
+                    <Text
+                      fontSize="1.5rem"
+                      align="center"
+                      w="100%"
+                      color="#fff"
+                    >
                       R${Number(product.price).toFixed(2).replace('.', ',')}
                     </Text>
                     <Flex
-                      p="0.2rem"
-                      borderRadius="0.2rem"
                       onClick={() => addProduct(product.id)}
                       cursor="pointer"
                       align="center"
                       bg="itemColor"
+                      p={2}
+                      justify="center"
+                      w="100%"
                       _hover={{
-                        background: 'itemColor',
+                        background: '#080C26',
                       }}
                       transition={['background 200ms']}
                     >
                       <Text color="white">Comprar</Text>
-                      <Image alt="carrinho" src="carrinho.png" />
+                      <AiOutlineShoppingCart color="#fff" size={32} />
                     </Flex>
                   </HStack>
                 </Flex>

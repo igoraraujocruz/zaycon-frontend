@@ -25,6 +25,7 @@ import {
 } from 'react';
 
 import { FiShoppingCart } from 'react-icons/fi';
+import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { useCart } from '../../services/hooks/useCart';
 import { Product } from '../../services/hooks/useProducts';
 
@@ -92,26 +93,31 @@ const DetailsProductModal: ForwardRefRenderFunction<
                     </VStack>
                   ) : (
                     <VStack align="flex-start">
-                      <VStack>
+                      <VStack justify="start" align="start">
                         <Text
                           fontSize={['1.2rem', '1.2rem', '3xl']}
                           w={['18rem', '18rem', '30rem']}
                           overflow="hidden"
-                          align="center"
                           textOverflow="ellipsis"
                           whiteSpace="nowrap"
                         >
                           {product.name}
                         </Text>
                         <Text
-                          align="center"
                           w={['18rem', '18rem', '30rem']}
-                          maxH="5rem"
+                          maxH="8rem"
                           fontWeight={400}
-                          overflow="scroll"
-                          sx={{
-                            '::-webkit-scrollbar': {
-                              display: 'none',
+                          overflow="auto"
+                          css={{
+                            '&::-webkit-scrollbar': {
+                              width: '7px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                              width: '6px',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                              background: '#14213D',
+                              borderRadius: '0px',
                             },
                           }}
                         >
@@ -119,8 +125,13 @@ const DetailsProductModal: ForwardRefRenderFunction<
                         </Text>
                       </VStack>
 
-                      <HStack justify="center" align="center" w="100%">
-                        <Text fontSize="1.5rem">
+                      <HStack
+                        justify="flex-end"
+                        align="center"
+                        w="100%"
+                        bg="#080C26"
+                      >
+                        <Text fontSize="1.5rem" color="#fff">
                           R${Number(product.price).toFixed(2).replace('.', ',')}
                         </Text>
                         <Flex
@@ -131,9 +142,13 @@ const DetailsProductModal: ForwardRefRenderFunction<
                           align="center"
                           color="white"
                           bg="itemColor"
+                          _hover={{
+                            background: '#080C26',
+                          }}
+                          transition={['background 200ms']}
                         >
                           <Text>Comprar</Text>
-                          <FiShoppingCart cursor="pointer" size={30} />
+                          <AiOutlineShoppingCart color="#fff" size={32} />
                         </Flex>
                       </HStack>
 

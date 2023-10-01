@@ -92,7 +92,7 @@ const SearchInputBase: ForwardRefRenderFunction<
           id={name}
           _hover={{ bg: 'inputBg' }}
           _focus={{ bg: 'inputBg', border: '0.1rem solid #14213D' }}
-          bgColor="inputBg"
+          bgColor="#fff"
           variant="filled"
           size="lg"
           {...rest}
