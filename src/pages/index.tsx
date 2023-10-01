@@ -20,11 +20,7 @@ import {
 import Head from 'next/head';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { FiShoppingCart } from 'react-icons/fi';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
-
-import { GrInstagram } from 'react-icons/gr';
-import { GetStaticProps } from 'next';
 import { SearchInput } from '../components/Form/SearchInput';
 import { api } from '../services/apiClient';
 import { Product, useProducts } from '../services/hooks/useProducts';
@@ -33,7 +29,7 @@ import DetailsProductModal, {
 } from '../components/Modais/DetailsProductModal';
 import { useCart } from '../services/hooks/useCart';
 import { MyCarousel } from '../components/Carousel';
-import { Footer } from '../components/Footer';
+
 import { Header } from '../components/Header';
 
 export type BannerProps = {
@@ -195,7 +191,7 @@ export default function Home({ banners }: BannerProps) {
                       textOverflow="ellipsis"
                       whiteSpace="normal"
                       w={['15.7rem', '15.7rem', '18.8rem']}
-                      h="9.2rem"
+                      h="9rem"
                       color="#000"
                     >
                       {product.description}
@@ -241,7 +237,6 @@ export default function Home({ banners }: BannerProps) {
           )}
         </Flex>
         <Flex h="10rem" />
-        {/* <Footer /> */}
       </Flex>
     </>
   );

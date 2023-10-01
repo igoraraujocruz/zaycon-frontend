@@ -352,10 +352,24 @@ const BagModal: ForwardRefRenderFunction<IBagModal> = (props, ref) => {
                           ml="1rem"
                           flexDir="column"
                           fontFamily="Anek Devanagari"
-                          align="start"
-                          w="40%"
                         >
-                          <Text w={['7.5rem', '7.5rem', '11rem']}>
+                          <Text
+                            w={['7.5rem', '7.5rem', '11rem']}
+                            overflow="auto"
+                            css={{
+                              '&::-webkit-scrollbar': {
+                                width: '4px',
+                              },
+                              '&::-webkit-scrollbar-track': {
+                                width: '6px',
+                              },
+                              '&::-webkit-scrollbar-thumb': {
+                                background: '#14213D',
+                                borderRadius: '0px',
+                              },
+                            }}
+                            h="4rem"
+                          >
                             {product.name}
                           </Text>
                           <Text w={['7.5rem', '7.5rem', '11rem']}>
