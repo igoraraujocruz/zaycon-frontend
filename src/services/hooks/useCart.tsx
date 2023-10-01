@@ -111,7 +111,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
       setCart(updatedCart);
       toast({
-        position: 'top',
+        position: 'bottom-right',
         title: `Adicionado ao Carrinho!`,
         status: 'success',
         duration: 1000,

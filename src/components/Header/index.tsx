@@ -34,6 +34,9 @@ export const Header = () => {
       color="#fff"
       bg="itemColor"
       templateColumns={['repeat(1, 1fr)', 'repeat(1, 1fr)', 'repeat(3, 1fr)']}
+      position="fixed"
+      zIndex={1}
+      w="100%"
     >
       <BagModal ref={bagModal} />
       <MyShops ref={modalMyShops} />
