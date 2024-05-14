@@ -22,7 +22,7 @@
 ## 💇🏻‍♂️ Sobre o projeto
 Uma plataforma que faz o cadastro de de usuários, produtos, clientes e que gerencia pontos acumulados de cada compra de cada cliente. Esses pontos são trocados por produtos.
 
-Verifique a **api** deste projeto, clicando aqui: [Snap Rest API](https://github.com/igoraraujocruz/snap-backend)</br>
+Verifique a **api** deste projeto, clicando aqui: [Zaycon Rest API](https://github.com/igoraraujocruz/zaycon-backend)</br>
 
 ## 🚀 Tecnologias
 
@@ -49,7 +49,7 @@ Tecnologias que foram usadas para desenvolver este cliente web.
 **Clone o projeto e acesse a pasta**
 
 ```bash
-$ git clone https://github.com/igoraraujocruz/snap-frontend.git && cd snap-frontend
+$ git clone https://github.com/igoraraujocruz/zaycon-frontend
 ```
 
 **Siga os passos abaixo**
