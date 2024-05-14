@@ -44,7 +44,7 @@ Tecnologias que foram usadas para desenvolver este cliente web.
 
 ### Pré-Requisitos
 -  [Yarn](https://classic.yarnpkg.com/) ou [npm](https://www.npmjs.com/)
-- Tenha a [API](https://github.com/igoraraujocruz/snap-api) executando.
+- Tenha a [API](https://github.com/igoraraujocruz/zaycon-backend) executando.
 
 **Clone o projeto e acesse a pasta**
 
